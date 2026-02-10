@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joseph "Joe" Pointer | Strategic Leadership in Career Development & AI</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Playfair+Display:ital,wght@1,900&family=Space+Mono&family=Georgia:ital@0;1&family=Outfit:wght@300;600;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-template="blueprint">
+
+    <!-- Admin Panel Overlay (Click-Outside to Close) -->
+    <div id="admin-overlay"></div>
+
+    <!-- Admin Settings Panel -->
+    <div id="admin-panel" class="admin-panel">
+        <div class="admin-header">
+            <h3>Portfolio Settings</h3>
+            <button onclick="closeAdmin()" class="close-btn">×</button>
+        </div>
+        <div class="admin-content">
+            <div class="admin-section">
+                <label>Template Style</label>
+                <div class="template-buttons">
+                    <button class="template-btn active" data-template="blueprint" onclick="setTemplate('blueprint')">Blueprint</button>
+                    <button class="template-btn" data-template="executive" onclick="setTemplate('executive')">Executive</button>
+                    <button class="template-btn" data-template="minimal" onclick="setTemplate('minimal')">Minimal</button>
+                    <button class="template-btn" data-template="designer" onclick="setTemplate('designer')">Designer</button>
+                </div>
+            </div>
+            <div class="admin-section">
+                <label for="company-input">Company Name</label>
+                <input type="text" id="company-input" placeholder="Enter company name" onchange="updateCompany(this.value)">
+            </div>
+            <div class="admin-section">
+                <label for="message-input">Welcome Message</label>
+                <input type="text" id="message-input" placeholder="Custom message" onchange="updateMessage(this.value)">
+            </div>
+            <div class="admin-section">
+                <button onclick="generateURL()" class="generate-btn">Generate Shareable URL</button>
+                <input type="text" id="url-output" readonly onclick="this.select()" placeholder="URL will appear here">
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-top">
+                <div class="header-title">JOSEPH <span>JOE</span> POINTER</div>
+                <div id="sub-header" style="font-size: 1.1rem; font-weight: 600; letter-spacing: 0.5px;">Strategic Leadership in Career Development & AI</div>
+                <div onclick="toggleAdmin()" style="cursor:pointer; opacity: 0.3; font-size: 1.2rem; transition: opacity 0.3s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='0.3'">⚙</div>
+            </div>
+        </header>
+
+        <!-- SIDEBAR NAVIGATION -->
+        <nav class="sidebar">
+            <div class="nav-node active" onclick="showPane('home', this)">
+                <div class="nav-label">Foundation</div>
+                <div class="nav-title">How I Think</div>
+            </div>
+            <div class="nav-node" onclick="showPane('philosophy', this)">
+                <div class="nav-label">Thinking</div>
+                <div class="nav-title">Operating Principles</div>
+            </div>
+            <div class="nav-node" onclick="showPane('careerspark', this)">
+                <div class="nav-label">2022–Present</div>
+                <div class="nav-title">CareerSpark at TIAA</div>
+            </div>
+            <div class="nav-node" onclick="showPane('workplace', this)">
+                <div class="nav-label">2017–2025</div>
+                <div class="nav-title">Workplace Modernization</div>
+            </div>
+            <div class="nav-node" onclick="showPane('revolver', this)">
+                <div class="nav-label">2001–2004</div>
+                <div class="nav-title">Revolver Content Architecture</div>
+            </div>
+            <div class="nav-node" onclick="showPane('foundations', this)">
+                <div class="nav-label">1998–2016</div>
+                <div class="nav-title">Building Blocks: Systems Thinking</div>
+            </div>
+            <div class="nav-node" onclick="showPane('contact', this)">
+                <div class="nav-label">Next</div>
+                <div class="nav-title">Let's Talk</div>
+            </div>
+        </nav>
+
+        <!-- MAIN VIEWPORT -->
+        <main class="viewport">
+
+            <!-- HOME / HOW I THINK -->
+            <div id="home" class="content-pane active">
+                <span class="mono">Professional Profile</span>
+                
+                <!-- Hero Section with Headshot -->
+                <div style="display: flex; gap: 40px; align-items: flex-start; margin-bottom: 30px;">
+                    <div style="flex: 1;">
+                        <h2>Strategic Leader.<br>Human-Centered<br>Systems Architect.</h2>
+                        
+                        <p style="font-size: 1.05rem; line-height: 1.7;">I help organizations rethink how they develop talent, modernize workplaces, and adopt AI at human scale. Nearly 30 years building enterprise solutions—from pioneering information architecture to leading AI transformation at a Fortune 100 company.</p>
+                        
+                        <p style="font-size: 0.95rem; line-height: 1.6;">I bridge strategy and execution, obsessing over the gap between what organizations <em>know</em> they should do and what actually gets <em>adopted</em>.</p>
+                    </div>
+                    <div style="flex-shrink: 0;">
+                        <img src="images/headshot.jpg" alt="Joseph Pointer" style="width: 200px; height: 200px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover;">
+                    </div>
+                </div>
+                
+                <!-- RESULTS DASHBOARD -->
+                <div style="margin: 40px 0; padding: 30px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1)); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="font-size: 0.9rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;">Impact at a Glance</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">16,000+</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">Associates Impacted</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">44%</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">Cost Reduction</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">395%</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">Engagement Increase</div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="font-size: 0.9rem;"><strong>30 Years</strong><br><span style="font-size: 0.8rem; color: var(--text-secondary);">Enterprise Experience</span></div>
+                        <div style="font-size: 0.9rem;"><strong>3 Fortune 100s</strong><br><span style="font-size: 0.8rem; color: var(--text-secondary);">Organizations Transformed</span></div>
+                        <div style="font-size: 0.9rem;"><strong>5 Major Awards</strong><br><span style="font-size: 0.8rem; color: var(--text-secondary);">Leadership Recognition</span></div>
+                    </div>
+                </div>
+                
+                <div class="philosophy-box">
+                    <div class="principle-title">What I Do</div>
+                    <p><strong>I partner with leaders to:</strong></p>
+                    <ul style="margin: 12px 0; padding-left: 20px;">
+                        <li>Reimagine career development as a product experience, not an HR process</li>
+                        <li>Design AI solutions that amplify human judgment and expand what's possible</li>
+                        <li>Transform workplace strategy to balance cost, flexibility, and human connection</li>
+                        <li>Build adoption and culture into transformation initiatives from day one</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.9rem;">
+                    <div style="background: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                        <div style="color: var(--primary); font-weight: 700; margin-bottom: 8px;">Current Situation</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Director at TIAA | Denver office closing July 2026<br>Committed to staying in Colorado with my family</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                        <div style="color: var(--accent); font-weight: 700; margin-bottom: 8px;">Looking For</div>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Director / VP roles in Colorado with organizations committed to career development, AI transformation, or workforce strategy</p>
+                    </div>
+                </div>
+
+                <p style="margin-top: 40px; color: rgba(255, 255, 255, 0.7); font-size: 0.95rem;">I've built a framework—six core operating principles—that shapes how I solve problems. These principles aren't abstract theory. They're the lens I've used across nearly 30 years and every major initiative. Read them first. Then watch them in action across my three flagship projects.</p>
+
+                <a href="#" onclick="showPane('philosophy', event.target.closest('.nav-node') || document.querySelectorAll('.nav-node')[1]); return false;" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background: var(--accent); color: var(--text-primary); border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s;">→ View My Operating Principles</a>
+            </div>
+
+            <!-- OPERATING PRINCIPLES -->
+            <div id="philosophy" class="content-pane">
+                <span class="mono">The Framework</span>
+                <h2>My Operating<br>Principles.</h2>
+                
+                <p style="font-size: 1.05rem;">Six principles tested across 30 years. How I diagnose problems, design solutions, and navigate complexity.</p>
+
+                <div style="margin-top: 40px;">
+                    <!-- Principle 1 -->
+                    <div class="principle">
+                        <div class="principle-title">1. Design for Adoption, Not Just Launch</div>
+                        <p>A great solution that nobody uses isn't a solution. Success isn't measured at rollout—it's measured by sustained use.</p>
+                        <button class="expand-btn" onclick="toggleExpand('principle1')">+ See How I Apply This</button>
+                        <div id="principle1" class="expand-content">
+                            <p style="margin-top: 15px;"><strong>How I operationalize it:</strong> In Workplace Modernization, I reduced real estate footprint by 44%—a change that typically destroys morale. Instead, I architected adoption into every layer: launched a Job Shadowing Program (made change feel like opportunity), built a Culture Champions Network (2,000+ associates invested in success), and drove recognitions UP 395% (proved culture could thrive during efficiency).</p>
+                            <p>In CareerSpark: designed prompts that helped a 27-year associate see her value (not technical jargon), created a Manager Guide <em>before</em> launch (not after), ran roadshows reaching 1,500+ people directly. Result: 16,000+ at scale.</p>
+                            <p><strong>The proof:</strong> 44% footprint reduction without retention crisis. CareerSpark integrated into TIAA University as core career development experience.</p>
+                        </div>
+                    </div>
+
+                    <!-- Principle 2 -->
+                    <div class="principle">
+                        <div class="principle-title">2. Systems First, Humans Always</div>
+                        <p>I think systematically about how organizations work—workflows, incentives, infrastructure, governance. But I never optimize for the system at the expense of humans. Technology should amplify what people do best, not replace judgment.</p>
+                        <button class="expand-btn" onclick="toggleExpand('principle2')">+ See How I Apply This</button>
+                        <div id="principle2" class="expand-content">
+                            <p style="margin-top: 15px;"><strong>How I operationalize it:</strong> In Revolver (2001), I separated <em>what you're teaching</em> from <em>how you're teaching it.</em> The same content could publish to web, mobile, paper, expert review, or novice learner—each optimized for context. The SYSTEM scaled content reuse by 50-80%. The HUMAN (the learner) always stayed at the center.</p>
+                            <p>In CareerSpark, AI surfaces career options, but humans decide. The system recommends; people choose. Same principle, different era.</p>
+                            <p><strong>The proof:</strong> Revolver deployed at Fortune 500 scale with 50-80% reduction in content development time. CareerSpark's 16,000+ adoption proves human-centered AI design works at enterprise scale.</p>
+                        </div>
+                    </div>
+
+                    <!-- Principle 3 -->
+                    <div class="principle">
+                        <div class="principle-title">3. AI as Amplifier, Not Replacement</div>
+                        <p>In the AI era, the most powerful question isn't "What can we automate?" It's "What can we help people <em>think</em> differently about?" I design AI to enhance judgment and expand possibility—not eliminate jobs or thought.</p>
+                        <button class="expand-btn" onclick="toggleExpand('principle3')">+ See How I Apply This</button>
+                        <div id="principle3" class="expand-content">
+                            <p style="margin-top: 15px;"><strong>How I operationalize it:</strong> CareerSpark teaches AI <em>through</em> the one subject every associate is already an expert in: themselves. Instead of "Here's how to use AI for business cases," I made it "Let's use AI to see your skills, explore your options, and build your story." A 27-year associate terrified she had nothing to offer watched AI break down her work into 20+ transferable skills. Her face lit up.</p>
+                            <p><strong>The proof:</strong> Associates moved from "I don't know what AI is for" to "I used AI to see my career differently." Confidence increased. Fear decreased. AI became a tool for self-discovery, not a threat.</p>
+                        </div>
+                    </div>
+
+                    <!-- Principle 4 -->
+                    <div class="principle">
+                        <div class="principle-title">4. Right Brain + Left Brain</div>
+                        <p>I combine strategic vision with hands-on execution. Creative problem-solving with data-driven decision-making. Empathy for humans with discipline for systems. This blend bridges the gap between how organizations <em>think</em> and how they need to <em>operate</em>.</p>
+                        <button class="expand-btn" onclick="toggleExpand('principle4')">+ See How I Apply This</button>
+                        <div id="principle4" class="expand-content">
+                            <p style="margin-top: 15px;"><strong>How I operationalize it:</strong> In every major initiative, I'm both the visionary and the executor. CareerSpark: I conceived the strategy (vision), designed the 9-module architecture (creativity), built the pedagogy (instructional design), led adoption roadshows (execution), and measured impact (data). Workplace Modernization: I partnered on real estate strategy (left brain) while designing culture integration that prevented backlash (right brain).</p>
+                            <p><strong>The proof:</strong> Multiple enterprise awards for "visionary leadership" and "execution excellence"—not one or the other, but both. Projects don't just launch well—they sustain and scale.</p>
+                        </div>
+                    </div>
+
+                    <!-- Principle 5 -->
+                    <div class="principle">
+                        <div class="principle-title">5. Career Development as Product</div>
+                        <p>How people grow, learn, and move into new roles should be treated like any product experience—designed with intent, evolving with user needs, measurable in impact. Organizations that rethink career development as a <em>product</em> (not just an HR process) win the talent game.</p>
+                        <button class="expand-btn" onclick="toggleExpand('principle5')">+ See How I Apply This</button>
+                        <div id="principle5" class="expand-content">
+                            <p style="margin-top: 15px;"><strong>How I operationalize it:</strong> CareerSpark isn't a "training course." It's a product with: intentional architecture (9 integrated modules), user research (understanding that associates feared AI), specific pedagogy (Do it → See it → Improve it → Deepen it → Share it), an ecosystem (Manager Guide, AI agent, Resume Builder), and iteration based on feedback.</p>
+                            <p><strong>The proof:</strong> 16,000+ adoption. Integration into TIAA University. Multiple recognition awards. Most importantly: associates moved from "I don't know what to do" to "I have a path forward." That's not training completion—that's a product working.</p>
+                        </div>
+                    </div>
+
+                    <!-- Principle 6 -->
+                    <div class="principle">
+                        <div class="principle-title">6. The Future Demands New Thinking</div>
+                        <p>We can't solve tomorrow's problems with today's thinking. AI, distributed work, skills-based careers, and rapid change mean organizations need people who can think differently and operate at the intersection of human and machine intelligence.</p>
+                        <button class="expand-btn" onclick="toggleExpand('principle6')">+ See How I Apply This</button>
+                        <div id="principle6" class="expand-content">
+                            <p style="margin-top: 15px;"><strong>How I operationalize it:</strong> I've reinvented my role every 5-10 years to stay ahead of change. 1998-2004: Information architecture and learning systems. 2005-2016: HCM and enterprise platforms. 2017-2025: Workplace transformation and culture. 2022-present: AI adoption and career development. Each era required new skills, new thinking, and willingness to lead in unfamiliar territory.</p>
+                            <p><strong>The proof:</strong> Nearly 30 years of continuous relevance across multiple domains. Recognition as both "innovative thinker" and "practical executor." Currently building Future.Me.Answered (high school career exploration platform) while leading enterprise AI adoption—operating in both the future and the present simultaneously.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="philosophy-box" style="margin-top: 40px;">
+                    <div class="principle-title">Pattern Recognition</div>
+                    <p>If you read the case studies that follow—CareerSpark, Workplace Modernization, Revolver—you'll see these principles operating simultaneously in every one. They're not separate approaches for different problems. They're the same lens applied across different contexts.</p>
+                    <p style="margin-top: 15px;">That consistency is intentional. It's what allows me to move between domains, understand complex organizations quickly, and design solutions that stick.</p>
+                </div>
+            </div>
+
+            <!-- CAREERSPARK CASE STUDY -->
+            <div id="careerspark" class="content-pane">
+                <span class="mono">Flagship Initiative: 2022–Present | TIAA</span>
+                <h2>CareerSpark<br>Rethinking Career<br>Development at Scale.</h2>
+                
+                <p style="margin-bottom: 30px; font-size: 1.05rem; color: var(--text-secondary);">AI-enabled career development platform adopted by 16,000+ associates at TIAA.</p>
+
+                <div style="margin: 30px 0; padding: 25px; background: rgba(59, 130, 246, 0.08); border-left: 4px solid var(--primary); border-radius: 8px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">16,000+</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Associates Reached</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">1,500+</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Live Sessions</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">9</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Integrated Modules</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Story</h3>
+                    <p>An associate had spent 27 years processing distributions. When TIAA announced office closures affecting 1,000+ associates, she was terrified. She couldn't see how to talk about her experience in a way another employer would value.</p>
+                    <p>In one of my CareerSpark sessions, we used AI prompts to break down what it takes to be good at her job. The output wasn't one task—it was dozens of skills: problem solving, client relationship management, attention to detail, working under pressure, handling complexity, meeting deadlines, advocating for customers.</p>
+                    <p>Watching that list appear, you could see the weight lift from her shoulders. She realized she had far more to offer than a job title suggested. <strong>That's what CareerSpark is designed to do—at scale.</strong></p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Challenge</h3>
+                    <p>TIAA's 16,000+ associates faced: two major office closures affecting 1,000+ people with 15-27 years in the same role, limited visibility into transferable skills, and development plans that felt like guesswork. Meanwhile, AI tools were being rolled out, but training was highly technical and most associates didn't see AI as "for people like them."</p>
+                    <p><strong>The real problem:</strong> How do we help thousands of people facing uncertainty see their own value clearly, chart a path forward, and learn to use AI in a way that feels relevant and empowering?</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Insight</h3>
+                    <p><strong>Instead of teaching AI through abstract business cases, teach AI through the one subject every associate is already an expert in: themselves.</strong></p>
+                    <p>Use AI as a guided mirror to help people see the skills they already have, explore where those skills could take them next, and build language and artifacts (resumes, profiles, plans) that tell their story.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Solution</h3>
+                    <p>I conceived and designed <strong>CareerSpark</strong> as an AI-enabled career development journey built around 9 integrated modules covering career values, self-assessment, upskilling, personal branding, resume writing, LinkedIn optimization, job search strategy, applications, and interview preparation.</p>
+                    <button class="expand-btn" onclick="toggleExpand('careerspark-modules')">+ See Module Details & Pedagogy</button>
+                    <div id="careerspark-modules" class="expand-content">
+                        <p style="margin-top: 15px;"><strong>The 9 modules:</strong></p>
+                        <ol>
+                            <li><strong>Career Values & Purpose:</strong> Define your "why" to guide your "what's next."</li>
+                            <li><strong>Self-Assessment & Career Exploration:</strong> Uncover your strengths, values, and future possibilities.</li>
+                            <li><strong>Upskilling & Reskilling:</strong> Target skills gaps and build the capabilities your next role requires.</li>
+                            <li><strong>Personal Branding:</strong> Let your strengths speak before you say a word.</li>
+                            <li><strong>Resume Writing & Editing:</strong> Translate your experience into a resume that reflects who you are and where you're going.</li>
+                            <li><strong>LinkedIn Use & Profile Enhancement:</strong> Make your digital presence as strong as your real-world value.</li>
+                            <li><strong>Job Search Strategy:</strong> Turn hope into a system with structure and focus.</li>
+                            <li><strong>Job Application Process:</strong> Apply with intention, track with precision, and follow through.</li>
+                            <li><strong>Interview Preparation:</strong> Show up prepared, practiced, and ready to turn conversation into connection.</li>
+                        </ol>
+                        <p style="margin-top: 20px;"><strong>How each module works:</strong></p>
+                        <ul>
+                            <li><strong>Do it:</strong> step-by-step guidance with tailored AI prompts</li>
+                            <li><strong>See it:</strong> example outputs from someone like you</li>
+                            <li><strong>Improve it:</strong> guidance that AI is a conversation, not a search box</li>
+                            <li><strong>Deepen it:</strong> "super prompting" for richer, more nuanced back-and-forth</li>
+                            <li><strong>Share it:</strong> how to turn what you've learned into development plans, resumes, profiles, and conversations</li>
+                        </ul>
+                        <p style="margin-top: 20px;"><strong>The ecosystem:</strong> Resources on ATS and keywords, tracking tools for job searches, Manager Guide (now in pilot), and in-development CareerSpark AI agent and Resume Builder that will guide associates conversationally and dynamically generate resumes.</p>
+                    </div>
+                </div>
+
+                <div class="case-section">
+                    <h3>My Role</h3>
+                    <p>Connected upskilling, AI adoption, and career development into a single coherent strategy. Conceived the CareerSpark concept and designed the 9-module journey. Defined the pedagogy and AI-prompting approach. Led content and experience design. Drove adoption through webinars, workshops, roadshows, and coaching. Created the Manager Guide and am leading design for the AI agent and Resume Builder.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>Impact</h3>
+                    <p><strong>Scale:</strong> 16,000+ associates now have access. 1,000+ directly affected by office closures have a structured path forward. 1,500+ engaged through live sessions. Integrated into TIAA University as core career development experience.</p>
+                    <p><strong>Transformation:</strong> Associates who once "shot in the dark" on development plans now identify realistic future directions, see and name their transferable skills, and map skills required for where they want to go. Long-tenured associates report feeling more confident telling their story to other employers.</p>
+                    <p><strong>Recognition:</strong> Values Champion, "Face of TIAA Values" VIP honors, Change Champion roles—all connected to this work.</p>
+                    <button class="expand-btn" onclick="toggleExpand('careerspark-adoption')">+ See Adoption Strategy Details</button>
+                    <div id="careerspark-adoption" class="expand-content">
+                        <p style="margin-top: 15px;"><strong>How I drove adoption:</strong></p>
+                        <ul>
+                            <li>Ran webinars, workshops, and roadshows that reached more than 1,500 associates directly</li>
+                            <li>Joined team meetings to reduce anxiety and show, in real time, how CareerSpark could help</li>
+                            <li>Framed AI as a tool to discover and express their value—not as a threat or purely technical feature</li>
+                            <li>Equipped managers to use CareerSpark as a coaching tool rather than a compliance requirement</li>
+                        </ul>
+                        <p>Many associates arrived at sessions skeptical or nervous. After seeing their own skills and stories reflected back through AI, they left more confident, more hopeful, and eager to keep going.</p>
+                    </div>
+                </div>
+
+                <div class="case-section">
+                    <h3>What's Next</h3>
+                    <p>The <strong>Manager Guide</strong> is being rolled out. The <strong>CareerSpark AI agent</strong> is in final development and will launch within the next two months. The integrated <strong>Resume Builder</strong> will launch with the agent, generating resumes directly from associates' CareerSpark work.</p>
+                </div>
+            </div>
+
+            <!-- WORKPLACE MODERNIZATION CASE STUDY -->
+            <div id="workplace" class="content-pane">
+                <span class="mono">Enterprise Transformation: 2017–2025 | TIAA</span>
+                <h2>Workplace Modernization<br>Orchestrating Transformation<br>at Scale.</h2>
+                
+                <p style="margin-bottom: 30px; font-size: 1.05rem; color: var(--text-secondary);">Led 3,000+ associates through pandemic return and office modernization—44% real estate efficiency without retention crisis.</p>
+
+                <div style="margin: 30px 0; padding: 25px; background: rgba(59, 130, 246, 0.08); border-left: 4px solid var(--primary); border-radius: 8px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">3,000+</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Associates Transitioned</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">44%</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Real Estate Efficiency</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">6</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Locations Modernized</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Challenge</h3>
+                    <p>When TIAA called 3,000+ associates back to office in January 2022, the initiative launched multi-million dollar modernization projects across six locations. But modernization brought hard choices: associates would lose assigned seats, embrace hoteling models, and see their personal workspace "homes away from home" redesigned without their input. Eighteen months of remote work had severed the connection to physical spaces.</p>
+                    <p><strong>The core problem:</strong> How do you lead people through multiple unwanted changes simultaneously—modernization, seating model shifts, facility redesigns—when trust is already fragile?</p>
+                    <p><strong>The stakes:</strong> Get it right, and you modernize the company while keeping culture intact. Get it wrong, and you trigger a retention crisis.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Approach</h3>
+                    <p>I didn't treat this as a space problem. I treated it as a change management problem wrapped in a facilities problem.</p>
+                    <p><strong>My strategy:</strong> Build a structure where tactical work gets delegated (to space liaisons), strategic work stays centralized (relationship management with GCS, CRE, Facilities, HR, leadership), and one person stays constant through all the change—that was me.</p>
+                    <button class="expand-btn" onclick="toggleExpand('workplace-strategy')">+ See Key Strategic Moves</button>
+                    <div id="workplace-strategy" class="expand-content">
+                        <p style="margin-top: 15px;"><strong>Key moves:</strong></p>
+                        <ol>
+                            <li><strong>Built a liaison network</strong> – 8 space liaisons across locations managing day-to-day space planning; I removed obstacles and managed strategy</li>
+                            <li><strong>Showed up personally</strong> – Attended every Client Services town hall; answered hard questions; was honest about changes I didn't like either</li>
+                            <li><strong>Designed for adoption</strong> – Created neighborhoods in BookIT for hoteling navigation; hosted campus tours for NCC moving to Charlotte; designed digital displays for team cohesion in hoteling environments</li>
+                            <li><strong>Maintained relationships</strong> – Regular monthly meetings with business area leaders showing how their requirements were reflected in designs; educated new GCS leaders on lessons from prior projects</li>
+                            <li><strong>Stayed constant</strong> – 12+ years as Workspace Leader; my continuity became a form of leadership capital through all the changes</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="case-section">
+                    <h3>Key Projects</h3>
+                    <p><strong>Charlotte Campus Welcome (2022):</strong> Hosted 6 in-person tour events with leadership greetings, campus tours, training, meals. Changed skepticism into excitement.</p>
+                    <p><strong>Lewisville Digital Displays (2022):</strong> CEO-directed 2-week refresh; installed 12 digital displays. Innovation became repeatable: replicated in Denver and Charlotte; later became business requirement for Frisco.</p>
+                    <p><strong>Denver Consolidation & Modernization (2023-2024):</strong> 700 associates transitioning from assigned to hoteling seating; achieved 44% more efficient space utilization. Most resistive change; I volunteered to attend townhalls and answer every concern. Result: minimal unexpected turnover.</p>
+                    <p><strong>Frisco Corporate Center Opening (2024):</strong> 500+ associates moved into new 15-story building; largest modernization undertaking. Negotiated special call center configuration for team cohesion. Recognized as "Change Champion."</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>Impact</h3>
+                    <ul>
+                        <li><strong>3,000+ associates</strong> transitioned through multiple office/seating changes without major disruption</li>
+                        <li><strong>44% real estate efficiency</strong> achieved through hoteling adoption and space optimization across locations</li>
+                        <li><strong>Multi-million dollar modernization investments</strong> delivered on time and on strategy</li>
+                        <li><strong>6 locations</strong> successfully modernized or consolidated</li>
+                        <li><strong>Maintained morale</strong> through unprecedented change—no retention crisis despite high-stakes transitions</li>
+                        <li><strong>Recognition:</strong> Values Champion, "Face of TIAA" Values VIP, Change Champion across multiple projects</li>
+                    </ul>
+                </div>
+
+                <div class="philosophy-box">
+                    <div class="principle-title">Why This Work Matters</div>
+                    <p>This work demonstrates that <strong>modernization and culture are not enemies</strong>—they're the same problem.</p>
+                    <p>Most organizations think: "Invest in offices" or "Maintain culture." I proved you can do both simultaneously if you: (1) Separate <em>what</em> needs to happen from <em>how</em> you do it, (2) Build structure that scales leadership without bottlenecking, (3) Show up personally and prove you're going through it too.</p>
+                    <p style="margin-top: 20px;"><strong>This is enterprise transformation leadership:</strong> not just executing plans, but reshaping how organizations approach change itself.</p>
+                </div>
+            </div>
+
+            <!-- REVOLVER CASE STUDY -->
+            <div id="revolver" class="content-pane">
+                <span class="mono">Learning Platform: 2001–2004 | Vangent/Pearson</span>
+                <h2>Revolver<br>Architecting Enterprise<br>Content for Infinite Reuse.</h2>
+                
+                <p style="margin-bottom: 30px; font-size: 1.05rem; color: var(--text-secondary);">Enterprise LCMS separating content from delivery—enabling publish-once, deploy-everywhere at Fortune 500 scale.</p>
+
+                <div style="margin: 30px 0; padding: 25px; background: rgba(59, 130, 246, 0.08); border-left: 4px solid var(--primary); border-radius: 8px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">50-80%</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Time Reduction</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">3</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Fortune 500 Clients</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">Global</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Deployment</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Market Moment (2001)</h3>
+                    <p>In the early 2000s, companies were moving training from classrooms to networks and the internet. But they faced a critical problem: <strong>they were building content in silos.</strong> A course built for web-based learners couldn't easily become a paper job aid. Training teams rebuilt the same knowledge multiple times—for different mediums, different contexts, different audiences.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Insight: Content Separation</h3>
+                    <p><strong>The core innovation:</strong> Separate <em>what you're teaching</em> from <em>how you're teaching it.</em></p>
+                    <p>Before Revolver, content and delivery were locked together. Changing the look and feel meant rebuilding the entire course. Delivering to a new audience meant starting over. Revolver inverted that model. <strong>Authors entered content once. The platform published everywhere.</strong></p>
+                    <button class="expand-btn" onclick="toggleExpand('revolver-details')">+ See How It Worked</button>
+                    <div id="revolver-details" class="expand-content">
+                        <p style="margin-top: 15px;"><strong>The same learning object could be deployed across multiple contexts:</strong></p>
+                        <ul>
+                            <li><strong>For web-based learners:</strong> Full, interactive lesson with exercises and explanations</li>
+                            <li><strong>For field technicians:</strong> Condensed job aid delivered on paper</li>
+                            <li><strong>For mobile users:</strong> Micro-learning "nuggets" optimized for phones</li>
+                            <li><strong>For subject matter experts:</strong> Expert review in short, straightforward format</li>
+                            <li><strong>For novice learners:</strong> Expanded lessons with detailed explanations and practice</li>
+                        </ul>
+                        <p>And the entire look and feel of a course? That was a design choice applied at publishing time—not during authoring.</p>
+                    </div>
+                </div>
+
+                <div class="case-section">
+                    <h3>My Role: Knowledge Architect + Translator</h3>
+                    <p>I wasn't just building software. I was architecting <em>how enterprises should think about knowledge structure.</em> My unique blend: Knowledge Architecture (structured content for reuse), Instructional Design (built learning science into the structure), UX Design (made structured thinking easy, not bureaucratic), and Global Trainer & Sales Engineer (traveled the world teaching enterprises how to <em>think differently</em> about knowledge as organizational infrastructure).</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Real Innovation: Separation of Concerns</h3>
+                    <p>This principle—separating content from context, delivery, and design—was radical for 2001. Today, we call this "API-first thinking" or "headless content." Revolver was doing it two decades early.</p>
+                    <p><strong>For enterprises, it meant:</strong> 50–80% reduction in content development time, dramatically faster time-to-publish (days instead of weeks), consistency across contexts, sustainability (content stayed evergreen and reusable), and scalability (large organizations could manage knowledge as infrastructure).</p>
+                </div>
+
+                <div class="philosophy-box">
+                    <div class="principle-title">Why This Work Still Matters</div>
+                    <p>Revolver demonstrated a principle that shapes everything I do today: <strong>The best systems don't force people into one way of working—they let knowledge and design scale according to context.</strong></p>
+                    <p>That principle shows up in CareerSpark (content adapts to learner level and style), my workplace modernization work (one design for multiple contexts), and my core operating principle: "Systems First, Humans Always." I learned early that transformation happens when you separate <em>what needs to happen</em> from <em>how it happens.</em></p>
+                </div>
+            </div>
+
+            <!-- BUILDING BLOCKS CASE STUDY -->
+            <div id="foundations" class="content-pane">
+                <span class="mono">Foundation Years: 1998–2016</span>
+                <h2>Building Blocks<br>The Foundation of<br>Systems Thinking.</h2>
+                
+                <p style="margin-bottom: 30px; font-size: 1.05rem; color: var(--text-secondary);">Eighteen years learning how organizations learn, hire, work, and scale—building the pattern recognition that informs everything I do today.</p>
+
+                <div style="margin: 30px 0; padding: 25px; background: rgba(59, 130, 246, 0.08); border-left: 4px solid var(--primary); border-radius: 8px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">200K+</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Employees (Lucent)</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">80%</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">Cost Reduction</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1;">200+</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">SharePoint Sites</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="philosophy-box" style="margin-bottom: 40px; background: rgba(59, 130, 246, 0.08); border-color: var(--primary);">
+                    <div class="principle-title" style="color: var(--primary);">The Thread</div>
+                    <p style="font-size: 1.05rem;"><strong>30 years solving the same core problem:</strong> designing systems that help people do their jobs better.</p>
+                    <p style="margin-top: 15px; font-size: 0.95rem;">The contexts changed—learning platforms, hiring systems, workplace tools, career development—but the challenge remained constant: translate complexity into usability, build for adoption not just launch, never lose sight of the humans using the system.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Origin: Learning to Build at Scale (1998–2000)</h3>
+                    <p><strong>Horizon Interactive → Lucent Technologies</strong></p>
+                    <p>Fresh out of grad school with an MS in Instructional Technology, I started as an Instructional Designer and Graphic Designer at a small consulting firm in Colorado Springs. I developed technical training for HP and MCI, created instructional strategy tools for the CDC, and learned that good training can't fix bad design.</p>
+                    <p>That realization led me to Lucent Technologies in Denver, where I joined a team standing up the <strong>L-Channel</strong>—a satellite-based television network delivering training to sales and support staff worldwide. We reached <strong>200,000+ employees</strong> across the globe, reduced training costs by <strong>80%</strong>, and won the <strong>Enterprise Networks Gold President's Award for Team Excellence</strong>.</p>
+                    <p><strong>The lesson:</strong> Technology without usability is just expensive frustration. Scale requires structure, but structure must serve humans. I also learned that training is often blamed for bad process and product design—which made me want to start designing those processes and products better from the beginning.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Internet Era: Information Architecture & UX (2000–2001)</h3>
+                    <p><strong>iXL, Inc. → Senior Information Architect</strong></p>
+                    <p>I left Lucent to join a small internet consulting firm where I could design the processes and products themselves—not just train people on poorly designed systems. As a Senior Information Architect, I worked with clients like <strong>Budget.com</strong> and <strong>eCollege.com</strong> (later acquired by Pearson).</p>
+                    <p>For Budget.com, I redesigned the car and truck rental booking engine, enhancing user experience and conversion rates. For eCollege, I designed a new assessment and survey development tool. I learned how to conduct usability testing and became passionate about what was becoming possible with the internet.</p>
+                    <p><strong>The lesson:</strong> Design isn't decoration—it's how things work. Information architecture is about making complexity navigable. The best interfaces disappear—users accomplish their goals without thinking about the tool.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>The Revolver Years: Enterprise Learning Systems (2001–2009)</h3>
+                    <p><strong>Interactive Media Corp → Financial Times Knowledge → Pearson Performance Solutions → Vangent Human Capital</strong></p>
+                    <p>The company changed names four times through mergers and acquisitions, but my work remained consistent: architecting enterprise learning and talent systems at Fortune 500 scale.</p>
+                    <p>I designed and supported the <strong>Revolver LCMS</strong> (detailed in its own case study), selling and implementing it with three Fortune 500 clients including <strong>Unilever</strong>, where it was used successfully for over two years. I traveled to the UK and Brazil training teams on how to think differently about knowledge as organizational infrastructure.</p>
+                    <p>I also developed training content for <strong>Kinkos, Bank of America, Unilever, GE Capital, Regions Bank, and Verizon Wireless</strong>—everything from sexual harassment training to financial product training to company-specific mandatory courses.</p>
+                    <p>I played multiple roles during this era: Instructional Designer, Project Manager, Information Architect, Knowledge Architect, Software/Application Designer, Product Manager, and Sales Engineer. Each role taught me a different lens for solving the same problem: how do you help organizations scale knowledge effectively?</p>
+                    <p><strong>The lesson:</strong> Separation of concerns—content from delivery, structure from presentation—is what allows systems to scale. The same principle applies whether you're building learning platforms, career development tools, or workplace systems.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>Talent Systems & Enterprise Sales (2009–2011)</h3>
+                    <p><strong>Vangent Human Capital → Sales Engineer & Web Manager</strong></p>
+                    <p>In my final two years at Vangent, I shifted focus to talent acquisition systems and corporate web management. I redesigned the corporate website after the rebrand from Pearson Performance Solutions to Vangent Human Capital, managing the effort including vendor selection and oversight.</p>
+                    <p>As a Sales Engineer, I helped sell and implement our <strong>Applicant Tracking System (ATS)</strong> to clients like <strong>Extra Space Storage</strong> and the <strong>U.S. Department of Commerce</strong> (for hiring 2010 Census workers). I learned how recruiting systems work at scale, how hiring decisions get made, and how technology can either accelerate or obstruct talent acquisition.</p>
+                    <p><strong>The lesson:</strong> Selling enterprise software teaches you what actually matters to buyers—not features, but outcomes. Not "what it does," but "what problem it solves." That lesson shapes how I position initiatives today.</p>
+                </div>
+
+                <div class="case-section">
+                    <h3>TIAA Foundations: Management Systems & SharePoint (2010–2016)</h3>
+                    <p><strong>TIAA → Management Systems Designer & SharePoint Administrator</strong></p>
+                    <p>When I joined TIAA 15 years ago, I started designing a collection of tools we called <strong>"Management Systems"</strong>—providing people managers with the tools and support needed to more effectively and efficiently run the business. These systems addressed Change Management, Finance Management, People Management, Operations Management, and Quality Management. I created and provided access to reports, dashboards, and tools for all people and process leaders within our Client Services organization.</p>
+                    <p>I also took over management of our organization's <strong>SharePoint sites</strong>. Despite knowing nothing about SharePoint before joining TIAA, I learned the platform deeply and taught others how to use it more effectively. At one point, I was managing <strong>over 200 SharePoint sites</strong> for our ~2,000-employee organization.</p>
+                    <p><strong>The lesson:</strong> Governance at scale requires both structure and flexibility. You can't control everything, but you can create frameworks that help people make good decisions. The best systems empower users to solve their own problems rather than creating dependencies.</p>
+                </div>
+
+                <div class="philosophy-box">
+                    <div class="principle-title">Why This Foundation Matters</div>
+                    <p>These 18 years weren't a winding path—they were deliberate pattern recognition across different contexts. I learned:</p>
+                    <ul style="margin: 12px 0; padding-left: 20px; line-height: 1.8;">
+                        <li>How people actually learn (not how we wish they learned)</li>
+                        <li>How systems scale (and why most don't)</li>
+                        <li>How technology gets adopted (or rejected)</li>
+                        <li>How organizations make decisions (and what influences them)</li>
+                        <li>How to design for humans while thinking systematically</li>
+                    </ul>
+                    <p style="margin-top: 20px;">That's why I can lead AI transformation, career development, and workplace modernization simultaneously. I'm not guessing—I'm applying 30 years of pattern recognition. Every principle I operate by today was forged in this era.</p>
+                    <p style="margin-top: 15px;"><strong>The through-line:</strong> I've spent three decades making complex systems work for humans. The technology changes. The organizations change. The challenge remains the same.</p>
+                </div>
+            </div>
+
+            <!-- CONTACT -->
+            <div id="contact" class="content-pane">
+                <span class="mono">What's Next</span>
+                <h2>Let's Talk.</h2>
+
+                <p style="font-size: 1.1rem; margin-bottom: 30px; line-height: 1.6;">I'm actively exploring Director and VP-level opportunities in Colorado where I can lead career development, AI transformation, or workforce modernization initiatives. I'm currently at TIAA (available July 2026 due to Denver office closure) and am committed to staying in Colorado with my family. I'm looking for organizations that value local talent and are rethinking how they develop people, adopt AI, or modernize the workplace.</p>
+
+                <div class="philosophy-box" style="margin-bottom: 30px; background: rgba(59, 130, 246, 0.08); border-color: var(--primary);">
+                    <div class="principle-title" style="color: var(--primary);">Open to Opportunities</div>
+                    <p style="margin: 0; font-size: 1.05rem;">Director / VP roles in career development, AI transformation, workforce strategy, or organizational development</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 40px 0;">
+                    <div style="background: rgba(255, 255, 255, 0.02); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="color: var(--accent); font-weight: 700; margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Availability</div>
+                        <p style="margin: 0; font-size: 1rem; line-height: 1.5;">Available <strong>July 2026</strong><br><span style="font-size: 0.9rem; color: var(--text-secondary);">TIAA closing Denver office; choosing to stay in Colorado</span></p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); padding: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="color: var(--accent); font-weight: 700; margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Location</div>
+                        <p style="margin: 0; font-size: 1rem; line-height: 1.5;">Based in <strong>Arvada, Colorado</strong><br><span style="font-size: 0.9rem; color: var(--text-secondary);">Committed to Colorado-based opportunities</span></p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.02); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); margin: 40px 0;">
+                    <h3 style="margin: 0 0 20px 0; color: var(--text-primary); font-size: 1.3rem;">Contact Information</h3>
+                    <div style="display: grid; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 1.5rem;">📧</span>
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 3px;">Email</div>
+                                <a href="mailto:joseph.pointer@yourdomain.com" style="color: var(--primary); text-decoration: none; font-weight: 600;">joseph.pointer@yourdomain.com</a>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 1.5rem;">🔗</span>
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 3px;">LinkedIn</div>
+                                <a href="https://linkedin.com/in/josephpointer" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">linkedin.com/in/josephpointer</a>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 1.5rem;">📄</span>
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 3px;">Resume</div>
+                                <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 600;">Download Resume (PDF)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="philosophy-box" style="background: rgba(16, 185, 129, 0.08); border-color: var(--accent);">
+                    <div class="principle-title" style="color: var(--accent);">Why Colorado?</div>
+                    <p style="margin: 0;">After 30 years building enterprise solutions across multiple states, I've chosen Colorado as home. The innovation ecosystem, quality of life, and commitment to work-life balance align with my values. I'm looking for organizations that share that commitment and value local talent.</p>
+                </div>
+
+                <div class="philosophy-box" style="margin-top: 20px; background: rgba(16, 185, 129, 0.08); border-color: var(--accent);">
+                    <div class="principle-title" style="color: var(--accent);">Open To</div>
+                    <ul style="margin: 12px 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Permanent full-time roles</li>
+                        <li>Interim leadership positions</li>
+                        <li>Advisory and consulting engagements</li>
+                        <li>Fractional executive roles</li>
+                    </ul>
+                </div>
+
+                <p style="margin-top: 40px; text-align: center; color: var(--text-secondary); font-size: 0.95rem;">Whether you're a hiring manager, recruiter, or fellow leader exploring collaboration opportunities, I'd welcome the conversation.</p>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
