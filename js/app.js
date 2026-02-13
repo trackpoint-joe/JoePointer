@@ -231,6 +231,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (overlay) {
         overlay.addEventListener('click', closeAdmin);
     }
+    
+    // Setup mobile menu overlay to close menu (not toggle)
+    const mobileOverlay = document.querySelector('.mobile-menu-overlay');
+    if (mobileOverlay) {
+        mobileOverlay.addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            if (sidebar) sidebar.classList.remove('active');
+            if (mobileOverlay) mobileOverlay.classList.remove('active');
+            if (toggle) toggle.classList.remove('active');
+        });
+    }
 });
 
 // === UTILITY FUNCTIONS ===
