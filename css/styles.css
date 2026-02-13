@@ -703,9 +703,6 @@ body, html {
     overflow-y: auto;
     border-right: 1px solid rgba(255,255,255,0.1);
     transition: background-color 0.6s ease, border-color 0.6s ease;
-    position: sticky;
-    top: 0;
-    height: 100vh;
 }
 
 [data-template="executive"] .sidebar,
@@ -958,6 +955,16 @@ ul li:last-child, ol li:last-child {
 }
 
 /* === RESPONSIVE === */
+
+/* Desktop: Make sidebar sticky */
+@media (min-width: 1025px) {
+    .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        align-self: start;
+    }
+}
 
 /* Mobile menu toggle button */
 .mobile-menu-toggle {
