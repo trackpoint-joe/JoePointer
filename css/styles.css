@@ -1011,11 +1011,13 @@ ul li:last-child, ol li:last-child {
     background: rgba(0, 0, 0, 0.8);
     z-index: 998;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
 .mobile-menu-overlay.active {
     opacity: 1;
+    pointer-events: auto;
 }
 
 @media (max-width: 1024px) {
