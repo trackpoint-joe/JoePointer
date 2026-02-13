@@ -295,14 +295,19 @@ function toggleMobileMenu() {
 
 // Close mobile menu when navigation item is clicked
 function showPane(paneId, navElement) {
-    // Close mobile menu first if open
+    // Always close mobile menu on mobile (regardless of current state)
     const sidebar = document.querySelector('.sidebar');
     const overlay = document.querySelector('.mobile-menu-overlay');
     const toggle = document.querySelector('.mobile-menu-toggle');
-    if (sidebar && sidebar.classList.contains('active')) {
+    
+    if (sidebar) {
         sidebar.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-        if (toggle) toggle.classList.remove('active');
+    }
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    if (toggle) {
+        toggle.classList.remove('active');
     }
     
     const panes = document.querySelectorAll('.content-pane');
