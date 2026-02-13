@@ -324,6 +324,17 @@ function showPane(paneId, navElement) {
         navElement.classList.add('active');
     }
     
+    // Force close mobile menu again after nav update (prevent race condition)
+    if (sidebar) {
+        sidebar.classList.remove('active');
+    }
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    if (toggle) {
+        toggle.classList.remove('active');
+    }
+    
     // Scroll viewport container to top
     const viewport = document.querySelector('.viewport');
     if (viewport) {
