@@ -1037,10 +1037,12 @@ ul li:last-child, ol li:last-child {
         z-index: 999;
         transition: left 0.3s ease;
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        visibility: hidden;
     }
     
     .sidebar.active {
         left: 0;
+        visibility: visible;
     }
     
     .mobile-menu-toggle,
