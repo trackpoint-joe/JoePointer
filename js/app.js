@@ -245,44 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// === UTILITY FUNCTIONS ===
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Export functions for global access
-window.showPane = showPane;
-window.setTemplate = setTemplate;
-window.toggleAdmin = toggleAdmin;
-window.closeAdmin = closeAdmin;
-window.updateCompany = updateCompany;
-window.updateMessage = updateMessage;
-window.updateColor = updateColor;
-window.resetColors = resetColors;
-window.generateURL = generateURL;
-
-
-// === EXPANDABLE SECTIONS ===
-
-function toggleExpand(contentId) {
-    const content = document.getElementById(contentId);
-    const button = event.target;
-    
-    if (content.classList.contains('open')) {
-        content.classList.remove('open');
-        button.textContent = button.textContent.replace('− Hide', '+ See');
-    } else {
-        content.classList.add('open');
-        button.textContent = button.textContent.replace('+ See', '− Hide');
-    }
-}
-
-window.toggleExpand = toggleExpand;
-
 // === MOBILE MENU ===
 
 function toggleMobileMenu() {
@@ -360,4 +322,39 @@ function showPane(paneId, navElement) {
     });
 }
 
+// === EXPANDABLE SECTIONS ===
+
+function toggleExpand(contentId) {
+    const content = document.getElementById(contentId);
+    const button = event.target;
+    
+    if (content.classList.contains('open')) {
+        content.classList.remove('open');
+        button.textContent = button.textContent.replace('− Hide', '+ See');
+    } else {
+        content.classList.add('open');
+        button.textContent = button.textContent.replace('+ See', '− Hide');
+    }
+}
+
+// === UTILITY FUNCTIONS ===
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Export functions for global access
+window.showPane = showPane;
 window.toggleMobileMenu = toggleMobileMenu;
+window.toggleExpand = toggleExpand;
+window.setTemplate = setTemplate;
+window.toggleAdmin = toggleAdmin;
+window.closeAdmin = closeAdmin;
+window.updateCompany = updateCompany;
+window.updateMessage = updateMessage;
+window.updateColor = updateColor;
+window.resetColors = resetColors;
+window.generateURL = generateURL;
