@@ -1,360 +1,484 @@
-// ============================================
-// JOSEPH POINTER PORTFOLIO - JAVASCRIPT
-// Complete functionality for navigation, templates, and admin panel
-// ============================================
+// === SCROLL RESTORATION CONTROL ===
+// Force page to always return to top on refresh/navigation
+// Rationale: Portfolio sites are navigation-driven (sticky nav), not scroll-driven
+// This ensures predictable UX and proper URL sharing behavior
 
-
-
-// === TEMPLATE SWITCHING ===
-
-function setTemplate(templateName) {
-    document.body.setAttribute('data-template', templateName);
-    
-    const buttons = document.querySelectorAll('.template-btn');
-    buttons.forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.template === templateName) {
-            btn.classList.add('active');
-        }
-    });
-    
-    localStorage.setItem('portfolio-template', templateName);
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
 }
 
-// === ADMIN PANEL ===
+// Reset scroll position on page load
+window.addEventListener('load', () => {
+    const hash = window.location.hash;
 
-function toggleAdmin() {
-    const panel = document.getElementById('admin-panel');
-    const overlay = document.getElementById('admin-overlay');
-    
-    if (panel && overlay) {
-        const isOpen = panel.classList.contains('open');
-        
-        if (isOpen) {
-            panel.classList.remove('open');
-            overlay.classList.remove('visible');
-        } else {
-            panel.classList.add('open');
-            overlay.classList.add('visible');
-            loadSettings();
-        }
-    }
-}
-
-function closeAdmin() {
-    const panel = document.getElementById('admin-panel');
-    const overlay = document.getElementById('admin-overlay');
-    
-    if (panel && overlay) {
-        panel.classList.remove('open');
-        overlay.classList.remove('visible');
-    }
-}
-
-function loadSettings() {
-    const companyName = localStorage.getItem('portfolio-company') || '';
-    const message = localStorage.getItem('portfolio-message') || '';
-    const primaryColor = localStorage.getItem('portfolio-primary') || getTemplateDefaultColor('primary');
-    const accentColor = localStorage.getItem('portfolio-accent') || getTemplateDefaultColor('accent');
-    
-    document.getElementById('company-input').value = companyName;
-    document.getElementById('message-input').value = message;
-    document.getElementById('primary-color').value = primaryColor;
-    document.getElementById('accent-color').value = accentColor;
-}
-
-function updateCompany(value) {
-    const companyName = value || 'your team';
-    const coNameEl = document.getElementById('co-name');
-    const welcomeMsg = document.getElementById('welcome-msg');
-    
-    if (coNameEl) {
-        coNameEl.textContent = companyName;
-    }
-    
-    if (welcomeMsg && value) {
-        welcomeMsg.classList.add('visible');
-    } else if (welcomeMsg) {
-        welcomeMsg.classList.remove('visible');
-    }
-    
-    localStorage.setItem('portfolio-company', value || '');
-}
-
-function updateMessage(value) {
-    const welcomeTextEl = document.getElementById('welcome-text');
-    if (welcomeTextEl) {
-        welcomeTextEl.textContent = value || '';
-    }
-    localStorage.setItem('portfolio-message', value || '');
-}
-
-function updateColor(type, value) {
-    if (type === 'primary') {
-        document.documentElement.style.setProperty('--primary', value);
-        localStorage.setItem('portfolio-primary', value);
-    } else if (type === 'accent') {
-        document.documentElement.style.setProperty('--accent', value);
-        localStorage.setItem('portfolio-accent', value);
-    }
-}
-
-function resetColors() {
-    const template = document.body.getAttribute('data-template') || 'blueprint';
-    const primaryColor = getTemplateDefaultColor('primary');
-    const accentColor = getTemplateDefaultColor('accent');
-    
-    document.getElementById('primary-color').value = primaryColor;
-    document.getElementById('accent-color').value = accentColor;
-    
-    updateColor('primary', primaryColor);
-    updateColor('accent', accentColor);
-}
-
-function getTemplateDefaultColor(type) {
-    const template = document.body.getAttribute('data-template') || 'blueprint';
-    const defaults = {
-        blueprint: { primary: '#3b82f6', accent: '#10b981' },
-        executive: { primary: '#1e40af', accent: '#d97706' },
-        minimal: { primary: '#3b82f6', accent: '#e5e5e5' },
-        designer: { primary: '#6366f1', accent: '#f59e0b' }
-    };
-    return defaults[template][type];
-}
-
-function generateURL() {
-    const template = document.body.getAttribute('data-template');
-    const company = localStorage.getItem('portfolio-company') || '';
-    const message = localStorage.getItem('portfolio-message') || '';
-    const primary = localStorage.getItem('portfolio-primary') || '';
-    const accent = localStorage.getItem('portfolio-accent') || '';
-    
-    const params = new URLSearchParams();
-    if (template !== 'blueprint') params.set('template', template);
-    if (company) params.set('company', company);
-    if (message) params.set('message', message);
-    if (primary && primary !== getTemplateDefaultColor('primary')) params.set('primary', primary);
-    if (accent && accent !== getTemplateDefaultColor('accent')) params.set('accent', accent);
-    
-    const baseURL = window.location.origin + window.location.pathname;
-    const fullURL = params.toString() ? `${baseURL}?${params.toString()}` : baseURL;
-    
-    const urlOutput = document.getElementById('url-output');
-    urlOutput.value = fullURL;
-    urlOutput.select();
-    
-    // Copy to clipboard
-    try {
-        document.execCommand('copy');
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = '✓ Copied to Clipboard!';
+    if (hash) {
+        // URL has an anchor - scroll to that section after a brief delay
         setTimeout(() => {
-            btn.textContent = originalText;
-        }, 2000);
-    } catch (err) {
-        console.log('Copy failed, but URL is selected');
-    }
-}
-
-function loadFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    
-    const template = params.get('template');
-    if (template) {
-        setTemplate(template);
-    }
-    
-    const company = params.get('company');
-    if (company) {
-        updateCompany(company);
-    }
-    
-    const message = params.get('message');
-    if (message) {
-        updateMessage(message);
-    }
-    
-    const primary = params.get('primary');
-    if (primary) {
-        updateColor('primary', primary);
-    }
-    
-    const accent = params.get('accent');
-    if (accent) {
-        updateColor('accent', accent);
-    }
-}
-
-// === INITIALIZATION ===
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Load URL parameters first (highest priority)
-    loadFromURL();
-    
-    // Load saved settings from localStorage if no URL params
-    const params = new URLSearchParams(window.location.search);
-    
-    if (!params.has('template')) {
-        const savedTemplate = localStorage.getItem('portfolio-template');
-        if (savedTemplate) setTemplate(savedTemplate);
-    }
-    
-    if (!params.has('company')) {
-        const savedCompany = localStorage.getItem('portfolio-company');
-        if (savedCompany) updateCompany(savedCompany);
-    }
-    
-    if (!params.has('message')) {
-        const savedMessage = localStorage.getItem('portfolio-message');
-        if (savedMessage) updateMessage(savedMessage);
-    }
-    
-    if (!params.has('primary')) {
-        const savedPrimary = localStorage.getItem('portfolio-primary');
-        if (savedPrimary) updateColor('primary', savedPrimary);
-    }
-    
-    if (!params.has('accent')) {
-        const savedAccent = localStorage.getItem('portfolio-accent');
-        if (savedAccent) updateColor('accent', savedAccent);
-    }
-    
-    // Ensure home pane is active
-    const homePane = document.getElementById('home');
-    if (homePane && !document.querySelector('.content-pane.active')) {
-        homePane.classList.add('active');
-    }
-    
-    // Setup overlay click handler
-    const overlay = document.getElementById('admin-overlay');
-    if (overlay) {
-        overlay.addEventListener('click', closeAdmin);
-    }
-    
-    // Setup mobile menu overlay to close menu (not toggle)
-    const mobileOverlay = document.querySelector('.mobile-menu-overlay');
-    if (mobileOverlay) {
-        mobileOverlay.addEventListener('click', function() {
-            const sidebar = document.querySelector('.sidebar');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-            if (sidebar) sidebar.classList.remove('active');
-            if (mobileOverlay) mobileOverlay.classList.remove('active');
-            if (toggle) toggle.classList.remove('active');
-        });
+            const target = document.querySelector(hash);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    } else {
+        // No anchor - return to top
+        window.scrollTo({ top: 0, behavior: 'instant' });
     }
 });
 
-// === MOBILE MENU ===
+// Ensure scroll resets before page unload
+window.addEventListener('beforeunload', () => {
+    if (!window.location.hash) {
+        window.scrollTo(0, 0);
+    }
+});
 
-function toggleMobileMenu() {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.mobile-menu-overlay');
-    const toggle = document.querySelector('.mobile-menu-toggle');
-    
-    if (sidebar && overlay && toggle) {
-        const isActive = sidebar.classList.contains('active');
-        
-        if (isActive) {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-            toggle.classList.remove('active');
+// === END SCROLL RESTORATION CONTROL ===
+
+// === INDUSTRY TEMPLATE & EMPLOYER ROUTING SYSTEM ===
+
+// Employer profile database
+const employerProfiles = {
+    // Finance/Banking
+    'finance': { industry: 'finance', company: '', welcome: '' },
+    'goldman': { industry: 'finance', company: 'Goldman Sachs', welcome: '' },
+    'goldman-sachs': { industry: 'finance', company: 'Goldman Sachs', welcome: '' },
+    'jpmorgan': { industry: 'finance', company: 'JPMorgan Chase', welcome: '' },
+    'wells-fargo': { industry: 'finance', company: 'Wells Fargo', welcome: '' },
+    'boa': { industry: 'finance', company: 'Bank of America', welcome: '' },
+    'citi': { industry: 'finance', company: 'Citigroup', welcome: '' },
+
+    // Tech/Startups
+    'tech': { industry: 'tech', company: '', welcome: '' },
+    'google': { industry: 'tech', company: 'Google', welcome: '' },
+    'amazon': { industry: 'tech', company: 'Amazon', welcome: '' },
+    'microsoft': { industry: 'tech', company: 'Microsoft', welcome: '' },
+    'meta': { industry: 'tech', company: 'Meta', welcome: '' },
+    'apple': { industry: 'tech', company: 'Apple', welcome: '' },
+    'salesforce': { industry: 'tech', company: 'Salesforce', welcome: '' },
+
+    // Consulting
+    'consulting': { industry: 'consulting', company: '', welcome: '' },
+    'bcg': { industry: 'consulting', company: 'Boston Consulting Group', welcome: '' },
+    'mckinsey': { industry: 'consulting', company: 'McKinsey & Company', welcome: '' },
+    'bain': { industry: 'consulting', company: 'Bain & Company', welcome: '' },
+    'deloitte': { industry: 'consulting', company: 'Deloitte', welcome: '' },
+    'accenture': { industry: 'consulting', company: 'Accenture', welcome: '' },
+
+    // Healthcare/Pharma
+    'healthcare': { industry: 'healthcare', company: '', welcome: '' },
+    'uhg': { industry: 'healthcare', company: 'UnitedHealth Group', welcome: '' },
+    'cvs': { industry: 'healthcare', company: 'CVS Health', welcome: '' },
+    'pfizer': { industry: 'healthcare', company: 'Pfizer', welcome: '' },
+    'johnson-johnson': { industry: 'healthcare', company: 'Johnson & Johnson', welcome: '' },
+    'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' }
+};
+
+// Apply industry template based on URL path or query parameter
+function applyIndustryTemplate() {
+    // Check URL path
+    const path = window.location.pathname.replace(/^\/|\/$/g, '').toLowerCase();
+
+    // Check query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const industryParam = urlParams.get('industry');
+    const companyParam = urlParams.get('company');
+    const welcomeParam = urlParams.get('welcome');
+
+    let profile = null;
+
+    // Try to match URL path to employer profile
+    if (path && employerProfiles[path]) {
+        profile = employerProfiles[path];
+    }
+    // Fall back to query parameters
+    else if (industryParam) {
+        profile = {
+            industry: industryParam,
+            company: companyParam || '',
+            welcome: welcomeParam ? decodeURIComponent(welcomeParam) : ''
+        };
+    }
+
+    if (profile) {
+        // Apply industry template
+        if (profile.industry) {
+            document.body.setAttribute('data-industry', profile.industry);
+        }
+
+        // Update company name if provided
+        if (profile.company) {
+            updateCompanyName(profile.company);
+        }
+
+        // Display welcome message if provided
+        if (profile.welcome) {
+            displayWelcomeMessage(profile.welcome);
+        }
+
+        // Store in localStorage for admin panel
+        localStorage.setItem('currentProfile', JSON.stringify(profile));
+    }
+}
+
+// Update company name throughout the site (sticky banner + hero + target role)
+function updateCompanyName(companyName) {
+    if (!companyName) return;
+
+    // Update sticky banner
+    const stickyCompanyName = document.getElementById('stickyCompanyName');
+    if (stickyCompanyName) {
+        stickyCompanyName.textContent = companyName;
+    }
+
+    // Update hero personalization
+    const heroCompanyName = document.getElementById('heroCompanyName');
+    if (heroCompanyName) {
+        heroCompanyName.textContent = `Prepared for ${companyName}`;
+    }
+
+    // Update target role section (legacy location)
+    const targetElement = document.querySelector('.target-role h2');
+    if (targetElement) {
+        targetElement.innerHTML = `Director/VP Opportunities<br><span style="font-size: 0.8em; color: var(--accent, var(--gold)); font-weight: 600;">Prepared for ${companyName}</span>`;
+    }
+}
+
+// Display welcome message in hero personalization (above the fold)
+function displayWelcomeMessage(message) {
+    if (!message) return;
+
+    // Update hero personalization
+    const heroWelcomeMessage = document.getElementById('heroWelcomeMessage');
+    if (heroWelcomeMessage) {
+        heroWelcomeMessage.innerHTML = message;
+    }
+
+    // Show the hero personalization section
+    const heroPersonalization = document.getElementById('heroPersonalization');
+    if (heroPersonalization) {
+        heroPersonalization.style.display = 'block';
+    }
+}
+
+// Sticky company banner scroll detection
+window.addEventListener('scroll', () => {
+    const companyBanner = document.getElementById('companyBanner');
+    const stickyCompanyName = document.getElementById('stickyCompanyName');
+
+    // Only show banner if company name is set and user has scrolled
+    if (companyBanner && stickyCompanyName && stickyCompanyName.textContent.trim() !== '') {
+        if (window.scrollY > 100) {
+            companyBanner.classList.add('visible');
         } else {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-            toggle.classList.add('active');
+            companyBanner.classList.remove('visible');
         }
     }
-}
+});
 
-// Close mobile menu when navigation item is clicked
-function showPane(paneId, navElement) {
-    // Always close mobile menu on mobile (regardless of current state)
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.mobile-menu-overlay');
-    const toggle = document.querySelector('.mobile-menu-toggle');
-    
-    if (sidebar) {
-        sidebar.classList.remove('active');
-    }
-    if (overlay) {
-        overlay.classList.remove('active');
-    }
-    if (toggle) {
-        toggle.classList.remove('active');
-    }
-    
-    const panes = document.querySelectorAll('.content-pane');
-    panes.forEach(pane => pane.classList.remove('active'));
-    
-    const targetPane = document.getElementById(paneId);
-    if (targetPane) {
-        targetPane.classList.add('active');
-    }
-    
-    const navNodes = document.querySelectorAll('.nav-node');
-    navNodes.forEach(node => node.classList.remove('active'));
-    if (navElement) {
-        navElement.classList.add('active');
-    }
-    
-    // Force close mobile menu again after nav update (prevent race condition)
-    if (sidebar) {
-        sidebar.classList.remove('active');
-    }
-    if (overlay) {
-        overlay.classList.remove('active');
-    }
-    if (toggle) {
-        toggle.classList.remove('active');
-    }
-    
-    // Scroll viewport container to top
-    const viewport = document.querySelector('.viewport');
-    if (viewport) {
-        viewport.scrollTop = 0;
-    }
-    
-    // Scroll main window to top for better UX
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+// Initialize on page load
+applyIndustryTemplate();
+
+// === END INDUSTRY TEMPLATE & EMPLOYER ROUTING ===
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+
+        const target = document.querySelector(href);
+        if (target) {
+            // Use native scrollIntoView which respects CSS scroll-margin-top
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     });
-}
+});
 
-// === EXPANDABLE SECTIONS ===
+// Scroll progress indicator
+window.addEventListener('scroll', () => {
+    const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (window.scrollY / windowHeight) * 100;
+    document.getElementById('scrollProgress').style.width = scrolled + '%';
+});
 
-function toggleExpand(contentId) {
-    const content = document.getElementById(contentId);
-    const button = event.target;
+// Nav scroll effect
+let lastScroll = 0;
+const nav = document.getElementById('mainNav');
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
     
-    if (content.classList.contains('open')) {
-        content.classList.remove('open');
-        button.textContent = button.textContent.replace('− Hide', '+ See');
+    if (currentScroll > 100) {
+        nav.classList.add('scrolled');
     } else {
-        content.classList.add('open');
-        button.textContent = button.textContent.replace('+ See', '− Hide');
+        nav.classList.remove('scrolled');
+    }
+    
+    lastScroll = currentScroll;
+});
+
+// Intersection Observer for fade-in animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe cards
+document.querySelectorAll('.card, .trust-card, .testimonial-card, .project-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(30px)';
+    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    observer.observe(el);
+});
+
+// ========================================
+// MOBILE MENU FUNCTIONALITY
+// ========================================
+
+// Create mobile menu overlay
+const mobileOverlay = document.createElement('div');
+mobileOverlay.className = 'mobile-menu-overlay';
+document.body.appendChild(mobileOverlay);
+
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const quickLinks = document.getElementById('quickLinks');
+const mobileMenuLinks = quickLinks.querySelectorAll('a');
+
+// Toggle mobile menu
+function toggleMobileMenu() {
+    const isOpen = quickLinks.classList.contains('mobile-menu-open');
+
+    if (isOpen) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
     }
 }
 
-// === UTILITY FUNCTIONS ===
+// Open mobile menu
+function openMobileMenu() {
+    quickLinks.classList.add('mobile-menu-open');
+    mobileMenuToggle.classList.add('active');
+    mobileOverlay.classList.add('active');
+    mobileMenuToggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
 
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    // Update active nav link when menu opens to ensure correct highlighting
+    updateActiveNavLink();
+}
+
+// Close mobile menu
+function closeMobileMenu() {
+    quickLinks.classList.remove('mobile-menu-open');
+    mobileMenuToggle.classList.remove('active');
+    mobileOverlay.classList.remove('active');
+    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = ''; // Restore scrolling
+}
+
+// Event listeners
+mobileMenuToggle?.addEventListener('click', toggleMobileMenu);
+
+// Close menu when clicking overlay
+mobileOverlay.addEventListener('click', closeMobileMenu);
+
+// Close menu when clicking a link
+mobileMenuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        closeMobileMenu();
+    });
+});
+
+// Close menu on escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && quickLinks.classList.contains('mobile-menu-open')) {
+        closeMobileMenu();
+    }
+});
+
+// ========================================
+// GOOGLE ANALYTICS EVENT TRACKING
+// ========================================
+
+// Track PDF Downloads
+document.querySelectorAll('a[href*=".pdf"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const fileName = this.getAttribute('href').split('/').pop();
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'file_download', {
+                'event_category': 'Downloads',
+                'event_label': fileName,
+                'file_name': fileName,
+                'file_extension': 'pdf'
+            });
+        }
+    });
+});
+
+// Track Email Link Clicks
+document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const email = this.getAttribute('href').replace('mailto:', '').split('?')[0];
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'email_click', {
+                'event_category': 'Contact',
+                'event_label': 'Email Click',
+                'contact_method': 'email'
+            });
+        }
+    });
+});
+
+// Track LinkedIn Profile Clicks
+document.querySelectorAll('a[href*="linkedin.com"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'social_click', {
+                'event_category': 'Social Media',
+                'event_label': 'LinkedIn Profile',
+                'platform': 'linkedin'
+            });
+        }
+    });
+});
+
+// Track Scroll Depth
+let scrollDepthTracked = {
+    '25': false,
+    '50': false,
+    '75': false,
+    '90': false
+};
+
+window.addEventListener('scroll', () => {
+    const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolledPercent = Math.round((window.scrollY / windowHeight) * 100);
+
+    Object.keys(scrollDepthTracked).forEach(depth => {
+        if (scrolledPercent >= parseInt(depth) && !scrollDepthTracked[depth]) {
+            scrollDepthTracked[depth] = true;
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'scroll_depth', {
+                    'event_category': 'Engagement',
+                    'event_label': `${depth}% Scrolled`,
+                    'value': parseInt(depth)
+                });
+            }
+        }
+    });
+});
+
+// Track CTA Button Clicks
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const buttonText = this.textContent.trim();
+        const buttonHref = this.getAttribute('href');
+
+        // Only track if not a download link (already tracked above) or anchor link
+        if (!buttonHref.includes('.pdf') && !buttonHref.startsWith('#')) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'cta_click', {
+                    'event_category': 'CTA',
+                    'event_label': buttonText,
+                    'button_location': this.closest('section')?.className || 'unknown'
+                });
+            }
+        }
+    });
+});
+
+// ========================================
+// SCROLL SPY: ACTIVE NAVIGATION INDICATOR
+// ========================================
+
+// Get all navigation links and sections
+const navLinks = document.querySelectorAll('.quick-links a[href^="#"]');
+const sections = Array.from(navLinks).map(link => {
+    const href = link.getAttribute('href');
+    return document.querySelector(href);
+}).filter(section => section !== null);
+
+// Function to update active nav link based on scroll position
+function updateActiveNavLink() {
+    // Fixed header heights
+    // Mobile (≤768px): Banner 136px + Nav 73px = 209px total
+    // Desktop (>768px): Banner 68px + Nav ~72px = 140px total
+    const isMobile = window.innerWidth <= 768;
+    const headerHeight = isMobile ? 209 : 140;
+
+    // Increase the offset for scroll spy detection so sections become active sooner
+    // We want "How I Think" to be highlighted when the user is viewing it,
+    // not when they've scrolled far past it
+    // Using header height + 50% makes sections active when content is clearly visible
+    const detectionOffset = Math.floor(headerHeight * 1.5);
+    const triggerPoint = window.scrollY + detectionOffset;
+
+    // Find which section is currently in view
+    // We iterate in reverse to find the last section whose top has passed the trigger point
+    let currentSection = null;
+
+    for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        const sectionTop = section.offsetTop;
+
+        // A section is active when its top is at or above the trigger point
+        // The larger offset means sections become active earlier as you scroll down
+        if (sectionTop <= triggerPoint) {
+            currentSection = section;
+            break;
+        }
+    }
+
+    // Update active class on nav links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+
+        if (currentSection) {
+            const href = link.getAttribute('href');
+            if (href === `#${currentSection.id}`) {
+                link.classList.add('active');
+            }
+        }
     });
 }
 
-// Export functions for global access
-window.showPane = showPane;
-window.toggleMobileMenu = toggleMobileMenu;
-window.toggleExpand = toggleExpand;
-window.setTemplate = setTemplate;
-window.toggleAdmin = toggleAdmin;
-window.closeAdmin = closeAdmin;
-window.updateCompany = updateCompany;
-window.updateMessage = updateMessage;
-window.updateColor = updateColor;
-window.resetColors = resetColors;
-window.generateURL = generateURL;
+// Update on scroll with debouncing for performance
+let scrollTimeout;
+window.addEventListener('scroll', () => {
+    if (scrollTimeout) {
+        window.cancelAnimationFrame(scrollTimeout);
+    }
+    scrollTimeout = window.requestAnimationFrame(() => {
+        updateActiveNavLink();
+    });
+});
+
+// Update on page load
+window.addEventListener('load', updateActiveNavLink);
+
+// Update when hash changes (direct navigation)
+window.addEventListener('hashchange', () => {
+    setTimeout(updateActiveNavLink, 100);
+});
+
+// Update on window resize (viewport change, device rotation)
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+    }
+    resizeTimeout = setTimeout(updateActiveNavLink, 100);
+});
