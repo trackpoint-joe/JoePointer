@@ -277,6 +277,16 @@ body {
    Prevent nav wrapping on iPad viewports
    ======================================== */
 @media (min-width: 769px) and (max-width: 1024px) {
+    /* Fix nav positioning - banner is ~95-105px on iPad due to fluid spacing */
+    .nav {
+        top: 95px; /* Match actual banner height at iPad viewport */
+    }
+
+    /* Adjust scroll offset for banner + nav height */
+    html {
+        scroll-padding-top: 178px; /* Banner ~95px + Nav ~83px = 178px */
+    }
+
     /* Tighten spacing to prevent nav links from wrapping to 2 lines */
     .nav .container {
         gap: var(--space-sm); /* Reduce from --space-md */

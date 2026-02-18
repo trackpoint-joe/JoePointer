@@ -415,9 +415,10 @@ const sections = Array.from(navLinks).map(link => {
 function updateActiveNavLink() {
     // Fixed header heights
     // Mobile (≤768px): Banner 136px + Nav 73px = 209px total
-    // Desktop (>768px): Banner 68px + Nav ~72px = 140px total
-    const isMobile = window.innerWidth <= 768;
-    const headerHeight = isMobile ? 209 : 140;
+    // iPad (769-1024px): Banner 95px + Nav 83px = 178px total
+    // Desktop (>1024px): Banner 68px + Nav 72px = 140px total
+    const width = window.innerWidth;
+    const headerHeight = width <= 768 ? 209 : (width <= 1024 ? 178 : 140);
 
     // Increase the offset for scroll spy detection so sections become active sooner
     // We want "How I Think" to be highlighted when the user is viewing it,
