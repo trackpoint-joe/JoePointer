@@ -276,7 +276,7 @@ body {
    TABLET/IPAD NAVIGATION ADJUSTMENTS
    Prevent nav wrapping on iPad viewports
    ======================================== */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
     /* Fix nav positioning - use fixed instead of sticky to prevent sliding under banner */
     /* Banner is ~95px on iPad, so nav must be fixed at 95px to avoid overlap */
     .nav {
