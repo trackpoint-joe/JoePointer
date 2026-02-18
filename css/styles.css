@@ -1623,13 +1623,13 @@ body {
         left: 0;
         right: 0;
         z-index: 1002;
-        padding: 10px 12px;
+        padding: 6px 12px; /* Reduced from 10px to save space */
     }
 
     .availability-banner .content {
         flex-direction: column;
         text-align: center;
-        gap: 2px;
+        gap: 0; /* Reduced from 2px to tighten spacing */
     }
 
     .availability-banner .status-badge {
@@ -1641,8 +1641,9 @@ body {
         font-size: 0.875rem;
     }
 
+    /* Hide detailed location text on mobile to save vertical space */
     .availability-banner .details {
-        font-size: 0.8125rem;
+        display: none;
     }
 
     .timeline::before {
@@ -1661,7 +1662,7 @@ body {
 
     .nav {
         position: fixed;
-        top: 138px;
+        top: 66px; /* Reduced from 138px due to smaller banner */
         left: 0;
         right: 0;
         padding: var(--space-sm) var(--space-md);
@@ -1679,9 +1680,9 @@ body {
     }
 
     /* Scroll padding for fixed headers on mobile */
-    /* Banner 136px (details wrap to 3 lines) + Nav at 138px + nav height 73px = 211px */
+    /* Banner ~64px (details hidden, reduced padding) + Nav at 66px + nav height 73px = 139px */
     html {
-        scroll-padding-top: 211px;
+        scroll-padding-top: 139px;
     }
 
     /* Reduce Core Competencies spacing on mobile to prevent white space */
