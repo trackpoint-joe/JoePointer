@@ -400,6 +400,11 @@ body {
     transform: translateY(-8px) rotate(-45deg);
 }
 
+/* Change hamburger lines to white when menu is open for better visibility */
+.mobile-menu-toggle.active .hamburger-line {
+    background: var(--white);
+}
+
 /* Container */
 .container {
     max-width: 1400px;
@@ -1709,7 +1714,7 @@ body {
         flex-direction: column;
         justify-content: flex-start;
         align-items: stretch;
-        padding: 80px var(--space-lg) var(--space-xl);
+        padding: 60px var(--space-lg) var(--space-lg); /* Reduced to fit all 6 links on small screens */
         gap: 0;
         z-index: 1001;
         transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1724,7 +1729,7 @@ body {
     /* Mobile menu link styles */
     .nav .quick-links a {
         color: var(--white);
-        padding: var(--space-md) var(--space-lg);
+        padding: var(--space-sm) var(--space-lg); /* Reduced padding to fit all links */
         font-size: 1.125rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         text-align: left;
