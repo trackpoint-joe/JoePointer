@@ -272,6 +272,30 @@ body {
     background: linear-gradient(90deg, #84cc16, #a3e635);
 }
 
+/* ========================================
+   TABLET/IPAD NAVIGATION ADJUSTMENTS
+   Prevent nav wrapping on iPad viewports
+   ======================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Tighten spacing to prevent nav links from wrapping to 2 lines */
+    .nav .container {
+        gap: var(--space-sm); /* Reduce from --space-md */
+    }
+
+    .nav .quick-links {
+        gap: var(--space-sm); /* Reduce from --space-lg */
+    }
+
+    .nav .quick-links a {
+        font-size: 0.875rem; /* Reduce from 0.9375rem (15px to 14px) */
+        white-space: nowrap; /* Prevent individual link text wrapping */
+    }
+
+    .nav .name {
+        font-size: 1.5rem; /* Slightly reduce logo size if needed */
+    }
+}
+
 /* Mobile Menu Toggle Button */
 .mobile-menu-toggle {
     display: none; /* Hidden on desktop */
