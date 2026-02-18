@@ -318,14 +318,30 @@ body {
 
     /* Fix hero stats truncation on iPad */
     /* 4 columns is too tight - switch to 2 columns for better readability */
+    /* !important needed because base styles come later in CSS and override */
     .impact-metrics {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-md);
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: var(--space-md) !important;
     }
 
     /* Reduce font size to prevent number overflow in narrower columns */
     .metric .number {
-        font-size: 2rem; /* Reduce from 2.5rem (40px -> 32px) */
+        font-size: 2rem !important; /* Reduce from 2.5rem (40px -> 32px) */
+    }
+
+    /* Reduce excessive white space between case study headers and stats */
+    /* Current: ~128px gap (header bottom padding + body top padding stacking) */
+    /* Target: ~40-50px gap for better visual flow */
+    .project-header {
+        padding: var(--space-xl) var(--space-xl) var(--space-md) var(--space-xl);
+    }
+
+    .project-body {
+        padding: var(--space-sm) var(--space-xl) var(--space-xl) var(--space-xl);
+    }
+
+    .project-metrics {
+        margin-top: 0;
     }
 }
 
