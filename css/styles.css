@@ -568,7 +568,7 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-lg);
-    margin: var(--space-2xl) 0;
+    margin: var(--space-md) 0; /* Reduced from var(--space-2xl) to bring stats above the fold on desktop */
     animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
 }
 
