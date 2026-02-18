@@ -452,7 +452,7 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--space-xl);
-    margin-bottom: var(--space-xl);
+    margin-bottom: 0; /* Removed to eliminate double-stacking with tagline margin */
 }
 
 .hero-text {
@@ -542,7 +542,7 @@ body {
 .hero .tagline {
     font-size: clamp(1.25rem, 3vw, 1.75rem);
     color: var(--text-mid);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-md); /* Reduced from var(--space-xl) for tighter narrative flow */
     font-weight: 400;
     line-height: 1.5;
     animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
@@ -1615,7 +1615,7 @@ body {
 @media (max-width: 768px) {
     /* Add padding for fixed headers and eliminate bottom white space */
     .hero {
-        padding: 260px var(--space-lg) var(--space-sm);
+        padding: 160px var(--space-lg) var(--space-sm); /* Reduced from 260px to show headshot + key content on load */
     }
 
     .hero h1 {
