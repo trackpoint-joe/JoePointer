@@ -330,24 +330,27 @@ body {
     }
 
     /* Reduce excessive white space between case study headers and stats */
-    /* Current: ~128px gap (header bottom padding + body top padding stacking) */
-    /* Target: ~40-50px gap for better visual flow */
+    /* Equalize spacing: Header→Stats and Stats→Story both = var(--space-md) (~30px) */
     .project-header {
         padding: var(--space-xl) var(--space-xl) var(--space-md) var(--space-xl);
     }
 
     .project-body {
-        padding: var(--space-sm) var(--space-xl) var(--space-xl) var(--space-xl);
+        padding: 0 var(--space-xl) var(--space-xl) var(--space-xl); /* Remove top padding */
     }
 
     .project-metrics {
-        margin-top: 0;
+        margin: 0 0 var(--space-md) 0; /* Equal spacing below metrics */
     }
 
-    /* Prevent headshot from being hidden behind fixed navigation */
-    /* Hero padding-top: 200px accounts for fixed header, but headshot needs additional spacing */
+    /* Push entire hero-header (text AND headshot) below fixed navigation */
+    /* Hero padding-top: 200px + hero-header margin-top provides total clearance */
+    .hero-header {
+        margin-top: var(--space-lg); /* ~40px additional clearance */
+    }
+
     .hero-headshot {
-        margin-top: var(--space-xl);
+        margin-top: var(--space-xl); /* Additional spacing for headshot within flex */
     }
 }
 
