@@ -277,9 +277,20 @@ body {
    Prevent nav wrapping on iPad viewports
    ======================================== */
 @media (min-width: 769px) and (max-width: 1024px) {
-    /* Fix nav positioning - banner is ~95-105px on iPad due to fluid spacing */
+    /* Fix nav positioning - use fixed instead of sticky to prevent sliding under banner */
+    /* Banner is ~95px on iPad, so nav must be fixed at 95px to avoid overlap */
     .nav {
+        position: fixed; /* Change from sticky to fixed - prevents nav sliding under banner */
         top: 95px; /* Match actual banner height at iPad viewport */
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+
+    /* Add top padding to hero to account for fixed nav covering content */
+    /* Banner 95px + Nav 83px = 178px total fixed header height */
+    .hero {
+        padding-top: 200px; /* Fixed header 178px + buffer */
     }
 
     /* Adjust scroll offset for banner + nav height */
