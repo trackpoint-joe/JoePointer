@@ -336,11 +336,11 @@ body {
     }
 
     .project-body {
-        padding: 0 var(--space-xl) var(--space-xl) var(--space-xl); /* Remove top padding */
+        padding: var(--space-md) var(--space-xl) var(--space-xl) var(--space-xl); /* Top padding creates space above metrics */
     }
 
     .project-metrics {
-        margin: 0 0 var(--space-md) 0; /* Equal spacing below metrics */
+        margin: 0 0 var(--space-md) 0; /* Bottom margin equals body top padding for equal spacing */
     }
 
     /* Push entire hero-header (text AND headshot) below fixed navigation */
@@ -1343,14 +1343,14 @@ body {
 }
 
 .project-body {
-    padding: 0 var(--space-2xl) var(--space-2xl) var(--space-2xl); /* Remove top padding to prevent excessive space above metrics */
+    padding: var(--space-lg) var(--space-2xl) var(--space-2xl) var(--space-2xl); /* Top padding creates space above metrics */
 }
 
 .project-metrics {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: var(--space-md);
-    margin: 0 0 var(--space-2xl) 0; /* Remove top margin, match bottom to header's bottom padding for equal spacing */
+    margin: 0 0 var(--space-lg) 0; /* No top margin, bottom margin equals body top padding for balance */
     padding: var(--space-lg);
     background: var(--off-white);
     border-radius: 12px;
