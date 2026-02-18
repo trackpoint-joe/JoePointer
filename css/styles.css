@@ -349,11 +349,11 @@ body {
     /* Current: hero padding 200px, but .hero-header has no additional margin being applied */
     /* Solution: Add padding to .hero-text itself to push content (category/h1) down */
     .hero-text {
-        padding-top: 80px !important; /* Forces first text element (.category) well below 178px */
+        padding-top: 120px !important; /* Increased spacing - creates comfortable buffer below nav */
     }
 
     .hero-headshot {
-        margin-top: 80px !important; /* Match text padding so headshot aligns with proper spacing */
+        margin-top: 120px !important; /* Match text padding for visual alignment */
     }
 }
 
