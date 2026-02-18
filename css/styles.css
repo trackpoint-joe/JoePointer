@@ -343,6 +343,12 @@ body {
     .project-metrics {
         margin-top: 0;
     }
+
+    /* Prevent headshot from being hidden behind fixed navigation */
+    /* Hero padding-top: 200px accounts for fixed header, but headshot needs additional spacing */
+    .hero-headshot {
+        margin-top: var(--space-xl);
+    }
 }
 
 /* Mobile Menu Toggle Button */
