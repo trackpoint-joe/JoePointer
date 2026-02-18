@@ -344,13 +344,16 @@ body {
     }
 
     /* Push entire hero-header (text AND headshot) below fixed navigation */
-    /* Hero padding-top: 200px + hero-header margin-top provides total clearance */
-    .hero-header {
-        margin-top: var(--space-lg); /* ~40px additional clearance */
+    /* Hero padding-top: 200px is NOT enough - need to push .hero-text content down */
+    /* Fixed nav bottom = 95px (banner) + 83px (nav) = 178px */
+    /* Current: hero padding 200px, but .hero-header has no additional margin being applied */
+    /* Solution: Add padding to .hero-text itself to push content (category/h1) down */
+    .hero-text {
+        padding-top: 80px !important; /* Forces first text element (.category) well below 178px */
     }
 
     .hero-headshot {
-        margin-top: var(--space-xl); /* Additional spacing for headshot within flex */
+        margin-top: 80px !important; /* Match text padding so headshot aligns with proper spacing */
     }
 }
 
