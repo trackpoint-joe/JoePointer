@@ -315,6 +315,18 @@ body {
     .nav .name {
         font-size: 1.5rem; /* Slightly reduce logo size if needed */
     }
+
+    /* Fix hero stats truncation on iPad */
+    /* 4 columns is too tight - switch to 2 columns for better readability */
+    .impact-metrics {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+    }
+
+    /* Reduce font size to prevent number overflow in narrower columns */
+    .metric .number {
+        font-size: 2rem; /* Reduce from 2.5rem (40px -> 32px) */
+    }
 }
 
 /* Mobile Menu Toggle Button */
