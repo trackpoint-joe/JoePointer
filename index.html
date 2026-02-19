@@ -1314,6 +1314,250 @@
         </div>
     </section>
 
+    <!-- ========================================
+         ADMIN PANEL: Template Testing Interface
+         Press Ctrl+Shift+T to toggle
+         ======================================== -->
+    <div id="adminPanel" class="admin-panel" style="display: none;">
+        <div class="admin-header">
+            <h3>🎨 Template Testing Panel</h3>
+            <button id="adminClose" class="admin-close">✕</button>
+        </div>
+        <div class="admin-content">
+            <h4>Industry Templates</h4>
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">Test the new 2025 color schemes</p>
+
+            <div class="template-grid">
+                <button class="template-btn" data-template="default">
+                    <span class="template-name">Default</span>
+                    <span class="template-colors">
+                        <span style="background: #0a0e27;"></span>
+                        <span style="background: #c9a961;"></span>
+                    </span>
+                </button>
+
+                <button class="template-btn" data-template="finance">
+                    <span class="template-name">Finance ✓</span>
+                    <span class="template-colors">
+                        <span style="background: #1a365d;"></span>
+                        <span style="background: #b8860b;"></span>
+                    </span>
+                    <span class="template-note">Navy + Gold</span>
+                </button>
+
+                <button class="template-btn" data-template="tech">
+                    <span class="template-name">Tech ✨ NEW</span>
+                    <span class="template-colors">
+                        <span style="background: #0A1E3D;"></span>
+                        <span style="background: #3B82F6;"></span>
+                    </span>
+                    <span class="template-note">Blue Monochrome</span>
+                </button>
+
+                <button class="template-btn" data-template="consulting">
+                    <span class="template-name">Consulting ✓</span>
+                    <span class="template-colors">
+                        <span style="background: #334155;"></span>
+                        <span style="background: #d97706;"></span>
+                    </span>
+                    <span class="template-note">McKinsey Colors</span>
+                </button>
+
+                <button class="template-btn" data-template="healthcare">
+                    <span class="template-name">Healthcare ✨ NEW</span>
+                    <span class="template-colors">
+                        <span style="background: #002677;"></span>
+                        <span style="background: #00A3AD;"></span>
+                    </span>
+                    <span class="template-note">UnitedHealth Blue</span>
+                </button>
+            </div>
+
+            <div class="admin-info">
+                <p style="font-size: 0.8rem; color: #666; margin-top: 1rem; line-height: 1.5;">
+                    <strong>Updated:</strong> Healthcare (no more lime green!) and Tech (blue monochrome)<br>
+                    <strong>Unchanged:</strong> Finance and Consulting (already professional)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .admin-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #0a0e27, #2d3e50);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .admin-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .admin-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-content {
+            padding: 1.25rem;
+        }
+
+        .admin-content h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .template-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .template-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .template-btn:hover {
+            border-color: #c9a961;
+            background: #fafaf9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-btn.active {
+            border-color: #c9a961;
+            background: #fffbf0;
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+        }
+
+        .template-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1a202c;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .template-note {
+            font-size: 0.75rem;
+            color: #718096;
+            display: block;
+        }
+
+        .template-colors {
+            display: flex;
+            gap: 6px;
+        }
+
+        .template-colors span {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-info {
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .admin-panel {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+            }
+        }
+    </style>
+
+    <script>
+        // Admin Panel Toggle (Ctrl+Shift+T)
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+                const panel = document.getElementById('adminPanel');
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+
+        // Close button
+        document.getElementById('adminClose')?.addEventListener('click', () => {
+            document.getElementById('adminPanel').style.display = 'none';
+        });
+
+        // Template switcher
+        document.querySelectorAll('.template-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const template = this.dataset.template;
+
+                // Remove active class from all buttons
+                document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Apply template
+                if (template === 'default') {
+                    document.body.removeAttribute('data-industry');
+                } else {
+                    document.body.setAttribute('data-industry', template);
+                }
+
+                // Scroll to top to see hero changes
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Show panel on load if hash is present
+        if (window.location.hash === '#admin') {
+            document.getElementById('adminPanel').style.display = 'block';
+        }
+    </script>
+
     <script src="js/app.js"></script>
 </body>
 </html>
