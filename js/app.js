@@ -105,6 +105,7 @@ function applyIndustryTemplate() {
         // Apply industry template
         if (profile.industry) {
             document.body.setAttribute('data-industry', profile.industry);
+            applyResumeVersion(profile.industry);
         }
 
         // Update company name if provided
@@ -120,6 +121,25 @@ function applyIndustryTemplate() {
         // Store in localStorage for admin panel
         localStorage.setItem('currentProfile', JSON.stringify(profile));
     }
+}
+
+// Swap resume download links to the industry-tailored version.
+// The `download` attribute is always set to "Joe_Pointer_Resume.pdf" so the
+// file saves with a clean name regardless of the internal filename served.
+function applyResumeVersion(industry) {
+    const resumeMap = {
+        tech:        'resources/Joe_Pointer_Resume_Tech.pdf',
+        healthcare:  'resources/Joe_Pointer_Resume_Healthcare.pdf',
+        consulting:  'resources/Joe_Pointer_Resume_Consulting.pdf',
+        finance:     'resources/Joe_Pointer_Resume.pdf',
+    };
+    const file = resumeMap[industry] || 'resources/Joe_Pointer_Resume.pdf';
+    document.querySelectorAll('a[href*="Joe_Pointer_Resume"]').forEach(link => {
+        // Only swap the 1-page resume button, not the Executive Brief
+        if (link.href.includes('Executive_Brief')) return;
+        link.setAttribute('href', file);
+        link.setAttribute('download', 'Joe_Pointer_Resume.pdf');
+    });
 }
 
 // Update company name throughout the site (sticky banner + hero + target role)
