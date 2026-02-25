@@ -2624,6 +2624,11 @@ body {
     color: #5c4609;
 }
 
+[data-industry="finance"] .project-subnav-pill:hover,
+[data-industry="finance"] .project-subnav-pill.active {
+    color: #1a365d !important;
+}
+
 [data-industry="finance"] .btn-primary,
 [data-industry="finance"] .btn {
     background: linear-gradient(135deg, #b8860b, #daa520);
@@ -2736,6 +2741,11 @@ body {
     background: rgba(59, 130, 246, 0.1);
     border-color: rgba(59, 130, 246, 0.3);
     color: #2563EB;
+}
+
+[data-industry="tech"] .project-subnav-pill:hover,
+[data-industry="tech"] .project-subnav-pill.active {
+    color: #ffffff !important;
 }
 
 [data-industry="tech"] .btn-primary,
@@ -2857,6 +2867,11 @@ body {
     color: #1e293b;
 }
 
+[data-industry="consulting"] .project-subnav-pill:hover,
+[data-industry="consulting"] .project-subnav-pill.active {
+    color: #1e293b !important;
+}
+
 [data-industry="consulting"] .btn-primary,
 [data-industry="consulting"] .btn {
     background: linear-gradient(135deg, #d97706, #f59e0b);
@@ -2968,6 +2983,11 @@ body {
     background: rgba(0, 163, 173, 0.1);
     border-color: rgba(0, 163, 173, 0.3);
     color: #006B72;
+}
+
+[data-industry="healthcare"] .project-subnav-pill:hover,
+[data-industry="healthcare"] .project-subnav-pill.active {
+    color: #ffffff !important;
 }
 
 [data-industry="healthcare"] .btn-primary,
