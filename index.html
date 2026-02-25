@@ -188,8 +188,8 @@
                 <a href="resources/Joe_Pointer_Resume.pdf" class="btn btn-primary" download>
                     <span>📥 Resume</span>
                 </a>
-                <a href="resources/Joe_Pointer_Resume_Full.pdf" class="btn btn-secondary" download>
-                    <span>📋 Full Resume (2-page)</span>
+                <a href="resources/Joe_Pointer_Executive_Brief.pdf" class="btn btn-secondary" download>
+                    <span>📋 Executive Brief</span>
                 </a>
                 <a href="#contact" class="btn btn-accent">
                     <span>📅 Let's Talk</span>
@@ -331,6 +331,9 @@
                 <p class="subtitle">
                     A layered system for navigating complexity, adoption, and change
                 </p>
+                <div class="section-collapse-row">
+                    <button class="collapse-all-btn" data-section="how-i-think" title="Collapse all expanded sections">Collapse All</button>
+                </div>
             </div>
 
             <!-- Principle Cards (Visual Representation) -->
@@ -734,8 +737,20 @@
                 <h2>Flagship Projects</h2>
             </div>
 
+            <!-- Project Sub-Navigation -->
+            <div class="project-subnav" id="projectSubnav">
+                <div class="project-subnav-pills">
+                    <a href="#project-careerspark" class="project-subnav-pill">CareerSpark</a>
+                    <a href="#project-workplace" class="project-subnav-pill">Workplace Modernization</a>
+                    <a href="#project-revolver" class="project-subnav-pill">Revolver LCMS</a>
+                    <a href="#project-rr" class="project-subnav-pill">R&amp;R Recognition</a>
+                    <a href="#project-buildingblocks" class="project-subnav-pill">Building Blocks</a>
+                </div>
+                <button class="collapse-all-btn" data-section="projects" title="Collapse all expanded sections">Collapse All</button>
+            </div>
+
             <!-- CareerSpark -->
-            <div class="project-card">
+            <div class="project-card" id="project-careerspark">
                 <div class="project-header">
                     <div class="project-badge">Current Initiative | TIAA</div>
                     <h3>CareerSpark</h3>
@@ -745,11 +760,11 @@
                     <div class="project-metrics">
                         <div class="project-metric">
                             <span class="number">16,000+</span>
-                            <span class="label">Associates Reached</span>
+                            <span class="label">Associates with Access</span>
                         </div>
                         <div class="project-metric">
                             <span class="number">1,500+</span>
-                            <span class="label">Associates Reached</span>
+                            <span class="label">Directly Engaged</span>
                         </div>
                         <div class="project-metric">
                             <span class="number">9</span>
@@ -840,7 +855,7 @@
                                 <ul style="margin: var(--space-md) 0; padding-left: var(--space-lg); line-height: 1.8;">
                                     <li>Ran webinars, workshops, and roadshows that reached more than 1,500 associates directly</li>
                                     <li>Joined team meetings to reduce anxiety and show, in real time, how CareerSpark could help</li>
-                                    <li>Framed AI as a tool to discover and express their value—not as a threat or purely technical feature</li>
+                                    <li>Framed AI as a tool to discover and express their value, not as a threat or purely technical feature</li>
                                     <li>Equipped managers to use CareerSpark as a coaching tool rather than a compliance requirement</li>
                                 </ul>
                                 <p style="margin-top: var(--space-md);">Many associates arrived at sessions skeptical or nervous. After seeing their own skills and stories reflected back through AI, they left more confident, more hopeful, and eager to keep going.</p>
@@ -851,7 +866,7 @@
             </div>
 
             <!-- Workplace Modernization -->
-            <div class="project-card">
+            <div class="project-card" id="project-workplace">
                 <div class="project-header">
                     <div class="project-badge">Recent Transformation | TIAA</div>
                     <h3>Workplace Modernization</h3>
@@ -915,9 +930,9 @@
                             <div class="principle-content">
                                 <h4 style="margin-bottom: var(--space-md); color: var(--text-primary);">Key Projects</h4>
                                 <p><strong>Charlotte Campus Welcome (2022):</strong> Hosted 6 in-person tour events with leadership greetings, campus tours, training, meals. Changed skepticism into excitement.</p>
-                                <p><strong>Lewisville Digital Displays (2022):</strong> CEO-directed 2-week refresh; installed 12 digital displays. Innovation became repeatable: replicated in Denver and Charlotte; later became business requirement for Frisco.</p>
+                                <p><strong>Lewisville Digital Displays (2022):</strong> CEO-directed 2-week refresh with no CS budget. Convinced Global Corporate Services to fund 12 digital displays by framing them as a company-wide asset. That framing became a repeatable model: the same approach got displays installed at every call center location, and they were built in as a standard requirement for the new Frisco Corporate Center.</p>
                                 <p><strong>Denver Consolidation & Modernization (2023-2024):</strong> 700 associates transitioning from assigned to hoteling seating; achieved 44% more efficient space utilization. Most resistive change; I volunteered to attend townhalls and answer every concern. Result: minimal unexpected turnover.</p>
-                                <p><strong>Frisco Corporate Center Opening (2024):</strong> 500+ associates moved into new 15-story building; largest modernization undertaking. Negotiated special call center configuration for team cohesion. Recognized as "Change Champion."</p>
+                                <p><strong>Frisco Corporate Center Opening (2024):</strong> Led Client Services change management for 500+ CS associates moving into new 15-story building; largest modernization undertaking. Negotiated special call center configuration for team cohesion. Recognized as "Change Champion."</p>
 
                                 <h4 style="margin: var(--space-xl) 0 var(--space-md) 0; color: var(--text-primary);">Impact</h4>
                                 <ul style="margin: var(--space-md) 0; padding-left: var(--space-lg); line-height: 1.8;">
@@ -949,7 +964,7 @@
             </div>
 
             <!-- Revolver LCMS -->
-            <div class="project-card">
+            <div class="project-card" id="project-revolver">
                 <div class="project-header">
                     <div class="project-badge">Innovation | Vangent/Pearson</div>
                     <h3>Revolver LCMS</h3>
@@ -1038,8 +1053,93 @@
                 </div>
             </div>
 
+            <!-- R&R Recognition Program -->
+            <div class="project-card" id="project-rr">
+                <div class="project-header">
+                    <div class="project-badge">Program Leadership | TIAA</div>
+                    <h3>R&amp;R Recognition Program</h3>
+                    <p class="project-subtitle">Building a Culture of Recognition, Then Redesigning It Company-Wide</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-metrics">
+                        <div class="project-metric">
+                            <span class="number">395%</span>
+                            <span class="label">Growth in Formal Recognitions</span>
+                        </div>
+                        <div class="project-metric">
+                            <span class="number">$500K</span>
+                            <span class="label">Recognition Budget Managed</span>
+                        </div>
+                        <div class="project-metric">
+                            <span class="number">34–44%</span>
+                            <span class="label">of All Enterprise Recognitions</span>
+                        </div>
+                    </div>
+
+                    <div class="project-story">
+                        <!-- Quick Summary -->
+                        <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: var(--space-xl);">Client Services was the largest user of TIAA's recognition platform, so when the company decided to overhaul its enterprise-wide R&amp;R system, they invited me onto the corporate selection team. By that point, I had already grown Client Services recognition to 34-44% of all enterprise recognitions, a 395% increase in formal recognitions that outpaced the next six organizations combined. The work went from building a recognition culture within one division to redesigning how an entire company recognizes its people.</p>
+
+                        <!-- Expandable Section 1: The Program Story -->
+                        <details class="principle-details">
+                            <summary>
+                                <div style="flex: 1;">
+                                    <strong style="font-size: 1rem;">The Program Story</strong>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">See how Client Services grew from minimal participation to leading the entire enterprise in recognition activity</div>
+                                </div>
+                            </summary>
+                            <div class="principle-content">
+                                <h4 style="margin-bottom: var(--space-md); color: var(--text-primary);">Starting Point</h4>
+                                <p>Client Services came into this work with a recognition gap. The existing program existed on paper but was not driving meaningful participation. Associates were not being recognized at the rate the organization needed to sustain engagement and retention, particularly through the significant change cycles TIAA was navigating.</p>
+
+                                <h4 style="margin: var(--space-xl) 0 var(--space-md) 0; color: var(--text-primary);">Building the Culture</h4>
+                                <p>The work was not about administering a program. It was about changing behavior at scale. I managed a $500K recognition budget, created recognition frameworks that made it easier for managers to act consistently, and built rhythms and visibility that turned sporadic recognition into an organizational habit. The results reflected that shift: Client Services grew to represent 34-44% of all enterprise recognition activity, a 395% increase in formal recognitions that outpaced the next six organizations combined.</p>
+
+                                <h4 style="margin: var(--space-xl) 0 var(--space-md) 0; color: var(--text-primary);">Why It Worked</h4>
+                                <p>Recognition programs fail when they stay administrative. This one succeeded because I treated it as an adoption problem. The platform was a tool. The real work was helping leaders understand why consistent recognition drives retention, how to make it genuine rather than performative, and how to build it into their existing rhythms rather than bolting it on as an extra task.</p>
+                            </div>
+                        </details>
+
+                        <!-- Expandable Section 2: The Platform Selection -->
+                        <details class="principle-details" style="margin-top: var(--space-md);">
+                            <summary>
+                                <div style="flex: 1;">
+                                    <strong style="font-size: 1rem;">The Platform Selection</strong>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">See how the program work led to a seat on TIAA's corporate R&amp;R platform selection team</div>
+                                </div>
+                            </summary>
+                            <div class="principle-content">
+                                <h4 style="margin-bottom: var(--space-md); color: var(--text-primary);">The Invitation</h4>
+                                <p>When TIAA decided to replace its enterprise-wide recognition platform, the corporate team came to me. Client Services was the biggest user of the existing system, and my track record of driving adoption made me the right voice in the room. I was brought onto the corporate selection team to represent the practitioner perspective, someone who had actually used the platform at scale and understood what worked and what didn't.</p>
+
+                                <h4 style="margin: var(--space-xl) 0 var(--space-md) 0; color: var(--text-primary);">The Selection Process</h4>
+                                <p>As a member of the team, I helped prepare the RFP, evaluated vendor proposals, and participated in the final platform selection. The evaluation criteria balanced features against adoption likelihood. What good looked like on paper was not always what would work for a large, distributed workforce with varying levels of manager engagement.</p>
+
+                                <h4 style="margin: var(--space-xl) 0 var(--space-md) 0; color: var(--text-primary);">Implementation and Launch</h4>
+                                <p>After selection, I joined the implementation team to ensure the transition went smoothly. The new platform launched company-wide, replacing the legacy system across all of TIAA. From there, I directly supported the corporate administrator of the platform and served as a key Recognition Champion across the company, helping drive adoption and consistency in how recognition was practiced at every level of the organization.</p>
+                            </div>
+                        </details>
+
+                        <!-- Expandable Section 3: Why This Work Matters -->
+                        <details class="principle-details" style="margin-top: var(--space-md);">
+                            <summary>
+                                <div style="flex: 1;">
+                                    <strong style="font-size: 1rem;">Why This Work Matters</strong>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">See the connection between recognition culture and organizational change capacity</div>
+                                </div>
+                            </summary>
+                            <div class="principle-content">
+                                <p style="margin-bottom: var(--space-md);">Recognition is an adoption problem. Every major change initiative, from AI adoption to workplace modernization to new platform rollouts, succeeds or fails based on whether people feel seen for the effort they're putting in. Organizations that recognize behavior change early get more of it. Organizations that don't wonder why adoption stalls.</p>
+                                <p style="margin-bottom: var(--space-md);">The R&amp;R program work is not a detour from my AI adoption focus. It is the same work. Changing behavior at organizational scale requires building the conditions where people feel safe to try, valued when they do, and motivated to keep going. Recognition is one of the most direct levers available to a leader managing that kind of change.</p>
+                                <p style="margin-bottom: 0;">The platform selection chapter added a second dimension: the ability to represent practitioner needs in a procurement process, evaluate vendor claims against real-world use, and shepherd an enterprise-wide technology transition from selection through launch.</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
             <!-- Building Blocks Case Study -->
-            <div class="project-card">
+            <div class="project-card" id="project-buildingblocks">
                 <div class="project-header">
                     <div class="project-badge">Foundations | Pattern Recognition</div>
                     <h3>Building Blocks: The Foundation of Systems Thinking</h3>
@@ -1051,17 +1151,17 @@
                     </div>
 
                     <div class="project-metrics">
-                        <div class="metric">
-                            <div class="metric-number">200K+</div>
-                            <div class="metric-label">Employees (Lucent)</div>
+                        <div class="project-metric">
+                            <span class="number">200K+</span>
+                            <span class="label">Employees Reached (Lucent)</span>
                         </div>
-                        <div class="metric">
-                            <div class="metric-number">80%</div>
-                            <div class="metric-label">Cost Reduction</div>
+                        <div class="project-metric">
+                            <span class="number">80%</span>
+                            <span class="label">Training Cost Reduction</span>
                         </div>
-                        <div class="metric">
-                            <div class="metric-number">6</div>
-                            <div class="metric-label">Eras of Evolution</div>
+                        <div class="project-metric">
+                            <span class="number">6</span>
+                            <span class="label">Eras of Evolution</span>
                         </div>
                     </div>
 
@@ -1080,16 +1180,16 @@
                                 <div style="flex: 1;">
                                     <strong style="font-size: 1.1rem;">The Early Years: Learning to Build at Scale</strong>
                                     <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Horizon Interactive → Lucent Technologies → Instructional Designer & Graphic Designer</div>
-                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">Contributed to satellite TV network delivering training to 200,000+ employees worldwide. Team reduced training costs 80%. Recognized with Enterprise Networks Gold President's Award.</div>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">Served on core team establishing Lucent's enterprise multimedia standards (CD-ROM to web) while building and producing L-Channel satellite TV courseware, collaborating with subject matter experts, writing teleprompter scripts, and directing on-air talent from the broadcast control room. 200,000+ employees reached. Team reduced training costs 80%.</div>
                                 </div>
                                 <div style="font-size: 0.9rem; color: var(--accent-gold); font-weight: 700; white-space: nowrap; margin-left: var(--space-md);">200K+ employees | 80% cost reduction</div>
                             </summary>
                             <div class="principle-content">
-                                <p>Contributed to implementation of L-Channel satellite TV network delivering training to 200,000+ employees worldwide. Team reduced training costs 80%. Recognized with Enterprise Networks Gold President's Award for Team Excellence.</p>
+                                <p>Served on Lucent's core team establishing enterprise multimedia standards as the industry transitioned from CD-ROM to web/browser-based instruction, while simultaneously building and producing L-Channel courseware from concept to live broadcast. 200,000+ employees reached globally. Team reduced training costs 80%. Recognized with Enterprise Networks Gold President's Award for Team Excellence.</p>
 
                                 <p><strong>The context:</strong> Began career as Instructional Designer and Graphic Designer at boutique consulting firm, developing technical training for HP and MCI, and creating instructional strategy tools for CDC. Early work revealed a critical insight: excellent training cannot compensate for poorly designed systems.</p>
 
-                                <p><strong>The opportunity:</strong> Joined Lucent Technologies as part of the team implementing the L-Channel, a satellite-based television network delivering training to sales and support staff globally. The platform reached 200,000+ employees across multiple continents, reduced training delivery costs by 80%, and earned recognition through the Enterprise Networks Gold President's Award for Team Excellence.</p>
+                                <p><strong>The opportunity:</strong> At Lucent, worked simultaneously on two tracks that rarely intersect in the same role. First: served on the core team defining enterprise multimedia standards governing how a 200,000-employee organization would transition from CD-ROM to web-based instruction, standards that shaped every training asset the company owned. Second: built and produced L-Channel courseware end-to-end, collaborating with subject matter experts, writing teleprompter scripts for on-air talent, and directing presenters through the material live from the broadcast control room. Delivered to sales associates across multiple continents, the solution reduced training delivery costs by 80% and earned the Enterprise Networks Gold President's Award for Team Excellence.</p>
 
                                 <p><strong>The lesson:</strong> Technology without usability creates expensive frustration. Scale requires structure, but structure must always serve humans, not the other way around.</p>
                             </div>
@@ -1112,7 +1212,7 @@
 
                                 <p><strong>The work:</strong> For Budget.com, led complete redesign of car and truck rental booking engine, improving user experience and conversion rates. For eCollege, designed new assessment and survey development tool. Established usability testing practices and explored emerging possibilities of internet-based applications.</p>
 
-                                <p><strong>The lesson:</strong> Design isn't decoration—it's how things work. Information architecture transforms complexity into clarity, making systems intuitive rather than intimidating.</p>
+                                <p><strong>The lesson:</strong> Design isn't decoration. It's how things work. Information architecture transforms complexity into clarity, making systems intuitive rather than intimidating.</p>
                             </div>
                         </details>
 
@@ -1135,7 +1235,7 @@
 
                                 <p><strong>Additional scope:</strong> Developed training content for major enterprises including Kinkos, Bank of America, Unilever, GE Capital, Regions Bank, and Verizon Wireless, spanning compliance training, financial products, and company-specific mandatory courses.</p>
 
-                                <p><strong>The lesson:</strong> Separation of concerns—decoupling content from delivery, structure from presentation—is the foundation of scalable systems.</p>
+                                <p><strong>The lesson:</strong> Separation of concerns, decoupling content from delivery and structure from presentation, is the foundation of scalable systems.</p>
                             </div>
                         </details>
 
@@ -1145,20 +1245,20 @@
                                 <div style="flex: 1;">
                                     <strong style="font-size: 1.1rem;">The Talent Systems Era: Hiring at Scale</strong>
                                     <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Vangent Human Capital → Sales Engineer & Web Manager</div>
-                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">Led corporate website redesign following major rebrand. Member of the sales team that secured and implemented enterprise ATS with U.S. Department of Commerce for 2010 Census hiring operations.</div>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">Led corporate website redesign following major rebrand. Sold and implemented enterprise Applicant Tracking System to U.S. Department of Commerce for 2010 Census hiring operations.</div>
                                 </div>
                                 <div style="font-size: 0.9rem; color: var(--accent-gold); font-weight: 700; white-space: nowrap; margin-left: var(--space-md);">ATS | Dept of Commerce</div>
                             </summary>
                             <div class="principle-content">
-                                <p>Led corporate website redesign following major rebrand. Member of the sales team that secured and implemented enterprise ATS contracts with Extra Space Storage and U.S. Department of Commerce for 2010 Census hiring operations.</p>
+                                <p>Led corporate website redesign following major rebrand. Sold and implemented enterprise Applicant Tracking System to Extra Space Storage and U.S. Department of Commerce for 2010 Census hiring operations.</p>
 
                                 <p><strong>Product management leadership:</strong> Directed design, development, and implementation of product enhancements for Vangent's three automated recruiting solutions. Set priorities and allocated development resources to meet deadlines. These solutions cut client hiring costs 50-80% and increased speed-to-hire by more than 50%.</p>
 
                                 <p><strong>The expansion:</strong> Broadened scope to talent acquisition systems and corporate web management. Led complete website redesign following rebrand from Pearson Performance Solutions to Vangent Human Capital, managing vendor selection and project oversight.</p>
 
-                                <p><strong>The sales engineering role:</strong> Transitioned into sales engineering, supporting the team in securing and implementing enterprise ATS contracts with clients including Extra Space Storage and U.S. Department of Commerce (supporting 2010 Census hiring operations). Contributed to customization design and delivery setup. Gained deep understanding of recruiting systems at scale, hiring decision frameworks, and how technology either accelerates or obstructs talent acquisition.</p>
+                                <p><strong>The sales engineering role:</strong> Transitioned into dual role selling and implementing enterprise Applicant Tracking System (ATS) to clients including Extra Space Storage and U.S. Department of Commerce (supporting 2010 Census hiring operations). Gained deep understanding of recruiting systems at scale, hiring decision frameworks, and how technology either accelerates or obstructs talent acquisition.</p>
 
-                                <p><strong>The lesson:</strong> Selling enterprise software reveals what truly matters to buyers. Not feature lists, but measurable outcomes and operational transformation.</p>
+                                <p><strong>The lesson:</strong> Selling enterprise software reveals what truly matters to buyers: not feature lists, but measurable outcomes and operational transformation.</p>
                             </div>
                         </details>
 
@@ -1175,7 +1275,7 @@
                             <div class="principle-content">
                                 <p>Designed comprehensive Management Systems suite covering Change, Finance, People, Operations, and Quality Management. Scaled SharePoint governance to 200+ sites supporting 2,000-employee organization.</p>
 
-                                <p><strong>The foundation:</strong> Joined TIAA to design integrated Management Systems suite—providing people managers with tools and support to run business operations more effectively. Systems spanned Change Management, Finance Management, People Management, Operations Management, and Quality Management. Created comprehensive reports, dashboards, and tools for all people and process leaders within Client Services organization.</p>
+                                <p><strong>The foundation:</strong> Joined TIAA to design integrated Management Systems suite, providing people managers with tools and support to run business operations more effectively. Systems spanned Change Management, Finance Management, People Management, Operations Management, and Quality Management. Created comprehensive reports, dashboards, and tools for all people and process leaders within Client Services organization.</p>
 
                                 <p><strong>The governance challenge:</strong> Assumed responsibility for organization's SharePoint infrastructure. Rapidly developed deep platform expertise and established training programs to improve organizational capability. Successfully scaled governance model to manage 200+ SharePoint sites supporting approximately 2,000 employees.</p>
 
@@ -1204,9 +1304,11 @@
 
                                 <p><strong>The replication:</strong> The solution was so effective that 3+ other teams across TIAA replicated the model for their own virtual engagement initiatives. What started as a pandemic response became a template for equitable access.</p>
 
+                                <p><strong>The evolution:</strong> The platform kept growing beyond its original purpose. It became the foundation for the company-wide TIAA Product Expo, extending the virtual accessibility model to enterprise programming at a broader scale. It's currently being updated for the Recordkeeping Transformation Expo, continuing to expand access to all TIAA associates globally, not just those outside the three main office locations.</p>
+
                                 <p><strong>The recognition:</strong> Earned my first double-EXCEPTIONAL performance rating (both What and How). Manager's feedback: "Wow... just wow! The leadership team and I were blown away by not only what you accomplished, but how you accomplished. Your commitment, creativity and innovation are unmatched."</p>
 
-                                <p><strong>Why this matters:</strong> This was 2020—two years before my Director promotion, five years before CareerSpark. The pattern was already there: when crisis hits, I don't wait for permission. I learn what's needed and build the solution. And I always look for the systemic problem hiding behind the immediate crisis.</p>
+                                <p><strong>Why this matters:</strong> This was 2020, two years before my Director promotion and five years before CareerSpark. The pattern was already there: when crisis hits, I don't wait for permission. I learn what's needed and build the solution. And I always look for the systemic problem hiding behind the immediate crisis.</p>
                             </div>
                         </details>
 
@@ -1303,8 +1405,8 @@
                     <a href="resources/Joe_Pointer_Resume.pdf" class="btn btn-primary" download>
                         <span>📄 Download 1-Page Resume</span>
                     </a>
-                    <a href="resources/Joe_Pointer_Resume_Full.pdf" class="btn btn-secondary" download>
-                        <span>📋 Download Full Resume (2-page)</span>
+                    <a href="resources/Joe_Pointer_Executive_Brief.pdf" class="btn btn-secondary" download>
+                        <span>📋 Download Executive Brief (2-page)</span>
                     </a>
                     <a href="mailto:joepointer@comcast.net?subject=Discovery%20Call%20Request" class="btn btn-accent">
                         <span>📅 Schedule Discovery Call</span>
@@ -1313,6 +1415,11 @@
             </div>
         </div>
     </section>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+        <span>&#8679;</span>
+    </button>
 
     <!-- ========================================
          ADMIN PANEL: Template Testing Interface

@@ -2792,12 +2792,26 @@ body {
     background: linear-gradient(90deg, #0A1E3D, #3B82F6);
 }
 
+/* Expandable details chevrons */
+[data-industry="tech"] .principle-details summary::before {
+    color: #3B82F6 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+[data-industry="tech"] .principle-details summary:hover::before {
+    background: rgba(59, 130, 246, 0.2) !important;
+}
+
+[data-industry="tech"] .principle-details:hover {
+    border-color: #3B82F6 !important;
+}
+
 /* Template: Consulting - Analytical & Strategic */
 [data-industry="consulting"] {
     --primary: #334155;
     --secondary: #475569;
     --accent: #d97706;
-    --accent-dark: #c2410c;
+    --accent-dark: #B45309;
     --accent-light: #f59e0b;
     --bg-primary: #f8fafc;
     --bg-secondary: #ffffff;
@@ -2838,8 +2852,8 @@ body {
 
 [data-industry="consulting"] .project-badge,
 [data-industry="consulting"] .seeking-label {
-    background: rgba(217, 119, 6, 0.35);
-    border-color: rgba(217, 119, 6, 0.5);
+    background: rgba(217, 119, 6, 0.15);
+    border-color: rgba(217, 119, 6, 0.3);
     color: #1e293b;
 }
 
@@ -3010,6 +3024,20 @@ body {
 
 [data-industry="healthcare"] .scroll-progress-bar {
     background: linear-gradient(90deg, #002677, #0072CE, #00A3AD);
+}
+
+/* Expandable details chevrons */
+[data-industry="healthcare"] .principle-details summary::before {
+    color: #00A3AD !important;
+    background: rgba(0, 163, 173, 0.1) !important;
+}
+
+[data-industry="healthcare"] .principle-details summary:hover::before {
+    background: rgba(0, 163, 173, 0.2) !important;
+}
+
+[data-industry="healthcare"] .principle-details:hover {
+    border-color: #00A3AD !important;
 }
 
 /* Default template (current design) */
@@ -3207,6 +3235,37 @@ body:not([data-industry]) {
     color: #ffffff !important;
 }
 
+/* Consulting: Hero is dark slate — body text must be white */
+[data-industry="consulting"] .hero {
+    color: #ffffff;
+}
+
+/* Consulting: Core Competencies h3 uses amber accent on dark hero */
+[data-industry="consulting"] .hero .expertise-keywords h3 {
+    color: #FBBF24 !important;
+}
+
+[data-industry="consulting"] .hero .expertise-keywords div {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-industry="consulting"] .hero .expertise-keywords {
+    border-color: rgba(252, 211, 77, 0.3) !important;
+}
+
+/* Consulting: Project card headers have dark gradient — force white text */
+[data-industry="consulting"] .project-header h1,
+[data-industry="consulting"] .project-header h2,
+[data-industry="consulting"] .project-header h3 {
+    color: #ffffff !important;
+}
+
+[data-industry="consulting"] .project-header .project-badge {
+    color: #FCD34D;
+    background: rgba(252, 211, 77, 0.15);
+    border-color: rgba(252, 211, 77, 0.35);
+}
+
 
 /* FINANCE TEMPLATE - Ensure white text on dark backgrounds */
 
@@ -3232,6 +3291,45 @@ body:not([data-industry]) {
 [data-industry="finance"] .section-dark h3,
 [data-industry="finance"] .section-dark .section-header h2 {
     color: #ffffff !important;
+}
+
+/* Finance: Project card headers have dark gradient — force white text */
+[data-industry="finance"] .project-header h1,
+[data-industry="finance"] .project-header h2,
+[data-industry="finance"] .project-header h3 {
+    color: #ffffff !important;
+}
+
+[data-industry="finance"] .project-header .project-badge {
+    color: #daa520;
+    background: rgba(218, 165, 32, 0.2);
+    border-color: rgba(218, 165, 32, 0.4);
+}
+
+/* Finance: Hero is dark navy — body text must be white */
+[data-industry="finance"] .hero {
+    color: #ffffff;
+}
+
+/* Finance: Core Competencies h3 should be gold on dark hero, not overridden to white */
+[data-industry="finance"] .hero .expertise-keywords h3 {
+    color: #daa520 !important;
+}
+
+/* Finance: Adjust expertise-keywords border for dark hero background */
+[data-industry="finance"] .hero .expertise-keywords {
+    border-color: rgba(218, 165, 32, 0.3) !important;
+}
+
+[data-industry="finance"] .hero .expertise-keywords div {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Finance: Seeking label in target-role needs gold color, not dark brown (#5c4609) */
+[data-industry="finance"] .target-role .seeking-label {
+    color: #daa520;
+    background: rgba(218, 165, 32, 0.2);
+    border-color: rgba(218, 165, 32, 0.5);
 }
 
 
@@ -3261,6 +3359,44 @@ body:not([data-industry]) {
     color: #ffffff !important;
 }
 
+/* Tech: Hero is dark navy — body text must be white */
+[data-industry="tech"] .hero {
+    color: #ffffff;
+}
+
+/* Tech: Core Competencies h3 uses light accent blue on dark hero */
+[data-industry="tech"] .hero .expertise-keywords h3 {
+    color: #60A5FA !important;
+}
+
+[data-industry="tech"] .hero .expertise-keywords div {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-industry="tech"] .hero .expertise-keywords {
+    border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Tech: Seeking label in target-role needs light color, not dark blue (#2563EB) */
+[data-industry="tech"] .target-role .seeking-label {
+    color: #93C5FD;
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Tech: Project card headers have dark gradient — force white text */
+[data-industry="tech"] .project-header h1,
+[data-industry="tech"] .project-header h2,
+[data-industry="tech"] .project-header h3 {
+    color: #ffffff !important;
+}
+
+[data-industry="tech"] .project-header .project-badge {
+    color: #93C5FD;
+    background: rgba(147, 197, 253, 0.15);
+    border-color: rgba(147, 197, 253, 0.35);
+}
+
 
 /* HEALTHCARE TEMPLATE - Ensure readable text on dark backgrounds */
 
@@ -3286,6 +3422,44 @@ body:not([data-industry]) {
 [data-industry="healthcare"] .section-dark h3,
 [data-industry="healthcare"] .section-dark .section-dark .section-header h2 {
     color: #ffffff !important;
+}
+
+/* Healthcare: Hero is dark navy/blue — body text must be white */
+[data-industry="healthcare"] .hero {
+    color: #ffffff;
+}
+
+/* Healthcare: Core Competencies h3 uses light teal on dark hero */
+[data-industry="healthcare"] .hero .expertise-keywords h3 {
+    color: #33C4CB !important;
+}
+
+[data-industry="healthcare"] .hero .expertise-keywords div {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-industry="healthcare"] .hero .expertise-keywords {
+    border-color: rgba(0, 163, 173, 0.3) !important;
+}
+
+/* Healthcare: Seeking label in target-role needs light color, not dark teal (#006B72) */
+[data-industry="healthcare"] .target-role .seeking-label {
+    color: #33C4CB;
+    background: rgba(0, 163, 173, 0.2);
+    border-color: rgba(0, 163, 173, 0.5);
+}
+
+/* Healthcare: Project card headers have dark gradient — force white text */
+[data-industry="healthcare"] .project-header h1,
+[data-industry="healthcare"] .project-header h2,
+[data-industry="healthcare"] .project-header h3 {
+    color: #ffffff !important;
+}
+
+[data-industry="healthcare"] .project-header .project-badge {
+    color: #33C4CB;
+    background: rgba(0, 163, 173, 0.2);
+    border-color: rgba(0, 163, 173, 0.4);
 }
 
 /* ========================================
