@@ -151,7 +151,7 @@ function applyResumeVersion(industry) {
     const file = resumeMap[industry] || 'resources/Joe_Pointer_Resume.pdf';
     document.querySelectorAll('a[href*="Joe_Pointer_Resume"]').forEach(link => {
         // Only swap the 1-page resume button, not the Executive Brief
-        if (link.href.includes('Executive_Brief')) return;
+        if (link.href.includes('Resume_Full')) return;
         link.setAttribute('href', file);
         link.setAttribute('download', 'Joe_Pointer_Resume.pdf');
     });
