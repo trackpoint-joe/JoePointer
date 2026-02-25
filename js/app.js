@@ -12,11 +12,13 @@ window.addEventListener('load', () => {
     const hash = window.location.hash;
 
     if (hash) {
-        // URL has an anchor - scroll to that section after a brief delay
+        // URL has an anchor - scroll to that section after a brief delay.
+        // Use navScrollTo (not scrollIntoView) to bypass Chrome's bug where
+        // scrollIntoView ignores scroll-padding-top on the html element.
         setTimeout(() => {
             const target = document.querySelector(hash);
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                navScrollTo(target);
             }
         }, 100);
     } else {
@@ -180,7 +182,41 @@ applyIndustryTemplate();
 
 // === END INDUSTRY TEMPLATE & EMPLOYER ROUTING ===
 
+// navScrollTo: scroll a target element into view, clearing the live nav bottom.
+// Uses window.scrollTo instead of scrollIntoView to bypass Chrome's known bug
+// where scrollIntoView ignores scroll-padding-top on the html element.
+// Measures nav.getBoundingClientRect().bottom at call time so it works correctly
+// regardless of nav height, scroll state (compact vs full), or breakpoint.
+function navScrollTo(target, delay) {
+    function doScroll() {
+        const nav = document.getElementById('mainNav');
+        const subnav = document.getElementById('projectSubnav');
+        const navBottom = nav ? nav.getBoundingClientRect().bottom : 0;
+
+        // Project cards sit below the sticky subnav — include subnav in the offset.
+        // Use the subnav's CSS sticky-top + rendered height rather than
+        // getBoundingClientRect().bottom: the latter is inaccurate mid-animation
+        // (the subnav may still be scrolling into position, giving a value like
+        // 900+px which inflates the offset and leaves the card too low in the
+        // viewport on the first click after navigating to the projects section).
+        let offset = navBottom;
+        if (subnav && target.classList.contains('project-card')) {
+            const subnavStickyTop    = parseFloat(getComputedStyle(subnav).top) || 0;
+            const subnavHeight       = subnav.getBoundingClientRect().height;
+            const subnavStickyBottom = subnavStickyTop + subnavHeight;
+            if (subnavStickyBottom > navBottom) offset = subnavStickyBottom;
+        }
+
+        const targetTop = target.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: Math.max(0, targetTop - offset - 8), behavior: 'smooth' });
+    }
+    delay ? setTimeout(doScroll, delay) : doScroll();
+}
+
 // Smooth scrolling for anchor links
+// On mobile the menu sets body.overflow:hidden while open.
+// We detect whether the mobile menu is open and, if so, wait one frame after
+// it closes before scrolling so the overflow lock has been released.
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -188,12 +224,62 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (href === '#') return;
 
         const target = document.querySelector(href);
-        if (target) {
-            // Use native scrollIntoView which respects CSS scroll-margin-top
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+        if (!target) return;
+
+        const quickLinks = document.getElementById('quickLinks');
+        const menuIsOpen = quickLinks && quickLinks.classList.contains('mobile-menu-open');
+
+        // After smooth scroll settles, force-reveal any project-card that the
+        // IntersectionObserver missed during programmatic scrolling.
+        //
+        // Why polling instead of scrollend or a fixed timeout:
+        // • scrollend (Chrome 114+/Firefox 109+/Safari 17+) fires mid-animation
+        //   in practice, so the card isn't in the viewport when the check runs.
+        //   Setting a "done" flag at that point permanently blocks the fallback.
+        // • A fixed timeout (e.g. 750ms) runs while the scroll may still be
+        //   animating — the card hasn't landed yet.
+        //
+        // Polling every 100ms (up to 2 s) continues until at least one card
+        // becomes visible, so it naturally catches the card the moment the
+        // scroll animation delivers it into the viewport.
+        function revealAfterScroll(delay) {
+            // Reveal the target section itself immediately after a short grace period
+            // (the section starts at opacity:0 and needs the IO or this nudge).
+            setTimeout(() => {
+                if (target.style.opacity !== '1') {
+                    target.style.opacity = '1';
+                    target.style.transform = 'translateY(0)';
+                }
+            }, delay + 350);
+
+            // Poll every 100ms to reveal project cards that enter the viewport
+            // at opacity:0. Stops after the first successful reveal or 2 seconds.
+            setTimeout(() => {
+                let ticks = 0;
+                const poll = setInterval(() => {
+                    ticks++;
+                    let revealed = false;
+                    document.querySelectorAll('.project-card').forEach(card => {
+                        if (card.style.opacity === '1') { revealed = true; return; }
+                        const r = card.getBoundingClientRect();
+                        if (r.top < window.innerHeight && r.bottom > 0) {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                            revealed = true;
+                        }
+                    });
+                    if (revealed || ticks >= 20) clearInterval(poll);
+                }, 100);
+            }, delay);
+        }
+
+        if (menuIsOpen) {
+            // Delay scroll until after closeMobileMenu restores body overflow
+            navScrollTo(target, 50);
+            revealAfterScroll(50);
+        } else {
+            navScrollTo(target);
+            revealAfterScroll(0);
         }
     });
 });
@@ -483,3 +569,255 @@ window.addEventListener('resize', () => {
     }
     resizeTimeout = setTimeout(updateActiveNavLink, 100);
 });
+
+// ============================================
+// DYNAMIC SCROLL-MARGIN CALCULATOR FOR PROJECT CARDS
+// scroll-padding-top (on html) and scroll-margin-top (on card) STACK.
+// This measures the real subnav height and sets the exact additional
+// offset needed so cards land just below the sticky subnav.
+// ============================================
+(function() {
+    function updateProjectScrollMargins() {
+        const subnav = document.getElementById('projectSubnav');
+        const projectCards = document.querySelectorAll('.project-card');
+        if (!subnav || !projectCards.length) return;
+
+        // On mobile the sub-nav is position:static (not sticky).
+        // In that case no extra scroll margin is needed — scroll-padding-top
+        // on the html element already handles the fixed nav clearance.
+        const subnavPosition = getComputedStyle(subnav).position;
+        if (subnavPosition !== 'sticky') {
+            projectCards.forEach(card => { card.style.scrollMarginTop = '0px'; });
+            return;
+        }
+
+        // Actual scroll-padding-top already applied to the html element
+        const scrollPaddingTop = parseFloat(
+            getComputedStyle(document.documentElement).scrollPaddingTop
+        ) || 0;
+
+        // The subnav's CSS sticky-top value (varies by breakpoint)
+        const subnavStickyTop = parseFloat(getComputedStyle(subnav).top) || 0;
+
+        // The subnav's actual rendered height (changes on resize/wrap)
+        const subnavHeight = subnav.getBoundingClientRect().height;
+
+        // Where the subnav bottom sits in the viewport when sticky
+        const subnavBottom = subnavStickyTop + subnavHeight;
+
+        // Desired card top = subnav bottom + 20px breathing room
+        // Subtract scroll-padding-top to avoid double-stacking
+        const scrollMargin = Math.max(0, Math.round(subnavBottom + 20 - scrollPaddingTop));
+
+        projectCards.forEach(card => {
+            card.style.scrollMarginTop = scrollMargin + 'px';
+        });
+    }
+
+    window.addEventListener('load', updateProjectScrollMargins);
+    window.addEventListener('resize', () => {
+        clearTimeout(window._sMarginTimeout);
+        window._sMarginTimeout = setTimeout(updateProjectScrollMargins, 120);
+    });
+})();
+
+// ============================================
+// NAV GEOMETRY TRACKER
+// Sets two CSS custom properties on <html>:
+//   --banner-height : actual rendered banner height (Math.ceil)
+//   --nav-bottom    : banner-height + scrolled nav height
+//
+// --banner-height drives .nav { top: var(--banner-height) } so the nav
+// always sticks right below the banner instead of inside it.
+//
+// --nav-bottom drives .project-subnav { top: var(--nav-bottom) } so the
+// subnav always sticks right below the nav.
+//
+// Both compact-block overrides (769-1219px) hardcode top values and cascade
+// over these vars, so this only matters at desktop (1220px+).
+// ============================================
+(function () {
+    function updateNavGeometry() {
+        const banner = document.querySelector('.availability-banner');
+        const nav    = document.getElementById('mainNav');
+        const subnav = document.getElementById('projectSubnav');
+        if (!banner || !nav) return;
+
+        // --banner-height: drives .nav { top: var(--banner-height) } at desktop.
+        const bannerH = Math.ceil(banner.getBoundingClientRect().height);
+        document.documentElement.style.setProperty('--banner-height', bannerH + 'px');
+
+        // Measure the nav's bottom edge to position the subnav flush below it.
+        //
+        // At compact widths (769-1219px) the nav is position:fixed and its
+        // height is identical in both scrolled and non-scrolled states (the
+        // compact CSS block sets the same padding for both). Measure as-is.
+        //
+        // At desktop (1220px+) the nav is position:sticky and is taller when
+        // NOT scrolled (larger padding). The subnav is only visible when the
+        // user is scrolled past 100px (nav has .scrolled = compact height).
+        // Temporarily apply .scrolled with transitions disabled to measure the
+        // compact height accurately.
+        let navBCRBottom;
+        const navIsFixed = getComputedStyle(nav).position === 'fixed';
+        if (navIsFixed) {
+            // Fixed nav: height is scroll-state-independent; measure directly.
+            navBCRBottom = nav.getBoundingClientRect().bottom;
+        } else {
+            // Sticky nav: measure in compact (.scrolled) state.
+            const wasScrolled = nav.classList.contains('scrolled');
+            nav.style.transition = 'none';
+            if (!wasScrolled) nav.classList.add('scrolled');
+            void nav.offsetHeight;
+            navBCRBottom = nav.getBoundingClientRect().bottom;
+            if (!wasScrolled) nav.classList.remove('scrolled');
+            void nav.offsetHeight;
+            nav.style.transition = '';
+        }
+
+        // Math.round: closest integer to the real nav bottom.
+        // Avoids the 0.74px sub-pixel gap (ceil) and the possible 1px under-
+        // shoot (floor) — at worst 0.5px overlap with the nav, which is
+        // invisible at any DPI.
+        const navBottomPx = Math.round(navBCRBottom) + 'px';
+        document.documentElement.style.setProperty('--nav-bottom', navBottomPx);
+
+        // Set subnav inline top directly. Inline style wins over every CSS
+        // rule — this eliminates the gap caused by hardcoded top values in
+        // the compact CSS blocks overriding var(--nav-bottom).
+        if (subnav) subnav.style.top = navBottomPx;
+    }
+    window.addEventListener('load', updateNavGeometry);
+    window.addEventListener('resize', function () {
+        clearTimeout(window._navGeoTimeout);
+        window._navGeoTimeout = setTimeout(updateNavGeometry, 80);
+    });
+})();
+
+// ============================================
+// PRIORITY 1: BACK TO TOP BUTTON
+// ============================================
+(function() {
+    const btn = document.getElementById('backToTop');
+    if (!btn) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    }, { passive: true });
+
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
+
+// ============================================
+// PRIORITY 2: COLLAPSE LINK AT BOTTOM OF EACH EXPANDED SECTION
+// ============================================
+(function() {
+    // Inject a "Collapse" button at the bottom of every .principle-content
+    // and .principle-expanded element (both expand container types used on page)
+    const expandContainers = document.querySelectorAll('.principle-content, .principle-expanded');
+
+    expandContainers.forEach(container => {
+        // Only inject into containers that are inside a <details> element.
+        // .principle-content on "How I Think" cards is the outer wrapper (not inside
+        // details), so it would produce a second, non-functional collapse button.
+        if (!container.closest('details')) return;
+
+        const collapseBtn = document.createElement('button');
+        collapseBtn.className = 'details-collapse-link';
+        collapseBtn.textContent = 'Collapse \u25B2';
+        collapseBtn.setAttribute('aria-label', 'Collapse this section');
+
+        collapseBtn.addEventListener('click', () => {
+            const parentDetails = container.closest('details');
+            if (parentDetails) {
+                parentDetails.removeAttribute('open');
+                // Scroll the summary into view so user can see the closed state
+                parentDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+
+        container.appendChild(collapseBtn);
+    });
+})();
+
+// ============================================
+// PRIORITY 3: PROJECT SUB-NAVIGATION ACTIVE STATE
+// ============================================
+(function() {
+    const pills = document.querySelectorAll('.project-subnav-pill');
+    if (!pills.length) return;
+
+    const projectCards = [
+        document.getElementById('project-careerspark'),
+        document.getElementById('project-workplace'),
+        document.getElementById('project-revolver'),
+        document.getElementById('project-rr'),
+        document.getElementById('project-buildingblocks')
+    ].filter(Boolean);
+
+    function updateActivePill() {
+        // Use getBoundingClientRect() for viewport-relative coords.
+        // card.offsetTop is relative to the offset parent (the section),
+        // not the document — comparing it to window.scrollY gives wrong results.
+        const threshold = window.innerHeight * 0.4;
+        let activeCard = null;
+
+        projectCards.forEach(card => {
+            if (card.getBoundingClientRect().top <= threshold) {
+                activeCard = card;
+            }
+        });
+
+        // No active pill when the user is above the projects section entirely
+        // (first card hasn't scrolled into the top 40% of the viewport yet)
+        // or below it (last card's bottom has left the viewport above).
+        const lastCard = projectCards[projectCards.length - 1];
+        if (lastCard && lastCard.getBoundingClientRect().bottom < 0) {
+            activeCard = null;
+        }
+
+        pills.forEach(pill => {
+            pill.classList.remove('active');
+            if (activeCard && pill.getAttribute('href') === '#' + activeCard.id) {
+                pill.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateActivePill, { passive: true });
+    window.addEventListener('load', updateActivePill);
+})();
+
+// ============================================
+// PRIORITY 4: COLLAPSE ALL BUTTONS
+// ============================================
+(function() {
+    document.querySelectorAll('.collapse-all-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const sectionId = btn.dataset.section;
+            let container;
+
+            if (sectionId === 'projects') {
+                container = document.getElementById('projects');
+            } else if (sectionId === 'how-i-think') {
+                container = document.getElementById('how-i-think');
+            }
+
+            if (!container) return;
+
+            const openDetails = container.querySelectorAll('details[open]');
+            openDetails.forEach(d => d.removeAttribute('open'));
+
+            // Brief visual feedback on the button
+            const orig = btn.textContent;
+            btn.textContent = 'Collapsed';
+            setTimeout(() => { btn.textContent = orig; }, 1200);
+        });
+    });
+})();

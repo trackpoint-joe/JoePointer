@@ -53,7 +53,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 140px; /* Desktop: Account for fixed nav + banner */
+    scroll-padding-top: 200px; /* Desktop: nav un-sticks near top — natural position 79px + 112px height = 191px bottom; 200px = 9px clearance */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -160,7 +160,7 @@ body {
     padding: var(--space-md) var(--space-lg);
     border-bottom: 1px solid rgba(0,0,0,0.06);
     position: sticky;
-    top: 68px;
+    top: var(--banner-height, 80px); /* set dynamically by JS; 80px fallback covers typical desktop banner */
     z-index: 1001;
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
@@ -177,8 +177,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--space-md);
+}
+
+.nav .name {
+    flex-shrink: 0; /* Name never compresses — links compress or hamburger takes over */
 }
 
 .nav .name {
@@ -277,43 +281,16 @@ body {
    Prevent nav wrapping on iPad viewports
    ======================================== */
 @media (min-width: 768px) and (max-width: 1024px) {
-    /* Fix nav positioning - use fixed instead of sticky to prevent sliding under banner */
-    /* Banner is ~95px on iPad, so nav must be fixed at 95px to avoid overlap */
-    .nav {
-        position: fixed; /* Change from sticky to fixed - prevents nav sliding under banner */
-        top: 95px; /* Match actual banner height at iPad viewport */
-        left: 0;
-        right: 0;
-        width: 100%;
-    }
+    /* Content layout for tablet — nav positioning handled in separate blocks below */
 
-    /* Add top padding to hero to account for fixed nav covering content */
-    /* Banner 95px + Nav 83px = 178px total fixed header height */
+    /* Hero top padding: covers the 919-1024px range where compact nav is fixed at ~115px.
+       769-918px range overrides this below with its own smaller value. */
     .hero {
-        padding-top: 200px; /* Fixed header 178px + buffer */
+        padding-top: 200px;
     }
 
-    /* Adjust scroll offset for banner + nav height */
     html {
-        scroll-padding-top: 178px; /* Banner ~95px + Nav ~83px = 178px */
-    }
-
-    /* Tighten spacing to prevent nav links from wrapping to 2 lines */
-    .nav .container {
-        gap: var(--space-sm); /* Reduce from --space-md */
-    }
-
-    .nav .quick-links {
-        gap: var(--space-sm); /* Reduce from --space-lg */
-    }
-
-    .nav .quick-links a {
-        font-size: 0.875rem; /* Reduce from 0.9375rem (15px to 14px) */
-        white-space: nowrap; /* Prevent individual link text wrapping */
-    }
-
-    .nav .name {
-        font-size: 1.5rem; /* Slightly reduce logo size if needed */
+        scroll-padding-top: 178px;
     }
 
     /* Fix hero stats truncation on iPad */
@@ -354,6 +331,139 @@ body {
 
     .hero-headshot {
         margin-top: 120px !important; /* Match text padding for visual alignment */
+    }
+}
+
+/* ========================================
+   768-1219px: COMPACT FIXED BANNER
+   Badge + headline in one horizontal row, details hidden.
+   Gives a predictable ~38px banner height at all these widths,
+   so nav top values don't drift as content wraps differently.
+   ======================================== */
+@media (min-width: 768px) and (max-width: 1219px) {
+    .availability-banner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1002;
+        padding: 6px 12px;
+    }
+    .availability-banner .content {
+        flex-direction: row;    /* single horizontal row */
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+    .availability-banner .details {
+        display: none;          /* hidden — keeps height to ~38px */
+    }
+}
+
+/* ========================================
+   769-918px: ULTRA-COMPACT INLINE NAV
+   All 6 links visible in one row.
+   Banner ~38px + nav ~45px = ~89px total fixed header.
+   (Starts at 769px — 768px stays in hamburger/mobile zone.)
+   (Ends at 918px — 919px+ uses the full compact nav block below.)
+   ======================================== */
+@media (min-width: 769px) and (max-width: 918px) {
+    .nav {
+        position: fixed;
+        top: 44px;              /* banner ~38px + 6px gap */
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 6px var(--space-sm);
+        z-index: 1001;
+    }
+    .mobile-menu-toggle {
+        display: none;
+    }
+    .nav .container {
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
+    .nav .quick-links {
+        gap: 4px;
+    }
+    .nav .quick-links a {
+        font-size: 0.8rem;
+        white-space: nowrap;
+        padding: 0 2px;
+    }
+    .nav .name {
+        font-size: 1.2rem;
+    }
+
+    /* Keep compact padding in scrolled state — prevents base .nav.scrolled from inflating height */
+    .nav.scrolled {
+        padding: 6px var(--space-sm);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* banner ~38px + nav ~45px = ~83px; use 95px for scroll-padding safety */
+    html {
+        scroll-padding-top: 95px;
+    }
+    .hero {
+        padding-top: 140px;
+    }
+    .hero-text {
+        padding-top: 80px !important;
+    }
+    .hero-headshot {
+        margin-top: 80px !important;
+    }
+}
+
+/* ========================================
+   919-1219px: COMPACT FULL NAV (single row guaranteed)
+   Covers 919px boundary, iPad landscape, narrow desktop.
+   Banner ~38px + nav ~71px = ~115px total fixed header.
+   ======================================== */
+@media (min-width: 919px) and (max-width: 1219px) {
+    .nav {
+        position: fixed;
+        top: 44px;              /* banner ~38px + 6px gap */
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: var(--space-xs) var(--space-sm);
+    }
+    .nav .container {
+        flex-wrap: nowrap;
+        gap: var(--space-sm);
+    }
+    .nav .quick-links {
+        gap: var(--space-sm);
+    }
+    .nav .quick-links a {
+        font-size: 0.875rem;
+        white-space: nowrap;
+    }
+    .nav .name {
+        font-size: 1.5rem;
+    }
+
+    /* Keep compact padding even in scrolled state — base .nav.scrolled has higher specificity
+       and would otherwise force large padding, making the nav ~89px tall instead of ~71px. */
+    .nav.scrolled {
+        padding: var(--space-xs) var(--space-sm);
+        box-shadow: var(--shadow-md); /* keep the shadow from .nav.scrolled */
+    }
+
+    /* banner ~38px + nav ~73px = ~117px at widest (1219px); 130px gives 13px safety margin */
+    html {
+        scroll-padding-top: 130px;
+    }
+    .hero {
+        padding-top: 130px;
+    }
+    .hero-text {
+        padding-top: 80px !important;
+    }
+    .hero-headshot {
+        margin-top: 80px !important;
     }
 }
 
@@ -665,12 +775,12 @@ body {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.15);
     transform: translate(-50%, -50%);
-    transition: width 1s, height 1s;
+    transition: width 0.6s, height 0.6s;
 }
 
 .btn:hover::before {
-    width: 500px;
-    height: 500px;
+    width: 300px;
+    height: 300px;
 }
 
 .btn span {
@@ -843,6 +953,20 @@ body {
     text-align: center;
     margin-bottom: var(--space-xl);
     position: relative;
+}
+
+/* Subtitle paragraphs: centered on desktop where wide viewports rarely
+   cause awkward wrapping. On tablet/mobile, switch to left-align so
+   wrapped lines have a consistent left edge — centered wrapping on
+   narrow screens forces the eye to hunt for the start of each line. */
+.section-header p {
+    text-align: center;
+}
+
+@media (max-width: 1023px) {
+    .section-header p {
+        text-align: left;
+    }
 }
 
 .section-header::after {
@@ -1105,7 +1229,7 @@ body {
     background: linear-gradient(135deg, rgba(201, 169, 97, 0.15), rgba(201, 169, 97, 0.08));
     padding: var(--space-2xl);
     border-radius: 20px;
-    text-align: center;
+    text-align: left;
     max-width: 900px;
     margin: 0 auto;
     border: 2px solid rgba(201, 169, 97, 0.3);
@@ -1287,6 +1411,7 @@ body {
     filter: grayscale(1);
     opacity: 0.6;
     transition: all var(--transition-base);
+    text-align: center;
 }
 
 .trust-card:hover .icon {
@@ -1635,8 +1760,12 @@ body {
     .hero-headshot {
         width: 180px;
         height: 180px;
-        margin-top: var(--space-sm); /* Reduced from var(--space-lg) to save space on mobile */
+        margin-top: var(--space-sm) !important; /* !important prevents 768-1024px block's 120px from applying at exactly 768px */
         margin-bottom: var(--space-md);
+    }
+
+    .hero-text {
+        padding-top: 0 !important; /* !important overrides 768-1024px block's 120px at exactly 768px; hero already has 160px top padding */
     }
     
     .target-role .container,
@@ -1730,9 +1859,9 @@ body {
     }
 
     /* Scroll padding for fixed headers on mobile */
-    /* Banner ~64px (details hidden, reduced padding) + Nav at 66px + nav height 73px = 139px */
+    /* Banner ~64px + Nav at 66px + nav height ~76px = ~142px; use 150px for safety */
     html {
-        scroll-padding-top: 139px;
+        scroll-padding-top: 150px;
     }
 
     /* Reduce Core Competencies spacing on mobile to prevent white space */
@@ -2118,13 +2247,271 @@ body {
     color: var(--text-dark);
 }
 
+/* ============================================
+   NAVIGATION ENHANCEMENTS
+   ============================================ */
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 28px;
+    z-index: 1200;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary, var(--midnight));
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease;
+    pointer-events: none;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.back-to-top:hover {
+    background: var(--accent, var(--gold));
+    color: var(--primary, var(--midnight));
+}
+
+/* Project Sub-Navigation — sticky within the Projects section */
+.project-subnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255,255,255,0.97);
+    border: 1px solid rgba(0,0,0,0.09);
+    border-radius: 0 0 12px 12px;  /* square top corners — subnav always abuts nav; rounded only at bottom */
+    backdrop-filter: blur(12px);
+    flex-wrap: wrap;
+    /* Sticky: stays below main nav while inside the Projects section */
+    position: sticky;
+    top: var(--nav-bottom, 165px);  /* set by JS to banner-height + scrolled-nav-height; 165px fallback */
+    z-index: 990;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+/* Project cards: offset scroll target to clear sticky subnav.
+   scroll-padding-top (165px) and scroll-margin-top STACK, so we only
+   add the ADDITIONAL clearance needed above the existing 165px offset.
+   Formula: (subnav sticky-top + subnav height + 20px gap) - scroll-padding-top
+   Desktop: (165 + ~80 + 20) - 165 = 100px — JS will refine at runtime */
+.project-card {
+    scroll-margin-top: 100px;
+}
+
+.project-subnav-pills {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.project-subnav-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.08);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.project-subnav-pill:hover,
+.project-subnav-pill.active {
+    background: var(--accent, var(--gold));
+    color: var(--primary, var(--midnight));
+    border-color: var(--accent, var(--gold));
+}
+
+/* Collapse All Button */
+.collapse-all-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.collapse-all-btn:hover {
+    background: rgba(0,0,0,0.06);
+    color: var(--text-dark);
+}
+
+/* Section-level Collapse Row */
+.section-collapse-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-md);
+}
+
+/* Collapse link injected at bottom of expanded details */
+.details-collapse-link {
+    display: block;
+    text-align: right;
+    margin-top: var(--space-md);
+    padding-top: var(--space-sm);
+    border-top: 1px solid rgba(0,0,0,0.07);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    width: 100%;
+}
+
+.details-collapse-link:hover {
+    color: var(--accent, var(--gold));
+}
+
+/* 919-1219px subnav: matches the 919-1219px compact nav range exactly.
+   Nav is fixed at top: 44px + ~71px height = ~115px bottom. Subnav at 115px = flush. */
+@media (min-width: 919px) and (max-width: 1219px) {
+    .project-subnav {
+        top: 115px;           /* nav bottom: 44px top + ~71px height = ~115px; flush, no gap */
+        flex-wrap: nowrap;    /* never wrap onto a second line */
+        overflow-x: auto;     /* swipe horizontally if pills don't fit */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        justify-content: flex-start;
+        border-top-left-radius: 0;    /* flush with nav — no rounded corners where content peeks through */
+        border-top-right-radius: 0;
+    }
+    .project-subnav::-webkit-scrollbar {
+        display: none;
+    }
+    .project-subnav-pills {
+        flex-wrap: nowrap;
+    }
+    .project-subnav-pill {
+        flex-shrink: 0;
+    }
+    /* Hide Collapse All in the sub-nav on tablet — saves space, avoids
+       it getting pushed into the scroll area awkwardly */
+    .collapse-all-btn[data-section="projects"] {
+        display: none;
+    }
+    .project-card {
+        scroll-margin-top: 76px;   /* JS refines at runtime */
+    }
+}
+
+/* 769-918px subnav: banner ~38px + nav ~45px = ~89px nav bottom; subnav at 90px (1px gap) */
+@media (min-width: 769px) and (max-width: 918px) {
+    .project-subnav {
+        top: 90px;                 /* banner ~38px + nav ~40px + 12px buffer */
+        flex-wrap: nowrap;         /* never wrap onto a second line */
+        overflow-x: auto;          /* swipe horizontally if pills don't fit */
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        justify-content: flex-start;
+        border-top-left-radius: 0;    /* flush with nav — no rounded corners where content peeks through */
+        border-top-right-radius: 0;
+    }
+    .project-subnav::-webkit-scrollbar {
+        display: none;
+    }
+    .project-subnav-pills {
+        flex-wrap: nowrap;
+    }
+    .project-subnav-pill {
+        flex-shrink: 0;
+    }
+    .collapse-all-btn[data-section="projects"] {
+        display: none;
+    }
+}
+
+/* Mobile (≤768px): hamburger nav. Banner ~64px + nav top 66px + nav height ~76px = ~142px.
+   Subnav at 150px clears the nav bottom safely. */
+@media (max-width: 768px) {
+    /* Sub-nav: sticky — horizontal swipeable full-width strip */
+    .project-subnav {
+        position: sticky;
+        top: 150px;                /* below fixed banner (~64px) + nav (66px top + ~76px height) */
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        /* Break out of container for full viewport width */
+        margin-left: calc(-1 * var(--space-md));
+        margin-right: calc(-1 * var(--space-md));
+        margin-bottom: var(--space-lg);
+        padding: 8px 12px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        justify-content: flex-start;
+        gap: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .project-subnav::-webkit-scrollbar {
+        display: none;
+    }
+    .project-subnav-pills {
+        flex-wrap: nowrap;
+        gap: var(--space-sm);
+    }
+    .project-subnav-pill {
+        flex-shrink: 0;
+    }
+    /* Hide project Collapse All on mobile — saves space */
+    .collapse-all-btn[data-section="projects"] {
+        display: none;
+    }
+    /* scroll-margin-top set dynamically by JS (subnav is sticky) */
+    .back-to-top {
+        bottom: 20px;
+        right: 16px;
+        width: 42px;
+        height: 42px;
+        font-size: 1.3rem;
+    }
+    /* Reduce project metric number size on mobile — at 2.25rem, word
+       values like "Systematic" overflow their grid column and get clipped. */
+    .project-metric .number {
+        font-size: 1.5rem;
+    }
+}
+
 /* Pattern Recognition Box */
 .pattern-recognition-box {
     background: linear-gradient(135deg, rgba(10, 14, 39, 0.05), rgba(42, 62, 80, 0.03));
     border: 2px solid rgba(201, 169, 97, 0.2);
     border-radius: 20px;
     padding: var(--space-2xl);
-    text-align: center;
+    text-align: left;
     position: relative;
     overflow: hidden;
 }
