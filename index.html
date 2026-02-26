@@ -185,11 +185,8 @@
 
             <!-- Primary CTAs -->
             <div class="cta-group" id="downloads">
-                <a href="resources/Joe_Pointer_Resume.pdf" class="btn btn-primary" download>
-                    <span>📥 Resume (1-page)</span>
-                </a>
-                <a href="resources/Joe_Pointer_Resume_Full.pdf" class="btn btn-secondary" download>
-                    <span>📋 Full Resume (2-page)</span>
+                <a href="resources/Joe_Pointer_Resume_Full.pdf" class="btn btn-primary" download="Joe_Pointer_Resume.pdf">
+                    <span>📥 Download Resume</span>
                 </a>
                 <a href="#contact" class="btn btn-accent">
                     <span>📅 Let's Connect</span>
@@ -1428,11 +1425,8 @@
                 <h3>Ready to Discuss Opportunities?</h3>
                 <p>Here's everything you need to share with your hiring team:</p>
                 <div class="download-buttons">
-                    <a href="resources/Joe_Pointer_Resume.pdf" class="btn btn-primary" download>
-                        <span>📄 Download 1-Page Resume</span>
-                    </a>
-                    <a href="resources/Joe_Pointer_Resume_Full.pdf" class="btn btn-secondary" download>
-                        <span>📋 Download Full Resume (2-page)</span>
+                    <a href="resources/Joe_Pointer_Resume_Full.pdf" class="btn btn-primary" download="Joe_Pointer_Resume.pdf">
+                        <span>📥 Download Resume</span>
                     </a>
                     <a href="mailto:joepointer@comcast.net?subject=Discovery%20Call%20Request" class="btn btn-accent">
                         <span>📅 Schedule Discovery Call</span>
@@ -2053,6 +2047,19 @@
                 } else {
                     document.body.setAttribute('data-industry', template);
                 }
+
+                // Swap resume download links based on template
+                const resumeMap = {
+                    default:     'resources/Joe_Pointer_Resume_Full.pdf',
+                    finance:     'resources/Joe_Pointer_Resume_Full.pdf',
+                    tech:        'resources/Joe_Pointer_Resume_Tech.pdf',
+                    consulting:  'resources/Joe_Pointer_Resume_Consulting.pdf',
+                    healthcare:  'resources/Joe_Pointer_Resume_Healthcare.pdf'
+                };
+                const fullResumePdf = resumeMap[template] || resumeMap.default;
+                document.querySelectorAll('a[download="Joe_Pointer_Resume.pdf"]').forEach(link => {
+                    link.href = fullResumePdf;
+                });
 
                 // Scroll to top to see hero changes
                 window.scrollTo({ top: 0, behavior: 'smooth' });
