@@ -2255,7 +2255,7 @@ body {
 .back-to-top {
     position: fixed;
     bottom: 32px;
-    right: 28px;
+    left: 28px;
     z-index: 1200;
     width: 48px;
     height: 48px;
@@ -2285,6 +2285,56 @@ body {
 .back-to-top:hover {
     background: var(--accent, var(--gold));
     color: var(--primary, var(--midnight));
+}
+
+/* ── Ask Joe Floating Button ── */
+.ask-joe-float {
+    position: fixed;
+    bottom: 32px;
+    right: 28px;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0 1.25rem;
+    height: 48px;
+    border-radius: 50px;
+    background: var(--accent, var(--gold));
+    color: var(--primary, var(--midnight));
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: askJoePulse 0.8s ease-in-out 2s 3;
+}
+
+.ask-joe-float:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.28);
+}
+
+.ask-joe-float-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+@keyframes askJoePulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.06); }
+}
+
+@media (max-width: 768px) {
+    .ask-joe-float {
+        bottom: 20px;
+        right: 16px;
+        height: 44px;
+        padding: 0 1rem;
+        font-size: 0.85rem;
+    }
 }
 
 /* Project Sub-Navigation — sticky within the Projects section */
@@ -2493,7 +2543,7 @@ body {
     /* scroll-margin-top set dynamically by JS (subnav is sticky) */
     .back-to-top {
         bottom: 20px;
-        right: 16px;
+        left: 16px;
         width: 42px;
         height: 42px;
         font-size: 1.3rem;
