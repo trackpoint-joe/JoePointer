@@ -2074,8 +2074,17 @@
         // Auto-apply template from ?company= URL parameter
         (function() {
             const params = new URLSearchParams(window.location.search);
-            const company = (params.get('company') || '').toLowerCase();
+            const companyRaw = params.get('company') || '';
+            const company = companyRaw.toLowerCase();
             if (!company) return;
+
+            // Populate company name elements
+            const stickyName = document.getElementById('stickyCompanyName');
+            const heroName = document.getElementById('heroCompanyName');
+            const heroPersonalization = document.getElementById('heroPersonalization');
+            if (stickyName) stickyName.textContent = companyRaw;
+            if (heroName) heroName.textContent = 'Prepared for ' + companyRaw;
+            if (heroPersonalization) heroPersonalization.style.display = 'block';
 
             const industryKeywords = {
                 finance:    ['bank', 'sachs', 'morgan', 'fidelity', 'vanguard', 'capital', 'jpmorgan', 'wells', 'citi', 'ameriprise', 'tiaa', 'insurance', 'financial', 'investment', 'equity', 'fund', 'credit', 'blackrock', 'schwab', 'prudential', 'metlife', 'allstate'],
