@@ -2070,6 +2070,38 @@
         if (window.location.hash === '#admin') {
             document.getElementById('adminPanel').style.display = 'block';
         }
+
+        // Auto-apply template from ?company= URL parameter
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const company = (params.get('company') || '').toLowerCase();
+            if (!company) return;
+
+            const industryKeywords = {
+                finance:    ['bank', 'sachs', 'morgan', 'fidelity', 'vanguard', 'capital', 'jpmorgan', 'wells', 'citi', 'ameriprise', 'tiaa', 'insurance', 'financial', 'investment', 'equity', 'fund', 'credit', 'blackrock', 'schwab', 'prudential', 'metlife', 'allstate'],
+                tech:       ['microsoft', 'google', 'amazon', 'apple', 'meta', 'salesforce', 'oracle', 'ibm', 'sap', 'adobe', 'software', 'tech', 'data', 'cloud', 'digital', 'intel', 'cisco', 'nvidia', 'servicenow', 'workday', 'zendesk', 'hubspot'],
+                consulting: ['mckinsey', 'deloitte', 'bcg', 'bain', 'accenture', 'kpmg', 'pwc', 'ernst', 'booz', 'consulting', 'advisory', 'gartner', 'strategy', 'mercer', 'oliver wyman'],
+                healthcare: ['health', 'medical', 'hospital', 'clinic', 'pharma', 'bio', 'care', 'kaiser', 'cvs', 'aetna', 'anthem', 'humana', 'cigna', 'optum', 'unitedhealth', 'johnson', 'pfizer', 'merck', 'abbvie', 'elevance']
+            };
+
+            let matched = null;
+            for (const [industry, keywords] of Object.entries(industryKeywords)) {
+                if (keywords.some(kw => company.includes(kw))) { matched = industry; break; }
+            }
+            if (!matched) return;
+
+            document.body.setAttribute('data-industry', matched);
+
+            const resumeMap = {
+                finance:    'resources/Joe_Pointer_Resume_Full.pdf',
+                tech:       'resources/Joe_Pointer_Resume_Tech.pdf',
+                consulting: 'resources/Joe_Pointer_Resume_Consulting.pdf',
+                healthcare: 'resources/Joe_Pointer_Resume_Healthcare.pdf'
+            };
+            document.querySelectorAll('a[download="Joe_Pointer_Resume.pdf"]').forEach(link => {
+                link.href = resumeMap[matched];
+            });
+        })();
     </script>
 
     <script>
