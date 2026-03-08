@@ -2047,6 +2047,7 @@
                     default:     'resources/Joe_Pointer_Resume_Full.pdf',
                     finance:     'resources/Joe_Pointer_Resume_Full.pdf',
                     tech:        'resources/Joe_Pointer_Resume_Tech.pdf',
+                    energy:      'resources/Joe_Pointer_Resume_Energy.pdf',
                     consulting:  'resources/Joe_Pointer_Resume_Consulting.pdf',
                     healthcare:  'resources/Joe_Pointer_Resume_Healthcare.pdf'
                 };
@@ -2079,13 +2080,14 @@
             const industryKeywords = {
                 finance:    ['bank', 'sachs', 'morgan', 'fidelity', 'vanguard', 'capital', 'jpmorgan', 'wells', 'citi', 'ameriprise', 'tiaa', 'insurance', 'financial', 'investment', 'equity', 'fund', 'credit', 'blackrock', 'schwab', 'prudential', 'metlife', 'allstate'],
                 tech:       ['microsoft', 'google', 'amazon', 'apple', 'meta', 'salesforce', 'oracle', 'ibm', 'sap', 'adobe', 'software', 'tech', 'data', 'cloud', 'digital', 'intel', 'cisco', 'nvidia', 'servicenow', 'workday', 'zendesk', 'hubspot'],
+                energy:     ['energy', 'utility', 'electric', 'power', 'grid', 'tri-state', 'tristate', 'xcel', 'duke energy', 'nextera', 'dominion', 'entergy', 'eversource', 'aes', 'avangrid', 'sempra', 'southern company', 'renewable', 'solar', 'wind', 'generation', 'transmission'],
                 consulting: ['mckinsey', 'deloitte', 'bcg', 'bain', 'accenture', 'kpmg', 'pwc', 'ernst', 'booz', 'consulting', 'advisory', 'gartner', 'strategy', 'mercer', 'oliver wyman'],
                 healthcare: ['health', 'medical', 'hospital', 'clinic', 'pharma', 'bio', 'care', 'kaiser', 'cvs', 'aetna', 'anthem', 'humana', 'cigna', 'optum', 'unitedhealth', 'johnson', 'pfizer', 'merck', 'abbvie', 'elevance']
             };
 
             // Direct ?industry= param takes priority over keyword matching
             const industryParam = params.get('industry');
-            const validIndustries = ['finance', 'tech', 'consulting', 'healthcare'];
+            const validIndustries = ['finance', 'tech', 'energy', 'consulting', 'healthcare'];
 
             let matched = null;
             if (industryParam && validIndustries.includes(industryParam)) {
@@ -2097,11 +2099,14 @@
             }
             if (!matched) return;
 
-            document.body.setAttribute('data-industry', matched);
+            // Map industry to visual CSS template (energy uses tech styling)
+            const visualTemplate = { energy: 'tech' };
+            document.body.setAttribute('data-industry', visualTemplate[matched] || matched);
 
             const resumeMap = {
                 finance:    'resources/Joe_Pointer_Resume_Full.pdf',
                 tech:       'resources/Joe_Pointer_Resume_Tech.pdf',
+                energy:     'resources/Joe_Pointer_Resume_Energy.pdf',
                 consulting: 'resources/Joe_Pointer_Resume_Consulting.pdf',
                 healthcare: 'resources/Joe_Pointer_Resume_Healthcare.pdf'
             };
@@ -2114,10 +2119,10 @@
     <script>
     // ============================================================
     // ASK JOE — AI Chatbot
-    // Routed through Cloudflare Worker proxy (key never in source)
+    // Replace CHAT_API_KEY value with your Anthropic API key
     // ============================================================
 
-    const CHAT_WORKER_URL = 'https://joe-portfolio-chat.joe-pointer.workers.dev/';
+    const CHAT_API_KEY = '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';
     const CHAT_DAILY_LIMIT = 15;
     const CHAT_RATE_PREFIX = 'joe_chat_';
 
@@ -2348,10 +2353,13 @@ RESPONSE INSTRUCTIONS:
         updateRateLimitUI();
 
         try {
-            const res = await fetch(CHAT_WORKER_URL, {
+            const res = await fetch('https://api.anthropic.com/v1/messages', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'x-api-key': CHAT_API_KEY,
+                    'anthropic-version': '2023-06-01',
+                    'anthropic-dangerous-direct-browser-access': 'true'
                 },
                 body: JSON.stringify({
                     model: 'claude-sonnet-4-6',
