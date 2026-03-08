@@ -2118,11 +2118,8 @@
 
     <script>
     // ============================================================
-    // ASK JOE — AI Chatbot
-    // Replace CHAT_API_KEY value with your Anthropic API key
+    // ASK JOE — AI Chatbot (routed through Cloudflare Worker proxy)
     // ============================================================
-
-    const CHAT_API_KEY = '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';
     const CHAT_DAILY_LIMIT = 15;
     const CHAT_RATE_PREFIX = 'joe_chat_';
 
@@ -2355,13 +2352,10 @@ RESPONSE INSTRUCTIONS:
         updateRateLimitUI();
 
         try {
-            const res = await fetch('https://api.anthropic.com/v1/messages', {
+            const res = await fetch('https://joe-portfolio-chat.joe-pointer.workers.dev', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': CHAT_API_KEY,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     model: 'claude-sonnet-4-6',
