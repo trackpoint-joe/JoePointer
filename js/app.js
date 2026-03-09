@@ -72,7 +72,12 @@ const employerProfiles = {
     'cvs': { industry: 'healthcare', company: 'CVS Health', welcome: '' },
     'pfizer': { industry: 'healthcare', company: 'Pfizer', welcome: '' },
     'johnson-johnson': { industry: 'healthcare', company: 'Johnson & Johnson', welcome: '' },
-    'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' }
+    'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' },
+
+    // Active Applications
+    'deltek': { industry: 'tech', company: 'Deltek', welcome: '' },
+    'tri-state': { industry: 'tech', company: 'Tri-State Generation and Transmission', welcome: '' },
+    'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' }
 };
 
 // Apply industry template based on URL path or query parameter
