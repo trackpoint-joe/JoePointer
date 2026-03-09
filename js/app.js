@@ -77,7 +77,9 @@ const employerProfiles = {
     // Active Applications
     'deltek': { industry: 'tech', company: 'Deltek', welcome: '' },
     'tri-state': { industry: 'tech', company: 'Tri-State Generation and Transmission', welcome: '' },
-    'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' }
+    'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' },
+    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' },
+    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' }
 };
 
 // Apply industry template based on URL path or query parameter
