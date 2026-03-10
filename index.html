@@ -1897,6 +1897,12 @@
             border-bottom-left-radius: 4px;
         }
 
+        .chat-message--ai .chat-bubble p { margin: 0 0 0.5em 0; }
+        .chat-message--ai .chat-bubble p:last-child { margin-bottom: 0; }
+        .chat-message--ai .chat-bubble strong { color: #1a365d; }
+        .chat-message--ai .chat-bubble ul, .chat-message--ai .chat-bubble ol { margin: 0.3em 0 0.5em 1.2em; padding: 0; }
+        .chat-message--ai .chat-bubble li { margin-bottom: 0.2em; }
+
         /* Loading dots */
         .chat-loading-dots {
             display: flex;
@@ -2297,6 +2303,35 @@ RESPONSE INSTRUCTIONS:
         document.getElementById('chatOverlay').classList.remove('chat-overlay--active');
     }
 
+    // Lightweight markdown to HTML (paragraphs, bold, italic, lists)
+    function chatMarkdown(text) {
+        // Escape HTML
+        let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        // Bold and italic
+        s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        // Split into lines for block processing
+        const lines = s.split('\n');
+        let html = '';
+        let inList = false;
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (/^[-•]\s+/.test(trimmed)) {
+                if (!inList) { html += '<ul>'; inList = true; }
+                html += '<li>' + trimmed.replace(/^[-•]\s+/, '') + '</li>';
+            } else {
+                if (inList) { html += '</ul>'; inList = false; }
+                if (trimmed === '') {
+                    // skip empty lines (paragraph breaks handled by wrapping)
+                } else {
+                    html += '<p>' + trimmed + '</p>';
+                }
+            }
+        }
+        if (inList) html += '</ul>';
+        return html;
+    }
+
     // Rendering helpers
     function appendMessage(role, text) {
         const area = document.getElementById('chatMessages');
@@ -2304,7 +2339,11 @@ RESPONSE INSTRUCTIONS:
         wrap.className = `chat-message chat-message--${role}`;
         const bubble = document.createElement('div');
         bubble.className = 'chat-bubble';
-        bubble.textContent = text;
+        if (role === 'ai') {
+            bubble.innerHTML = chatMarkdown(text);
+        } else {
+            bubble.textContent = text;
+        }
         wrap.appendChild(bubble);
         area.appendChild(wrap);
         area.scrollTop = area.scrollHeight;
