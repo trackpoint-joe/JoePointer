@@ -79,7 +79,8 @@ const employerProfiles = {
     'tri-state': { industry: 'tech', company: 'Tri-State Generation and Transmission', welcome: '' },
     'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' },
     'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' },
-    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' }
+    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' },
+    'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '' }
 };
 
 // Apply industry template based on URL path or query parameter
