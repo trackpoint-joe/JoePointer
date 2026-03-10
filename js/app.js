@@ -39,7 +39,7 @@ window.addEventListener('beforeunload', () => {
 // === INDUSTRY TEMPLATE & EMPLOYER ROUTING SYSTEM ===
 
 // Employer profile database
-const employerProfiles = {
+var employerProfiles = {
     // Finance/Banking
     'finance': { industry: 'finance', company: '', welcome: '' },
     'goldman': { industry: 'finance', company: 'Goldman Sachs', welcome: '' },
