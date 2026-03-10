@@ -104,12 +104,10 @@ function applyIndustryTemplate() {
     else if (industryParam || companyParam) {
         let derivedIndustry = industryParam || '';
 
-        // If no explicit industry param, derive from company name lookup
-        if (!derivedIndustry && companyParam) {
-            // Try slug match first (e.g., "Goldman Sachs" → "goldman-sachs")
+        // Employer profile industry always wins over URL parameter
+        if (companyParam) {
             const slug = companyParam.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
             const bySlug = employerProfiles[slug];
-            // Also try matching by display name value
             const byName = !bySlug && Object.values(employerProfiles).find(
                 ep => ep.company && ep.company.toLowerCase() === companyParam.toLowerCase()
             );
