@@ -2371,7 +2371,14 @@ RESPONSE INSTRUCTIONS:
                 body: JSON.stringify({
                     model: 'claude-sonnet-4-6',
                     max_tokens: 600,
-                    system: CHAT_SYSTEM_PROMPT,
+                    system: (function() {
+                        let prompt = CHAT_SYSTEM_PROMPT;
+                        const slug = new URLSearchParams(window.location.search).get('company');
+                        if (slug && typeof employerProfiles !== 'undefined' && employerProfiles[slug] && employerProfiles[slug].chatContext) {
+                            prompt += '\n\nVISITOR CONTEXT:\n' + employerProfiles[slug].chatContext;
+                        }
+                        return prompt;
+                    })(),
                     messages: chatHistory
                 })
             });

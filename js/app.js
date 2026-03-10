@@ -75,12 +75,18 @@ const employerProfiles = {
     'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' },
 
     // Active Applications
-    'deltek': { industry: 'tech', company: 'Deltek', welcome: '', resume: 'resources/Joe_Pointer_Resume_Deltek.pdf' },
-    'tri-state': { industry: 'tech', company: 'Tri-State', welcome: '', resume: 'resources/Joe_Pointer_Resume_Tri_State.pdf' },
-    'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' },
-    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf' },
-    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf' },
-    'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf' }
+    'deltek': { industry: 'tech', company: 'Deltek', welcome: '', resume: 'resources/Joe_Pointer_Resume_Deltek.pdf',
+        chatContext: 'Visitor is from Deltek, evaluating Joe for Senior Principal, AI Transformation Lead. Emphasize enterprise AI adoption methodology, change management at scale, and building repeatable frameworks that drive sustained adoption in regulated environments.' },
+    'tri-state': { industry: 'tech', company: 'Tri-State', welcome: '', resume: 'resources/Joe_Pointer_Resume_Tri_State.pdf',
+        chatContext: 'Visitor is from Tri-State Generation and Transmission, evaluating Joe for Senior Manager AI and Innovation. Emphasize AI strategy, innovation leadership, workforce augmentation, and experience driving technology adoption across large organizations.' },
+    'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '',
+        chatContext: 'Visitor is from Cherry Bekaert, evaluating Joe for AI Agent Architect. Emphasize hands-on AI building experience, agentic AI workflows, prompt engineering, and practical AI solution design alongside enterprise consulting delivery.' },
+    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf',
+        chatContext: 'Visitor is from Charles Schwab, evaluating Joe for a role in financial services. Emphasize Fortune 100 experience at TIAA, responsible AI governance in regulated environments, workforce transformation, and data-driven decision making.' },
+    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf',
+        chatContext: 'Visitor is from Charles Schwab, evaluating Joe for a role in financial services. Emphasize Fortune 100 experience at TIAA, responsible AI governance in regulated environments, workforce transformation, and data-driven decision making.' },
+    'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf',
+        chatContext: 'Visitor is from Human Agency, evaluating Joe for Chief of Staff to the Managing Director of AI. Emphasize 11 years of management consulting at Pearson delivering enterprise solutions to Fortune 500 clients globally, AI implementation methodology from discovery through sustained adoption, repeatable frameworks, responsible AI governance, and multi-client delivery instincts.' }
 };
 
 // Apply industry template based on URL path or query parameter
