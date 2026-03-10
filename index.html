@@ -2103,6 +2103,10 @@
             const visualTemplate = { energy: 'tech' };
             document.body.setAttribute('data-industry', visualTemplate[matched] || matched);
 
+            // Company-specific resume takes priority over industry default
+            const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[company];
+            const companyResume = companyProfile && companyProfile.resume;
+
             const resumeMap = {
                 finance:    'resources/Joe_Pointer_Resume_Full.pdf',
                 tech:       'resources/Joe_Pointer_Resume_Tech.pdf',
@@ -2111,7 +2115,7 @@
                 healthcare: 'resources/Joe_Pointer_Resume_Healthcare.pdf'
             };
             document.querySelectorAll('a[download="Joe_Pointer_Resume.pdf"]').forEach(link => {
-                link.href = resumeMap[matched];
+                link.href = companyResume || resumeMap[matched];
             });
         })();
     </script>

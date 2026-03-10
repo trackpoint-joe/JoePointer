@@ -80,7 +80,7 @@ const employerProfiles = {
     'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' },
     'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' },
     'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' },
-    'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '' }
+    'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
