@@ -75,11 +75,11 @@ const employerProfiles = {
     'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' },
 
     // Active Applications
-    'deltek': { industry: 'tech', company: 'Deltek', welcome: '' },
-    'tri-state': { industry: 'tech', company: 'Tri-State Generation and Transmission', welcome: '' },
+    'deltek': { industry: 'tech', company: 'Deltek', welcome: '', resume: 'resources/Joe_Pointer_Resume_Deltek.pdf' },
+    'tri-state': { industry: 'tech', company: 'Tri-State Generation and Transmission', welcome: '', resume: 'resources/Joe_Pointer_Resume_Tri_State.pdf' },
     'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' },
-    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' },
-    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '' },
+    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf' },
+    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf' },
     'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf' }
 };
 
