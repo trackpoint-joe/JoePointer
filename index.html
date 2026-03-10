@@ -2085,12 +2085,19 @@
                 healthcare: ['health', 'medical', 'hospital', 'clinic', 'pharma', 'bio', 'care', 'kaiser', 'cvs', 'aetna', 'anthem', 'humana', 'cigna', 'optum', 'unitedhealth', 'johnson', 'pfizer', 'merck', 'abbvie', 'elevance']
             };
 
-            // Direct ?industry= param takes priority over keyword matching
+            // Check employer profile first, then URL param, then keyword matching
+            const companySlug = company.replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
+            const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[companySlug];
+            const companyResume = companyProfile && companyProfile.resume;
+
             const industryParam = params.get('industry');
             const validIndustries = ['finance', 'tech', 'energy', 'consulting', 'healthcare'];
 
             let matched = null;
-            if (industryParam && validIndustries.includes(industryParam)) {
+            // Employer profile industry takes top priority
+            if (companyProfile && companyProfile.industry) {
+                matched = companyProfile.industry;
+            } else if (industryParam && validIndustries.includes(industryParam)) {
                 matched = industryParam;
             } else {
                 for (const [industry, keywords] of Object.entries(industryKeywords)) {
@@ -2102,11 +2109,6 @@
             // Map industry to visual CSS template (energy uses tech styling)
             const visualTemplate = { energy: 'tech' };
             document.body.setAttribute('data-industry', visualTemplate[matched] || matched);
-
-            // Company-specific resume takes priority over industry default
-            const companySlug = company.replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
-            const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[companySlug];
-            const companyResume = companyProfile && companyProfile.resume;
 
             const resumeMap = {
                 finance:    'resources/Joe_Pointer_Resume_Full.pdf',
