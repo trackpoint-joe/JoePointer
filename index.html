@@ -2104,7 +2104,8 @@
             document.body.setAttribute('data-industry', visualTemplate[matched] || matched);
 
             // Company-specific resume takes priority over industry default
-            const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[company];
+            const companySlug = company.replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
+            const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[companySlug];
             const companyResume = companyProfile && companyProfile.resume;
 
             const resumeMap = {
