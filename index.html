@@ -2076,9 +2076,12 @@
             const company = companyRaw.toLowerCase();
             if (!company) return;
 
-            // Populate company name elements
+            // Populate company name elements (use employer profile display name if available)
+            const companySlug = company.replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
+            const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[companySlug];
+            const displayName = (companyProfile && companyProfile.company) || companyRaw;
             const stickyName = document.getElementById('stickyCompanyName');
-            if (stickyName) stickyName.textContent = companyRaw;
+            if (stickyName) stickyName.textContent = displayName;
 
             const industryKeywords = {
                 finance:    ['bank', 'sachs', 'morgan', 'fidelity', 'vanguard', 'capital', 'jpmorgan', 'wells', 'citi', 'ameriprise', 'tiaa', 'insurance', 'financial', 'investment', 'equity', 'fund', 'credit', 'blackrock', 'schwab', 'prudential', 'metlife', 'allstate'],
@@ -2089,8 +2092,6 @@
             };
 
             // Check employer profile first, then URL param, then keyword matching
-            const companySlug = company.replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
-            const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[companySlug];
             const companyResume = companyProfile && companyProfile.resume;
 
             const industryParam = params.get('industry');
