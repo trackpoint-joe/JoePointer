@@ -105,19 +105,20 @@ function applyIndustryTemplate() {
         let derivedIndustry = industryParam || '';
 
         // Employer profile industry always wins over URL parameter
+        let derivedCompany = companyParam || '';
         if (companyParam) {
             const slug = companyParam.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
             const bySlug = employerProfiles[slug];
             const byName = !bySlug && Object.values(employerProfiles).find(
                 ep => ep.company && ep.company.toLowerCase() === companyParam.toLowerCase()
             );
-            if (bySlug) derivedIndustry = bySlug.industry;
-            else if (byName) derivedIndustry = byName.industry;
+            if (bySlug) { derivedIndustry = bySlug.industry; derivedCompany = bySlug.company || derivedCompany; }
+            else if (byName) { derivedIndustry = byName.industry; derivedCompany = byName.company || derivedCompany; }
         }
 
         profile = {
             industry: derivedIndustry,
-            company: companyParam || '',
+            company: derivedCompany,
             welcome: welcomeParam ? decodeURIComponent(welcomeParam) : ''
         };
     }
