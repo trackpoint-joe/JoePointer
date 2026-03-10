@@ -2412,7 +2412,8 @@ RESPONSE INSTRUCTIONS:
                     max_tokens: 600,
                     system: (function() {
                         let prompt = CHAT_SYSTEM_PROMPT;
-                        const slug = new URLSearchParams(window.location.search).get('company');
+                        const rawSlug = new URLSearchParams(window.location.search).get('company');
+                        const slug = rawSlug ? rawSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '') : null;
                         if (slug && typeof employerProfiles !== 'undefined' && employerProfiles[slug] && employerProfiles[slug].chatContext) {
                             prompt += '\n\nVISITOR CONTEXT:\n' + employerProfiles[slug].chatContext;
                         }
