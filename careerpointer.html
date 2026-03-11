@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CareerPointer</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --blue:    #007AFF;
+            --red:     #FF3B30;
+            --green:   #34C759;
+            --orange:  #FF9500;
+            --purple:  #AF52DE;
+            --gray:    #8E8E93;
+            --gray2:   #AEAEB2;
+            --gray3:   #C7C7CC;
+            --gray4:   #D1D1D6;
+            --gray5:   #E5E5EA;
+            --gray6:   #F2F2F7;
+            --label:   #000000;
+            --label2:  rgba(60,60,67,0.8);
+            --label3:  rgba(60,60,67,0.6);
+            --label4:  rgba(60,60,67,0.4);
+            --bg:      #F2F2F7;
+            --card:    #FFFFFF;
+            --nav-h:   83px;
+        }
+
+        html, body { height: 100%; background: var(--bg); }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+            color: var(--label);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #app {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+            background: var(--bg);
+        }
+
+        @media (min-width: 431px) {
+            body { background: #D1D1D6; }
+            #app { box-shadow: 0 0 80px rgba(0,0,0,0.2); }
+        }
+
+        .screen { display: none; padding-bottom: calc(var(--nav-h) + 24px); min-height: 100vh; }
+        .screen.active { display: block; }
+
+        /* ══ TODAY ══ */
+        .today-header { padding: 56px 24px 20px; }
+        .today-date { font-size: 13px; font-weight: 600; color: var(--blue); letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 6px; }
+        .today-greeting { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; }
+        .today-sub { font-size: 17px; color: var(--label3); margin-top: 6px; font-weight: 400; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 24px 20px; }
+        .stat-card { background: var(--card); border-radius: 18px; padding: 16px 10px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .stat-num { font-size: 34px; font-weight: 700; letter-spacing: -1.5px; line-height: 1; }
+        .stat-lbl { font-size: 11px; color: var(--label3); font-weight: 500; margin-top: 4px; }
+
+        .c-blue { color: var(--blue); } .c-orange { color: var(--orange); }
+        .c-green { color: var(--green); } .c-gray { color: var(--gray3); } .c-red { color: var(--red); }
+
+        .sect { padding: 0 24px 20px; }
+        .sect-hd { font-size: 13px; font-weight: 600; color: var(--label3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; padding-left: 2px; }
+
+        .attn-card { background: var(--card); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 14px; cursor: pointer; }
+        .attn-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .attn-dot.red    { background: var(--red);    box-shadow: 0 0 0 3px rgba(255,59,48,0.15); }
+        .attn-dot.orange { background: var(--orange); box-shadow: 0 0 0 3px rgba(255,149,0,0.15); }
+        .attn-dot.blue   { background: var(--blue);   box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
+        .attn-dot.purple { background: var(--purple); box-shadow: 0 0 0 3px rgba(175,82,222,0.15); }
+        .attn-dot.green  { background: var(--green);  box-shadow: 0 0 0 3px rgba(52,199,89,0.15); }
+
+        .attn-body { flex: 1; min-width: 0; }
+        .attn-co   { font-size: 15px; font-weight: 600; }
+        .attn-role { font-size: 13px; color: var(--label3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .attn-age  { font-size: 12px; font-weight: 600; margin-top: 4px; }
+        .attn-btn  { background: var(--blue); color: white; border: none; border-radius: 20px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: inherit; flex-shrink: 0; }
+        .attn-btn.ghost { background: none; color: var(--blue); padding: 0; }
+
+        .nextstep { background: var(--blue); border-radius: 18px; padding: 20px; color: white; box-shadow: 0 6px 20px rgba(0,122,255,0.28); }
+        .nextstep.green  { background: var(--green);  box-shadow: 0 6px 20px rgba(52,199,89,0.28); }
+        .nextstep.red    { background: var(--red);    box-shadow: 0 6px 20px rgba(255,59,48,0.28); }
+        .nextstep.purple { background: var(--purple); box-shadow: 0 6px 20px rgba(175,82,222,0.28); }
+        .nextstep-eye { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-bottom: 6px; }
+        .nextstep-txt { font-size: 17px; font-weight: 600; line-height: 1.4; }
+
+        /* ══ PIPELINE ══ */
+        .pipe-header { padding: 56px 24px 14px; display: flex; align-items: baseline; justify-content: space-between; }
+        .pipe-title  { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
+        .pipe-count  { font-size: 15px; color: var(--label3); }
+
+        .pill-row { display: flex; gap: 8px; padding: 0 24px 14px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .pill-row::-webkit-scrollbar { display: none; }
+        .pill { background: var(--card); border: 1.5px solid transparent; border-radius: 20px; padding: 7px 15px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--label2); white-space: nowrap; font-family: inherit; transition: all 0.12s; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .pill.on { background: var(--blue); color: white; border-color: var(--blue); }
+
+        .app-cards { padding: 0 24px; }
+
+        .app-card { background: var(--card); border-radius: 18px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.1s; }
+        .app-card:active { transform: scale(0.985); }
+        .card-accent { height: 4px; }
+        .card-body { padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+        .card-info { flex: 1; min-width: 0; }
+        .card-co   { font-size: 16px; font-weight: 700; }
+        .card-role { font-size: 13px; color: var(--label3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-flag { font-size: 12px; font-weight: 600; margin-top: 4px; }
+        .card-right { text-align: right; flex-shrink: 0; }
+        .s-badge { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; display: inline-block; }
+        .card-days { font-size: 12px; color: var(--label4); margin-top: 4px; }
+
+        /* referral indicator on card */
+        .card-indicators { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+        .card-chip { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: var(--gray6); color: var(--label3); }
+        .card-chip.green  { background: #ECFDF5; color: #065F46; }
+        .card-chip.purple { background: #F5F3FF; color: #6D28D9; }
+        .card-chip.blue   { background: #EFF6FF; color: #1D4ED8; }
+
+        /* Expanded card detail */
+        .card-detail { display: none; padding: 0 16px 16px; border-top: 1px solid var(--gray5); }
+        .app-card.open .card-detail { display: block; }
+
+        .detail-notes { font-size: 14px; color: var(--label3); line-height: 1.5; margin: 12px 0; padding: 12px; background: var(--gray6); border-radius: 10px; }
+
+        .d-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--gray5); font-size: 15px; }
+        .d-row:last-of-type { border-bottom: none; }
+        .d-lbl { color: var(--label3); flex-shrink: 0; }
+        .d-val { font-weight: 500; text-align: right; max-width: 65%; word-break: break-word; }
+        .d-val a { color: var(--blue); text-decoration: none; }
+
+        .card-actions { display: flex; gap: 8px; margin-top: 14px; }
+        .btn-act { flex: 1; padding: 11px; border-radius: 12px; border: 1.5px solid var(--gray4); background: var(--gray6); font-size: 14px; font-weight: 600; color: var(--blue); cursor: pointer; font-family: inherit; text-align: center; transition: all 0.12s; }
+        .btn-act.primary { background: var(--blue); color: white; border-color: var(--blue); }
+        .btn-act.danger  { color: var(--red); border-color: transparent; background: rgba(255,59,48,0.07); }
+        .btn-act.purple  { color: var(--purple); border-color: transparent; background: rgba(175,82,222,0.07); }
+
+        /* prompt modal */
+        .prompt-box { background: var(--gray6); border-radius: 12px; padding: 14px; margin-top: 14px; font-size: 13px; line-height: 1.6; color: var(--label2); white-space: pre-wrap; font-family: 'Menlo', 'Courier New', monospace; max-height: 260px; overflow-y: auto; display: none; }
+        .prompt-box.show { display: block; }
+        .prompt-copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+        .btn-copy { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+        /* Empty state */
+        .empty { text-align: center; padding: 60px 24px; color: var(--label4); }
+        .empty-ico { font-size: 48px; margin-bottom: 14px; }
+        .empty-ttl { font-size: 20px; font-weight: 600; color: var(--label3); margin-bottom: 6px; }
+        .empty-sub { font-size: 15px; }
+
+        /* ══ BOTTOM NAV ══ */
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; height: var(--nav-h); background: rgba(255,255,255,0.88); -webkit-backdrop-filter: saturate(200%) blur(24px); backdrop-filter: saturate(200%) blur(24px); border-top: 0.5px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-around; padding: 0 20px env(safe-area-inset-bottom, 10px); z-index: 100; }
+        .nav-tab { background: none; border: none; cursor: pointer; padding: 8px 28px; display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: inherit; color: var(--gray2); transition: color 0.12s; }
+        .nav-tab.on { color: var(--blue); }
+        .nav-ico { font-size: 22px; line-height: 1; }
+        .nav-lbl { font-size: 10px; font-weight: 500; letter-spacing: 0.2px; }
+        .nav-add-btn { background: var(--blue); color: white; border: none; width: 54px; height: 54px; border-radius: 50%; font-size: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(0,122,255,0.38); font-family: inherit; transition: transform 0.1s; margin-bottom: 14px; }
+        .nav-add-btn:active { transform: scale(0.91); }
+
+        /* ══ MODAL SHEET ══ */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.42); z-index: 200; align-items: flex-end; animation: fadein 0.2s; }
+        .overlay.open { display: flex; }
+        @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+        .sheet { background: var(--card); border-radius: 22px 22px 0 0; width: 100%; max-width: 430px; margin: 0 auto; max-height: 94vh; overflow-y: auto; padding: 0 22px 48px; animation: slideup 0.3s cubic-bezier(0.32, 0.72, 0, 1); }
+        @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .sheet-handle { width: 36px; height: 4px; background: var(--gray4); border-radius: 2px; margin: 12px auto 20px; }
+        .sheet-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 20px; }
+
+        /* Form fields */
+        .f-group { margin-bottom: 16px; }
+        .f-lbl { font-size: 12px; font-weight: 600; color: var(--label3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
+        .f-input, .f-select, .f-textarea { width: 100%; padding: 14px 16px; border: 1.5px solid var(--gray5); border-radius: 12px; font-size: 17px; font-family: inherit; color: var(--label); background: var(--gray6); transition: border-color 0.15s, background 0.15s; -webkit-appearance: none; appearance: none; }
+        .f-input:focus, .f-select:focus, .f-textarea:focus { outline: none; border-color: var(--blue); background: white; }
+        .f-input.err { border-color: var(--red); }
+        .f-textarea { min-height: 80px; resize: vertical; }
+        .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        /* Pill pickers */
+        .picker-row { display: flex; flex-wrap: wrap; gap: 7px; }
+        .pick-btn { padding: 8px 14px; border: 1.5px solid var(--gray5); border-radius: 20px; background: var(--gray6); font-size: 14px; font-weight: 600; cursor: pointer; color: var(--label2); font-family: inherit; transition: all 0.12s; }
+        .pick-btn.on { background: var(--blue); color: white; border-color: var(--blue); }
+
+        /* Industry swatches */
+        .ind-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .ind-btn { padding: 12px; border: 1.5px solid var(--gray5); border-radius: 12px; background: var(--gray6); font-size: 14px; font-weight: 600; cursor: pointer; color: var(--label2); font-family: inherit; text-align: left; display: flex; align-items: center; gap: 10px; transition: all 0.12s; }
+        .ind-btn.on { border-color: var(--blue); background: #EFF6FF; color: var(--blue); }
+        .ind-dot { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; }
+
+        /* Status grid */
+        .st-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+        .st-btn { padding: 10px 6px; border: 1.5px solid var(--gray5); border-radius: 12px; background: var(--gray6); font-size: 13px; font-weight: 600; cursor: pointer; color: var(--label2); font-family: inherit; text-align: center; transition: all 0.12s; }
+        .st-btn.on { background: var(--blue); color: white; border-color: var(--blue); }
+
+        /* Toggle switch */
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+        .toggle-label { font-size: 17px; color: var(--label); }
+        .toggle { position: relative; width: 51px; height: 31px; flex-shrink: 0; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-track { position: absolute; inset: 0; background: var(--gray4); border-radius: 31px; cursor: pointer; transition: background 0.2s; }
+        .toggle input:checked + .toggle-track { background: var(--green); }
+        .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; background: white; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s; pointer-events: none; }
+        .toggle input:checked ~ .toggle-thumb { transform: translateX(20px); }
+
+        /* Collapsible sections */
+        .coll-section { margin-bottom: 6px; }
+        .coll-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 10px; cursor: pointer; border-top: 1px solid var(--gray5); user-select: none; }
+        .coll-header:first-child { border-top: none; }
+        .coll-title { font-size: 15px; font-weight: 600; color: var(--label); }
+        .coll-sub   { font-size: 12px; color: var(--label3); margin-top: 1px; }
+        .coll-arrow { font-size: 13px; color: var(--gray); transition: transform 0.2s; }
+        .coll-section.open .coll-arrow { transform: rotate(90deg); }
+        .coll-body { display: none; padding-bottom: 8px; }
+        .coll-section.open .coll-body { display: block; }
+
+        /* Buttons */
+        .btn-save { width: 100%; padding: 17px; background: var(--blue); color: white; border: none; border-radius: 16px; font-size: 17px; font-weight: 600; cursor: pointer; font-family: inherit; margin-top: 14px; transition: opacity 0.12s; }
+        .btn-save:active { opacity: 0.82; }
+        .btn-cancel-sheet { width: 100%; padding: 14px; background: none; color: var(--gray); border: none; border-radius: 16px; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 4px; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: calc(var(--nav-h) + 12px); left: 50%; transform: translateX(-50%) translateY(16px); background: rgba(0,0,0,0.78); color: white; padding: 9px 20px; border-radius: 20px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 300; white-space: nowrap; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <!-- ══ TODAY ══ -->
+    <div id="screen-today" class="screen active">
+        <div class="today-header">
+            <div class="today-date"    id="todayDate"></div>
+            <div class="today-greeting" id="todayGreet"></div>
+            <div class="today-sub"     id="todaySub"></div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-card"><div class="stat-num c-blue"   id="sTotal">0</div><div class="stat-lbl">Applied</div></div>
+            <div class="stat-card"><div class="stat-num c-orange" id="sPipe">0</div><div class="stat-lbl">In Pipeline</div></div>
+            <div class="stat-card"><div class="stat-num c-gray"   id="sOffers">0</div><div class="stat-lbl">Offers</div></div>
+        </div>
+        <div id="todayBody"></div>
+    </div>
+
+    <!-- ══ PIPELINE ══ -->
+    <div id="screen-pipeline" class="screen">
+        <div class="pipe-header">
+            <div class="pipe-title">Pipeline</div>
+            <div class="pipe-count" id="pipeCount"></div>
+        </div>
+        <div class="pill-row"  id="pillRow"></div>
+        <div class="app-cards" id="appCards"></div>
+    </div>
+
+    <!-- ══ BOTTOM NAV ══ -->
+    <nav class="bottom-nav">
+        <button class="nav-tab on" id="nav-today"    onclick="showScreen('today')">
+            <span class="nav-ico">&#9728;&#xFE0E;</span>
+            <span class="nav-lbl">Today</span>
+        </button>
+        <button class="nav-add-btn" onclick="openAdd()" title="Add application">+</button>
+        <button class="nav-tab"    id="nav-pipeline" onclick="showScreen('pipeline')">
+            <span class="nav-ico">&#9776;</span>
+            <span class="nav-lbl">Pipeline</span>
+        </button>
+    </nav>
+</div>
+
+<!-- ══ ADD / EDIT SHEET ══ -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheetTitle">New Application</div>
+    <input type="hidden" id="editId">
+
+    <!-- ESSENTIALS (always open) -->
+    <div class="f-group">
+        <div class="f-lbl">Company</div>
+        <input class="f-input" id="fCo" placeholder="e.g. Microsoft" autocomplete="organization">
+    </div>
+    <div class="f-group">
+        <div class="f-lbl">Role</div>
+        <input class="f-input" id="fRole" placeholder="e.g. Director of AI Adoption">
+    </div>
+    <div class="f-group">
+        <div class="f-lbl">Industry</div>
+        <div class="ind-grid">
+            <button class="ind-btn" data-ind="finance"    onclick="pickInd('finance')">
+                <span class="ind-dot" style="background:linear-gradient(135deg,#1a365d,#b8860b)"></span>Finance
+            </button>
+            <button class="ind-btn" data-ind="tech"       onclick="pickInd('tech')">
+                <span class="ind-dot" style="background:linear-gradient(135deg,#0A1E3D,#3B82F6)"></span>Tech
+            </button>
+            <button class="ind-btn" data-ind="consulting" onclick="pickInd('consulting')">
+                <span class="ind-dot" style="background:linear-gradient(135deg,#334155,#d97706)"></span>Consulting
+            </button>
+            <button class="ind-btn" data-ind="healthcare" onclick="pickInd('healthcare')">
+                <span class="ind-dot" style="background:linear-gradient(135deg,#002677,#00A3AD)"></span>Healthcare
+            </button>
+        </div>
+    </div>
+    <div class="f-group">
+        <div class="f-lbl">Status</div>
+        <div class="st-grid">
+            <button class="st-btn on" data-st="applied"   onclick="pickSt('applied')">Applied</button>
+            <button class="st-btn"    data-st="phone"     onclick="pickSt('phone')">Phone</button>
+            <button class="st-btn"    data-st="technical" onclick="pickSt('technical')">Technical</button>
+            <button class="st-btn"    data-st="final"     onclick="pickSt('final')">Final</button>
+            <button class="st-btn"    data-st="offer"     onclick="pickSt('offer')">Offer</button>
+            <button class="st-btn"    data-st="rejected"  onclick="pickSt('rejected')">Rejected</button>
+        </div>
+    </div>
+    <div class="f-row">
+        <div class="f-group">
+            <div class="f-lbl">Applied Date</div>
+            <input class="f-input" id="fDate" type="date">
+        </div>
+        <div class="f-group">
+            <div class="f-lbl">Follow-up</div>
+            <input class="f-input" id="fFollowUp" type="date">
+        </div>
+    </div>
+
+    <!-- YOUR PITCH -->
+    <div class="coll-section" id="sect-pitch">
+        <div class="coll-header" onclick="toggleSect('pitch')">
+            <div><div class="coll-title">Your Pitch</div><div class="coll-sub">Resume, portfolio &amp; cover letter</div></div>
+            <span class="coll-arrow">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <div class="f-group">
+                <div class="f-lbl">Where did you find it?</div>
+                <div class="picker-row">
+                    <button class="pick-btn" data-src="linkedin"     onclick="pickSrc('linkedin')">LinkedIn</button>
+                    <button class="pick-btn" data-src="indeed"       onclick="pickSrc('indeed')">Indeed</button>
+                    <button class="pick-btn" data-src="referral"     onclick="pickSrc('referral')">Referral</button>
+                    <button class="pick-btn" data-src="recruiter"    onclick="pickSrc('recruiter')">Recruiter</button>
+                    <button class="pick-btn" data-src="company-site" onclick="pickSrc('company-site')">Company Site</button>
+                    <button class="pick-btn" data-src="other"        onclick="pickSrc('other')">Other</button>
+                </div>
+            </div>
+            <div class="f-group">
+                <div class="f-lbl">Resume Version Sent</div>
+                <div class="picker-row">
+                    <button class="pick-btn" data-rv="executive"  onclick="pickRv('executive')">Executive</button>
+                    <button class="pick-btn" data-rv="technical"  onclick="pickRv('technical')">Technical</button>
+                    <button class="pick-btn" data-rv="healthcare" onclick="pickRv('healthcare')">Healthcare</button>
+                    <button class="pick-btn" data-rv="finance"    onclick="pickRv('finance')">Finance</button>
+                    <button class="pick-btn" data-rv="consulting" onclick="pickRv('consulting')">Consulting</button>
+                </div>
+            </div>
+            <div class="f-group">
+                <div class="f-lbl">Portfolio URL Shared</div>
+                <input class="f-input" id="fPortfolioUrl" placeholder="https://joepointer.com/?...">
+            </div>
+            <div class="f-group">
+                <div class="toggle-row">
+                    <span class="toggle-label">Cover Letter Sent</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="fCLSent" onchange="syncCLToggle()">
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb"></div>
+                    </label>
+                </div>
+                <div id="clNotesWrap" style="display:none;margin-top:10px">
+                    <input class="f-input" id="fCLNotes" placeholder="Template used, key points, version notes...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REFERRAL -->
+    <div class="coll-section" id="sect-referral">
+        <div class="coll-header" onclick="toggleSect('referral')">
+            <div><div class="coll-title">Referral</div><div class="coll-sub">4x higher hire rate — track every opportunity</div></div>
+            <span class="coll-arrow">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <div class="f-group">
+                <div class="toggle-row">
+                    <span class="toggle-label">Know someone here?</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="fHasContact" onchange="syncReferralToggle()">
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb"></div>
+                    </label>
+                </div>
+            </div>
+            <div id="referralFields" style="display:none">
+                <div class="f-group">
+                    <div class="f-lbl">Contact Name</div>
+                    <input class="f-input" id="fRefName" placeholder="Name of your contact">
+                </div>
+                <div class="f-group">
+                    <div class="f-lbl">Relationship</div>
+                    <div class="picker-row">
+                        <button class="pick-btn" data-rel="close"        onclick="pickRel('close')">Close colleague</button>
+                        <button class="pick-btn" data-rel="acquaintance" onclick="pickRel('acquaintance')">Acquaintance</button>
+                        <button class="pick-btn" data-rel="alumni"       onclick="pickRel('alumni')">Alumni</button>
+                        <button class="pick-btn" data-rel="other"        onclick="pickRel('other')">Other</button>
+                    </div>
+                </div>
+                <div class="f-group">
+                    <div class="toggle-row">
+                        <span class="toggle-label">Asked for referral?</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="fRefAsked">
+                            <div class="toggle-track"></div>
+                            <div class="toggle-thumb"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="f-group">
+                    <div class="toggle-row">
+                        <span class="toggle-label">Referral submitted?</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="fRefSubmitted">
+                            <div class="toggle-track"></div>
+                            <div class="toggle-thumb"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="f-group">
+                    <div class="f-lbl">Referral Bonus (if known)</div>
+                    <input class="f-input" id="fRefBonus" type="number" placeholder="$ amount">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPENSATION -->
+    <div class="coll-section" id="sect-comp">
+        <div class="coll-header" onclick="toggleSect('comp')">
+            <div><div class="coll-title">Compensation</div><div class="coll-sub">Salary range &amp; expectations</div></div>
+            <span class="coll-arrow">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <div class="f-row">
+                <div class="f-group">
+                    <div class="f-lbl">Min ($)</div>
+                    <input class="f-input" id="fSalMin" type="number" placeholder="180,000">
+                </div>
+                <div class="f-group">
+                    <div class="f-lbl">Max ($)</div>
+                    <input class="f-input" id="fSalMax" type="number" placeholder="220,000">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACTS -->
+    <div class="coll-section" id="sect-contacts">
+        <div class="coll-header" onclick="toggleSect('contacts')">
+            <div><div class="coll-title">Contacts</div><div class="coll-sub">Recruiter &amp; hiring manager</div></div>
+            <span class="coll-arrow">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <div class="f-group">
+                <div class="f-lbl">Recruiter Name</div>
+                <input class="f-input" id="fRecName" placeholder="Full name">
+            </div>
+            <div class="f-group">
+                <div class="f-lbl">Recruiter Email</div>
+                <input class="f-input" id="fRecEmail" type="email" placeholder="email@company.com">
+            </div>
+            <div class="f-group">
+                <div class="f-lbl">Hiring Manager Name</div>
+                <input class="f-input" id="fHMName" placeholder="Full name">
+            </div>
+            <div class="f-group">
+                <div class="f-lbl">Hiring Manager Email</div>
+                <input class="f-input" id="fHMEmail" type="email" placeholder="email@company.com">
+            </div>
+        </div>
+    </div>
+
+    <!-- JOB DESCRIPTION -->
+    <div class="coll-section" id="sect-jd">
+        <div class="coll-header" onclick="toggleSect('jd')">
+            <div><div class="coll-title">Job Description</div><div class="coll-sub">Paste for cover letter &amp; interview prep</div></div>
+            <span class="coll-arrow">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <div class="f-group">
+                <textarea class="f-textarea" id="fJD" placeholder="Paste the full job description here..." style="min-height:120px"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="f-group" style="margin-top:6px">
+        <div class="f-lbl">Notes <span style="font-weight:400;text-transform:none;font-size:11px;opacity:.5">optional</span></div>
+        <textarea class="f-textarea" id="fNotes" placeholder="Key contacts, salary details, prep notes, interview impressions..."></textarea>
+    </div>
+
+    <button class="btn-save"         onclick="saveApp()">Save Application</button>
+    <button class="btn-cancel-sheet" onclick="closeSheet()">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/storage.js"></script>
+<script>
+// ═══════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════
+
+const SC = {
+    applied:   { label: 'Applied',      color: '#3B82F6', bg: '#EFF6FF' },
+    phone:     { label: 'Phone Screen', color: '#8B5CF6', bg: '#F5F3FF' },
+    technical: { label: 'Technical',    color: '#F59E0B', bg: '#FFFBEB' },
+    final:     { label: 'Final Round',  color: '#F97316', bg: '#FFF7ED' },
+    offer:     { label: 'Offer',        color: '#10B981', bg: '#ECFDF5' },
+    rejected:  { label: 'Rejected',     color: '#94A3B8', bg: '#F8FAFC' }
+};
+
+const IND = {
+    finance:    'linear-gradient(135deg,#1a365d,#b8860b)',
+    tech:       'linear-gradient(135deg,#0A1E3D,#3B82F6)',
+    consulting: 'linear-gradient(135deg,#334155,#d97706)',
+    healthcare: 'linear-gradient(135deg,#002677,#00A3AD)'
+};
+
+const RV_LABELS = {
+    executive: 'Executive', technical: 'Technical', healthcare: 'Healthcare',
+    finance: 'Finance', consulting: 'Consulting'
+};
+
+const SRC_LABELS = {
+    linkedin: 'LinkedIn', indeed: 'Indeed', referral: 'Referral',
+    recruiter: 'Recruiter', 'company-site': 'Company Site', other: 'Other'
+};
+
+// ═══════════════════════════════════════════════════
+//  STORAGE — delegates to shared storage.js
+// ═══════════════════════════════════════════════════
+
+function getApps()  { return getProfiles(); }
+function putApps(a) { saveProfiles(a); }
+function esc(s)      { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
+function todayStr()  { return new Date().toISOString().split('T')[0]; }
+function plusDays(n) { const d = new Date(); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; }
+function daysDiff(a, b) { return Math.round((new Date(b+'T00:00:00') - new Date(a+'T00:00:00')) / 86400000); }
+
+// ═══════════════════════════════════════════════════
+//  SCREEN ROUTER
+// ═══════════════════════════════════════════════════
+
+let curScreen = 'today';
+
+function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('on'));
+    document.getElementById('nav-' + name)?.classList.add('on');
+    curScreen = name;
+    if (name === 'today')    renderToday();
+    if (name === 'pipeline') renderPipeline();
+}
+
+// ═══════════════════════════════════════════════════
+//  TODAY
+// ═══════════════════════════════════════════════════
+
+function greeting() {
+    const h = new Date().getHours();
+    return h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+}
+function fmtDate(d) { return d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }); }
+
+function renderToday() {
+    const now   = new Date();
+    const today = todayStr();
+    document.getElementById('todayDate').textContent  = fmtDate(now);
+    document.getElementById('todayGreet').textContent = greeting() + ' Joe.';
+
+    const apps   = getApps();
+    const total  = apps.length;
+    const pipe   = apps.filter(p => ['phone','technical','final'].includes(p.status)).length;
+    const offers = apps.filter(p => p.status === 'offer').length;
+    const overdue = apps.filter(p =>
+        p.followUpDate && p.followUpDate < today && !['offer','rejected'].includes(p.status)
+    ).sort((a,b) => a.followUpDate.localeCompare(b.followUpDate));
+
+    document.getElementById('sTotal').textContent  = total;
+    document.getElementById('sPipe').textContent   = pipe;
+    document.getElementById('sOffers').textContent = offers;
+    const offerEl = document.getElementById('sOffers');
+    offerEl.className = offers > 0 ? 'stat-num c-green' : 'stat-num c-gray';
+
+    let sub = 'Start your search by tapping +.';
+    if (total > 0 && overdue.length > 0)
+        sub = `${overdue.length} follow-up${overdue.length>1?'s':''} need your attention.`;
+    else if (total > 0)
+        sub = pipe > 0 ? `${pipe} in active review.` : 'No active reviews right now.';
+    document.getElementById('todaySub').textContent = sub;
+
+    let html = '';
+
+    if (total === 0) {
+        html = `<div class="sect"><div class="nextstep">
+            <div class="nextstep-eye">Your next step</div>
+            <div class="nextstep-txt">Tap + below to add your first application and start tracking your search.</div>
+        </div></div>`;
+        document.getElementById('todayBody').innerHTML = html;
+        return;
+    }
+
+    // Overdue
+    if (overdue.length > 0) {
+        const items = overdue.map(p => {
+            const days = daysDiff(p.followUpDate, today);
+            const cls  = days > 3 ? 'red' : 'orange';
+            return `<div class="attn-card" onclick="editFromToday('${p.id}')">
+                <div class="attn-dot ${cls}"></div>
+                <div class="attn-body">
+                    <div class="attn-co">${esc(p.company)}</div>
+                    <div class="attn-role">${esc(p.role||'Role not specified')}</div>
+                    <div class="attn-age c-${cls}">${days}d overdue</div>
+                </div>
+                <button class="attn-btn" onclick="event.stopPropagation();editFromToday('${p.id}')">Update</button>
+            </div>`;
+        }).join('');
+        html += `<div class="sect"><div class="sect-hd">Needs attention</div>${items}</div>`;
+    }
+
+    // Referral opportunities (has contact, hasn't asked yet)
+    const refOpps = apps.filter(p =>
+        p.referral?.hasContact && !p.referral.asked && !['offer','rejected'].includes(p.status)
+    );
+    if (refOpps.length > 0) {
+        const items = refOpps.slice(0,3).map(p => `
+            <div class="attn-card" onclick="editFromToday('${p.id}')">
+                <div class="attn-dot purple"></div>
+                <div class="attn-body">
+                    <div class="attn-co">${esc(p.company)}</div>
+                    <div class="attn-role">Ask ${esc(p.referral.contactName||'your contact')} for a referral</div>
+                </div>
+                <button class="attn-btn" style="background:var(--purple)" onclick="event.stopPropagation();editFromToday('${p.id}')">Ask</button>
+            </div>`).join('');
+        html += `<div class="sect"><div class="sect-hd">Referral opportunity</div>${items}</div>`;
+    }
+
+    // Next step
+    const advice   = getAdvice(apps, overdue, pipe, offers, refOpps);
+    const advClass = offers > 0 ? 'nextstep green' : overdue.length > 0 ? 'nextstep red' : refOpps.length > 0 ? 'nextstep purple' : 'nextstep';
+    html += `<div class="sect"><div class="sect-hd">Your next step</div>
+        <div class="${advClass}">
+            <div class="nextstep-eye">Recommended action</div>
+            <div class="nextstep-txt">${advice}</div>
+        </div></div>`;
+
+    // Upcoming follow-ups
+    const upcoming = apps.filter(p => {
+        if (!p.followUpDate || ['offer','rejected'].includes(p.status)) return false;
+        const diff = daysDiff(today, p.followUpDate);
+        return diff >= 0 && diff <= 3;
+    }).sort((a,b) => a.followUpDate.localeCompare(b.followUpDate));
+
+    if (upcoming.length > 0) {
+        const items = upcoming.map(p => {
+            const diff = daysDiff(today, p.followUpDate);
+            const when = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `In ${diff} days`;
+            return `<div class="attn-card" onclick="editFromToday('${p.id}')">
+                <div class="attn-dot blue"></div>
+                <div class="attn-body">
+                    <div class="attn-co">${esc(p.company)}</div>
+                    <div class="attn-role">${esc(p.role||'Role not specified')}</div>
+                </div>
+                <span class="attn-btn ghost">${when}</span>
+            </div>`;
+        }).join('');
+        html += `<div class="sect"><div class="sect-hd">Coming up</div>${items}</div>`;
+    }
+
+    document.getElementById('todayBody').innerHTML = html;
+}
+
+function getAdvice(apps, overdue, pipe, offers, refOpps) {
+    if (offers > 0)
+        return `You have ${offers} offer${offers>1?'s':''}. This is your primary focus — evaluate carefully, negotiate confidently, and decide.`;
+    if (overdue.length > 0) {
+        const p = overdue[0];
+        return `Follow up with ${esc(p.company)} — you're past your reminder date. A brief check-in keeps your name at the top of the list.`;
+    }
+    if (refOpps.length > 0) {
+        const p = refOpps[0];
+        return `You know someone at ${esc(p.company)}. A referral is 4x more likely to lead to an offer than a cold apply. Reach out to ${esc(p.referral?.contactName||'your contact')} today.`;
+    }
+    const active = apps.filter(p => ['phone','technical','final'].includes(p.status));
+    if (active.length > 0) {
+        const top = active.sort((a,b) =>
+            ['final','technical','phone'].indexOf(a.status) - ['final','technical','phone'].indexOf(b.status)
+        )[0];
+        return `${esc(top.company)} is at ${SC[top.status].label}. Prepare thoroughly — this is where candidates separate themselves.`;
+    }
+    if (apps.length < 5)
+        return 'Your pipeline is light. Adding 2-3 applications per week builds momentum and gives you negotiating leverage.';
+    return 'Nothing is in active review. Consider refreshing your targeting or following up on recent applications.';
+}
+
+function editFromToday(id) { openEdit(id); }
+
+// ═══════════════════════════════════════════════════
+//  PIPELINE
+// ═══════════════════════════════════════════════════
+
+let pipFilter = 'all';
+
+function renderPipeline() {
+    const apps  = getApps();
+    const today = todayStr();
+
+    const cnt = {};
+    apps.forEach(p => { cnt[p.status] = (cnt[p.status]||0)+1; });
+
+    const pills = [
+        { id:'all', lbl:`All (${apps.length})` },
+        ...Object.keys(SC).filter(s => cnt[s]).map(s => ({ id:s, lbl:`${SC[s].label} (${cnt[s]})` }))
+    ];
+    document.getElementById('pillRow').innerHTML = pills.map(p =>
+        `<button class="pill${pipFilter===p.id?' on':''}" onclick="setPipFilter('${p.id}')">${p.lbl}</button>`
+    ).join('');
+
+    const filtered = pipFilter === 'all' ? apps : apps.filter(p => p.status === pipFilter);
+    document.getElementById('pipeCount').textContent = filtered.length + ' application' + (filtered.length!==1?'s':'');
+
+    if (filtered.length === 0) {
+        document.getElementById('appCards').innerHTML = `
+            <div class="empty">
+                <div class="empty-ico">&#128240;</div>
+                <div class="empty-ttl">Nothing here</div>
+                <div class="empty-sub">Tap + to add an application</div>
+            </div>`;
+        return;
+    }
+
+    const order = ['offer','final','technical','phone','applied','rejected'];
+    const sorted = [...filtered].sort((a,b) => {
+        const oi = order.indexOf(a.status) - order.indexOf(b.status);
+        if (oi !== 0) return oi;
+        return (b.appliedDate||b.created||'').localeCompare(a.appliedDate||a.created||'');
+    });
+
+    document.getElementById('appCards').innerHTML = sorted.map(p => buildCard(p, today)).join('');
+}
+
+function buildCard(p, today) {
+    const sc   = SC[p.status] || SC.applied;
+    const dago = p.appliedDate ? daysDiff(p.appliedDate, today) : null;
+    const dStr = dago===null ? '' : dago===0 ? 'Today' : `${dago}d ago`;
+
+    let flagHtml = '';
+    if (p.followUpDate && p.followUpDate < today && !['offer','rejected'].includes(p.status)) {
+        flagHtml = `<div class="card-flag c-red">${daysDiff(p.followUpDate, today)}d overdue</div>`;
+    }
+
+    // Indicator chips
+    const chips = [];
+    if (p.resumeVersion) chips.push(`<span class="card-chip blue">${RV_LABELS[p.resumeVersion]||p.resumeVersion}</span>`);
+    if (p.referral?.submitted) chips.push(`<span class="card-chip green">Referred</span>`);
+    else if (p.referral?.asked) chips.push(`<span class="card-chip purple">Referral asked</span>`);
+    else if (p.referral?.hasContact) chips.push(`<span class="card-chip">Contact known</span>`);
+    if (p.coverLetterSent) chips.push(`<span class="card-chip blue">Cover letter</span>`);
+    const chipsHtml = chips.length ? `<div class="card-indicators">${chips.join('')}</div>` : '';
+
+    // Detail rows
+    const rows = [];
+    if (p.appliedDate)    rows.push(`<div class="d-row"><span class="d-lbl">Applied</span><span class="d-val">${p.appliedDate}</span></div>`);
+    if (p.followUpDate)   rows.push(`<div class="d-row"><span class="d-lbl">Follow-up</span><span class="d-val">${p.followUpDate}</span></div>`);
+    if (p.source)         rows.push(`<div class="d-row"><span class="d-lbl">Source</span><span class="d-val">${esc(SRC_LABELS[p.source]||p.source)}</span></div>`);
+    if (p.resumeVersion)  rows.push(`<div class="d-row"><span class="d-lbl">Resume sent</span><span class="d-val">${esc(RV_LABELS[p.resumeVersion])}</span></div>`);
+    if (p.portfolioUrl)   rows.push(`<div class="d-row"><span class="d-lbl">Portfolio URL</span><span class="d-val"><a href="${esc(p.portfolioUrl)}" target="_blank" onclick="event.stopPropagation()">Open &#8599;</a> <button onclick="copyUrl('${esc(p.portfolioUrl)}',event)" style="background:none;border:none;color:var(--blue);font-size:12px;cursor:pointer;font-family:inherit;padding:0 0 0 6px">Copy</button></span></div>`);
+    if (p.coverLetterSent && p.coverLetterNotes) rows.push(`<div class="d-row"><span class="d-lbl">Cover letter</span><span class="d-val">${esc(p.coverLetterNotes)}</span></div>`);
+    if (p.referral?.hasContact) {
+        const ref = p.referral;
+        rows.push(`<div class="d-row"><span class="d-lbl">Referral contact</span><span class="d-val">${esc(ref.contactName||'Known')} ${ref.submitted?'&#10003; Submitted':ref.asked?'&#9679; Asked':'&#9675; Not asked yet'}</span></div>`);
+        if (ref.bonus) rows.push(`<div class="d-row"><span class="d-lbl">Referral bonus</span><span class="d-val">$${Number(ref.bonus).toLocaleString()}</span></div>`);
+    }
+    if (p.recruiterName)  rows.push(`<div class="d-row"><span class="d-lbl">Recruiter</span><span class="d-val">${esc(p.recruiterName)}${p.recruiterEmail?` &middot; <a href="mailto:${esc(p.recruiterEmail)}" onclick="event.stopPropagation()">${esc(p.recruiterEmail)}</a>`:''}</span></div>`);
+    if (p.hiringManagerName) rows.push(`<div class="d-row"><span class="d-lbl">Hiring Mgr</span><span class="d-val">${esc(p.hiringManagerName)}${p.hiringManagerEmail?` &middot; <a href="mailto:${esc(p.hiringManagerEmail)}" onclick="event.stopPropagation()">${esc(p.hiringManagerEmail)}</a>`:''}</span></div>`);
+    if (p.salaryMin || p.salaryMax) rows.push(`<div class="d-row"><span class="d-lbl">Salary</span><span class="d-val">${p.salaryMin?'$'+Number(p.salaryMin).toLocaleString():''}${p.salaryMin&&p.salaryMax?' – ':''}${p.salaryMax?'$'+Number(p.salaryMax).toLocaleString():''}</span></div>`);
+
+    const notesHtml = p.notes ? `<div class="detail-notes">${esc(p.notes.slice(0,160))}${p.notes.length>160?'...':''}</div>` : '';
+
+    return `
+    <div class="app-card" id="card-${p.id}" onclick="toggleCard('${p.id}')">
+        <div class="card-accent" style="background:${IND[p.industry]||'#94A3B8'}"></div>
+        <div class="card-body">
+            <div class="card-info">
+                <div class="card-co">${esc(p.company)}</div>
+                <div class="card-role">${esc(p.role||'Role not specified')}</div>
+                ${flagHtml}
+                ${chipsHtml}
+            </div>
+            <div class="card-right">
+                <span class="s-badge" style="background:${sc.bg};color:${sc.color}">${sc.label}</span>
+                <div class="card-days">${dStr}</div>
+            </div>
+        </div>
+        <div class="card-detail">
+            ${notesHtml}
+            ${rows.join('')}
+            <div class="card-actions">
+                <button class="btn-act primary" onclick="event.stopPropagation();openEdit('${p.id}')">Edit</button>
+                <button class="btn-act purple"  onclick="event.stopPropagation();showPrompt('${p.id}')">Build Your Case</button>
+                <button class="btn-act danger"  onclick="event.stopPropagation();delApp('${p.id}')">Delete</button>
+            </div>
+            <div class="prompt-box" id="prompt-${p.id}"></div>
+            <div class="prompt-copy-row" id="prompt-copy-${p.id}" style="display:none">
+                <button class="btn-copy" onclick="copyPrompt('${p.id}',event)">Copy to Clipboard &rarr; Paste into Claude</button>
+            </div>
+        </div>
+    </div>`;
+}
+
+function copyUrl(url, e) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(url).then(() => toast('URL copied!'));
+}
+
+function setPipFilter(f) { pipFilter = f; renderPipeline(); }
+function toggleCard(id) { document.getElementById('card-'+id)?.classList.toggle('open'); }
+
+// ═══════════════════════════════════════════════════
+//  COVER LETTER PROMPT GENERATOR
+// ═══════════════════════════════════════════════════
+
+function showPrompt(id) {
+    const p   = getApps().find(x => x.id === id);
+    if (!p) return;
+
+    const box      = document.getElementById('prompt-'+id);
+    const copyRow  = document.getElementById('prompt-copy-'+id);
+
+    if (box.classList.contains('show')) {
+        box.classList.remove('show');
+        copyRow.style.display = 'none';
+        return;
+    }
+
+    const industry = p.industry ? p.industry.charAt(0).toUpperCase()+p.industry.slice(1) : 'your industry';
+    const rv       = p.resumeVersion ? RV_LABELS[p.resumeVersion] : 'Executive';
+    const jdSnip   = p.jobDescription ? p.jobDescription.slice(0,600).trim() + (p.jobDescription.length>600?'...':'') : '';
+
+    const prompt = `You are helping Joe Pointer write a cover letter for the ${p.role||'[Role]'} position at ${p.company||'[Company]'}.
+
+WHO JOE IS:
+Joe is a Director-level AI Adoption and Change Management leader with 15 years of experience at TIAA. His most relevant credentials for this role:
+
+• Built CareerSpark — TIAA's AI-powered career development platform now serving 16,000+ associates nationwide. Conceived, designed, and built it from scratch, then personally drove enterprise adoption by presenting to 1,500+ associates across webinars and town halls.
+
+• Led the return-to-office effort for 15,000-person organization after 18 months of remote work — no playbook, no precedent. Coordinated across 5 locations, dozens of town halls, hundreds of individual questions.
+
+• Managed $250K+ R&R budget and grew Client Services recognition to 34–44% of all TIAA enterprise recognitions — outpacing the next six organizations combined.
+
+• Led the opening of a new 15-story Frisco Corporate Center — moving 500+ associates, years of planning, recognized as "Change Champion" at the grand opening.
+
+• Led Skills of the Future program: 5 curated training curricula, team of 7, 890 unique learners.
+
+• Named TIAA "Face of Values VIP" company-wide and Client Services Values Champion — while knowing his office was closing.
+
+ABOUT THIS ROLE:
+Company: ${p.company||'[Company]'}
+Role: ${p.role||'[Role]'}
+Industry: ${industry}
+Resume version sent: ${rv}${jdSnip?`\n\nJob description excerpt:\n${jdSnip}`:''}${p.notes?`\n\nAdditional context:\n${p.notes}`:''}
+
+WRITE A COVER LETTER THAT:
+— Opens with a specific, researched observation about ${p.company||'this company'}'s current AI or transformation challenge (not generic praise)
+— Uses 2 of Joe's achievements above as proof, not claims — keep them concrete and brief
+— Is 250 words or fewer, exactly 3 paragraphs
+— Closes with a confident, specific ask — not "I look forward to hearing from you"
+— Tone: Peer-level, direct, confident — senior leader to senior leader, not applicant to gatekeeper
+— Never uses: "I am writing to express my interest," "passionate about," "team player," "fast learner," or "I would be a great fit"
+— Adjust industry language and examples to resonate with a ${industry} audience`;
+
+    box.textContent = prompt;
+    box.classList.add('show');
+    copyRow.style.display = 'flex';
+}
+
+function copyPrompt(id, e) {
+    e.stopPropagation();
+    const box = document.getElementById('prompt-'+id);
+    navigator.clipboard.writeText(box.textContent)
+        .then(() => toast('Prompt copied — paste into Claude.ai'));
+}
+
+// ═══════════════════════════════════════════════════
+//  SHEET — ADD / EDIT
+// ═══════════════════════════════════════════════════
+
+let selInd = '', selSt = 'applied', selSrc = '', selRv = '', selRel = '';
+
+function openAdd() {
+    selInd=''; selSt='applied'; selSrc=''; selRv=''; selRel='';
+    document.getElementById('editId').value = '';
+    document.getElementById('sheetTitle').textContent = 'New Application';
+    document.getElementById('fCo').value       = '';
+    document.getElementById('fRole').value     = '';
+    document.getElementById('fDate').value     = todayStr();
+    document.getElementById('fFollowUp').value = plusDays(7);
+    document.getElementById('fNotes').value    = '';
+    document.getElementById('fPortfolioUrl').value = '';
+    document.getElementById('fCLSent').checked = false;
+    document.getElementById('fCLNotes').value  = '';
+    document.getElementById('clNotesWrap').style.display = 'none';
+    document.getElementById('fHasContact').checked = false;
+    document.getElementById('referralFields').style.display = 'none';
+    document.getElementById('fRefName').value  = '';
+    document.getElementById('fRefAsked').checked    = false;
+    document.getElementById('fRefSubmitted').checked = false;
+    document.getElementById('fRefBonus').value = '';
+    document.getElementById('fSalMin').value   = '';
+    document.getElementById('fSalMax').value   = '';
+    document.getElementById('fRecName').value  = '';
+    document.getElementById('fRecEmail').value = '';
+    document.getElementById('fHMName').value   = '';
+    document.getElementById('fHMEmail').value  = '';
+    document.getElementById('fJD').value       = '';
+    // close all sections
+    document.querySelectorAll('.coll-section').forEach(s => s.classList.remove('open'));
+    syncAllUI();
+    document.getElementById('overlay').classList.add('open');
+    setTimeout(() => document.getElementById('fCo').focus(), 340);
+}
+
+function openEdit(id) {
+    const p = getApps().find(x => x.id === id);
+    if (!p) return;
+    selInd = p.industry||''; selSt = p.status||'applied';
+    selSrc = p.source||''; selRv = p.resumeVersion||''; selRel = p.referral?.relationship||'';
+
+    document.getElementById('editId').value    = id;
+    document.getElementById('sheetTitle').textContent = 'Edit Application';
+    document.getElementById('fCo').value       = p.company||'';
+    document.getElementById('fRole').value     = p.role||'';
+    document.getElementById('fDate').value     = p.appliedDate||todayStr();
+    document.getElementById('fFollowUp').value = p.followUpDate||plusDays(7);
+    document.getElementById('fNotes').value    = p.notes||'';
+    document.getElementById('fPortfolioUrl').value = p.portfolioUrl||'';
+    document.getElementById('fCLSent').checked = !!p.coverLetterSent;
+    document.getElementById('fCLNotes').value  = p.coverLetterNotes||'';
+    document.getElementById('clNotesWrap').style.display = p.coverLetterSent ? 'block' : 'none';
+    document.getElementById('fHasContact').checked = !!(p.referral?.hasContact);
+    document.getElementById('referralFields').style.display = p.referral?.hasContact ? 'block' : 'none';
+    document.getElementById('fRefName').value  = p.referral?.contactName||'';
+    document.getElementById('fRefAsked').checked    = !!(p.referral?.asked);
+    document.getElementById('fRefSubmitted').checked = !!(p.referral?.submitted);
+    document.getElementById('fRefBonus').value = p.referral?.bonus||'';
+    document.getElementById('fSalMin').value   = p.salaryMin||'';
+    document.getElementById('fSalMax').value   = p.salaryMax||'';
+    document.getElementById('fRecName').value  = p.recruiterName||'';
+    document.getElementById('fRecEmail').value = p.recruiterEmail||'';
+    document.getElementById('fHMName').value   = p.hiringManagerName||'';
+    document.getElementById('fHMEmail').value  = p.hiringManagerEmail||'';
+    document.getElementById('fJD').value       = p.jobDescription||'';
+
+    // auto-open sections that have data
+    if (p.source||p.resumeVersion||p.portfolioUrl||p.coverLetterSent)
+        document.getElementById('sect-pitch').classList.add('open');
+    if (p.referral?.hasContact)
+        document.getElementById('sect-referral').classList.add('open');
+    if (p.salaryMin||p.salaryMax)
+        document.getElementById('sect-comp').classList.add('open');
+    if (p.recruiterName||p.hiringManagerName)
+        document.getElementById('sect-contacts').classList.add('open');
+    if (p.jobDescription)
+        document.getElementById('sect-jd').classList.add('open');
+
+    syncAllUI();
+    document.getElementById('overlay').classList.add('open');
+}
+
+function closeSheet() { document.getElementById('overlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target===document.getElementById('overlay')) closeSheet(); }
+
+// Pickers
+function pickInd(v) { selInd = selInd===v?'':v; syncAllUI(); }
+function pickSt(v)  { selSt  = v;               syncAllUI(); }
+function pickSrc(v) { selSrc = selSrc===v?'':v; syncAllUI(); }
+function pickRv(v)  { selRv  = selRv===v?'':v;  syncAllUI(); }
+function pickRel(v) { selRel = selRel===v?'':v; syncAllUI(); }
+
+function syncAllUI() {
+    document.querySelectorAll('.ind-btn').forEach(b  => b.classList.toggle('on', b.dataset.ind===selInd));
+    document.querySelectorAll('.st-btn').forEach(b   => b.classList.toggle('on', b.dataset.st===selSt));
+    document.querySelectorAll('[data-src]').forEach(b => b.classList.toggle('on', b.dataset.src===selSrc));
+    document.querySelectorAll('[data-rv]').forEach(b  => b.classList.toggle('on', b.dataset.rv===selRv));
+    document.querySelectorAll('[data-rel]').forEach(b => b.classList.toggle('on', b.dataset.rel===selRel));
+}
+
+function syncCLToggle() {
+    document.getElementById('clNotesWrap').style.display =
+        document.getElementById('fCLSent').checked ? 'block' : 'none';
+}
+
+function syncReferralToggle() {
+    document.getElementById('referralFields').style.display =
+        document.getElementById('fHasContact').checked ? 'block' : 'none';
+}
+
+// Collapsible sections
+function toggleSect(name) {
+    document.getElementById('sect-'+name).classList.toggle('open');
+}
+
+function saveApp() {
+    const co = document.getElementById('fCo').value.trim();
+    if (!co) {
+        const el = document.getElementById('fCo');
+        el.classList.add('err');
+        el.focus();
+        setTimeout(() => el.classList.remove('err'), 2000);
+        return;
+    }
+
+    const apps  = getApps();
+    const eid   = document.getElementById('editId').value;
+    const hasContact = document.getElementById('fHasContact').checked;
+
+    const patch = {
+        company:      co,
+        role:         document.getElementById('fRole').value.trim(),
+        industry:     selInd,
+        status:       selSt,
+        appliedDate:  document.getElementById('fDate').value,
+        followUpDate: document.getElementById('fFollowUp').value,
+        notes:        document.getElementById('fNotes').value.trim(),
+        source:       selSrc,
+        resumeVersion: selRv,
+        portfolioUrl: document.getElementById('fPortfolioUrl').value.trim(),
+        coverLetterSent:  document.getElementById('fCLSent').checked,
+        coverLetterNotes: document.getElementById('fCLNotes').value.trim(),
+        jobDescription:   document.getElementById('fJD').value.trim(),
+        salaryMin:    document.getElementById('fSalMin').value ? Number(document.getElementById('fSalMin').value) : null,
+        salaryMax:    document.getElementById('fSalMax').value ? Number(document.getElementById('fSalMax').value) : null,
+        recruiterName:     document.getElementById('fRecName').value.trim(),
+        recruiterEmail:    document.getElementById('fRecEmail').value.trim(),
+        hiringManagerName: document.getElementById('fHMName').value.trim(),
+        hiringManagerEmail:document.getElementById('fHMEmail').value.trim(),
+        referral: {
+            hasContact:   hasContact,
+            contactName:  document.getElementById('fRefName').value.trim(),
+            relationship: selRel,
+            asked:        document.getElementById('fRefAsked').checked,
+            submitted:    document.getElementById('fRefSubmitted').checked,
+            bonus:        document.getElementById('fRefBonus').value ? Number(document.getElementById('fRefBonus').value) : null
+        },
+        schemaVersion: 5
+    };
+
+    if (eid) {
+        const i = apps.findIndex(p => p.id===eid);
+        // Spread existing record first so admin.html fields (prepRounds, activityLog, etc.) are preserved
+        if (i>=0) { apps[i] = { ...apps[i], ...patch }; putApps(apps); toast('Updated'); }
+    } else {
+        apps.push({ id:'app_'+Date.now(), ...patch, activityLog:[], created: new Date().toISOString() });
+        putApps(apps);
+        toast('Application added');
+    }
+
+    closeSheet();
+    if (curScreen==='today')    renderToday();
+    if (curScreen==='pipeline') renderPipeline();
+}
+
+function delApp(id) {
+    if (!confirm('Delete this application?')) return;
+    putApps(getApps().filter(p => p.id!==id));
+    toast('Deleted');
+    renderPipeline();
+    if (curScreen==='today') renderToday();
+}
+
+// ═══════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════
+
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+migrateProfiles();
+renderToday();
+</script>
+</body>
+</html>

@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointer Story Bank — Career Arsenal</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            min-height: 100vh;
+            padding: 1.5rem;
+            color: #1a202c;
+        }
+
+        .container {
+            max-width: 1020px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #0A1E3D, #1a3a6b);
+            padding: 2rem 2.5rem 1.75rem;
+            color: white;
+        }
+
+        .header-top { display: flex; align-items: flex-start; justify-content: space-between; }
+
+        .header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .header p { opacity: 0.7; font-size: 0.875rem; }
+
+        .header-private {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px; padding: 0.3rem 0.75rem;
+            font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.8);
+            white-space: nowrap; margin-top: 0.25rem;
+        }
+
+        /* ── Controls ── */
+        .controls {
+            padding: 1.25rem 2.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+        }
+
+        .search-wrap { position: relative; flex: 1; min-width: 180px; }
+        .search-wrap input {
+            width: 100%; padding: 0.5rem 0.75rem 0.5rem 2rem;
+            border: 2px solid #e2e8f0; border-radius: 8px;
+            font-size: 0.875rem; font-family: inherit; color: #1a202c;
+            background: #f8fafc; transition: border-color 0.2s;
+        }
+        .search-wrap input:focus { outline: none; border-color: #3B82F6; background: white; }
+        .search-icon {
+            position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%);
+            font-size: 0.9rem; pointer-events: none; opacity: 0.4;
+        }
+
+        .tag-filters { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+        .tag-btn {
+            background: #f1f5f9; border: 2px solid transparent; border-radius: 20px;
+            padding: 0.3rem 0.85rem; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; color: #64748b; transition: all 0.15s; font-family: inherit;
+            white-space: nowrap;
+        }
+        .tag-btn:hover { background: #e2e8f0; }
+        .tag-btn.active { background: #EFF6FF; border-color: #3B82F6; color: #1D4ED8; }
+
+        .btn-add-story {
+            background: linear-gradient(135deg, #0A1E3D, #3B82F6); color: white;
+            border: none; padding: 0.55rem 1.1rem; border-radius: 8px;
+            font-size: 0.875rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; white-space: nowrap; transition: all 0.2s; margin-left: auto;
+        }
+        .btn-add-story:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+
+        /* ── Story Grid ── */
+        .grid-wrap { padding: 1.5rem 2.5rem 2rem; }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 0; }
+            .container { border-radius: 0; box-shadow: none; }
+            .header { padding: 1.5rem 1.25rem 1.25rem; }
+            .controls { padding: 1rem 1.25rem; }
+            .grid-wrap { padding: 1rem 1.25rem 1.5rem; }
+            .story-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── Story Card ── */
+        .story-card {
+            border: 1.5px solid #e2e8f0; border-radius: 12px; overflow: hidden;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            display: flex; flex-direction: column;
+        }
+        .story-card:hover { border-color: #94a3b8; box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+        .story-card.expanded { border-color: #3B82F6; box-shadow: 0 4px 24px rgba(59,130,246,0.12); }
+
+        .card-accent-bar { height: 4px; width: 100%; }
+
+        .card-inner { padding: 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+
+        .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.5rem; }
+        .card-title { font-weight: 700; font-size: 0.95rem; color: #1e293b; line-height: 1.3; flex: 1; }
+        .card-year { font-size: 0.75rem; font-weight: 600; color: #94a3b8; margin-left: 0.5rem; white-space: nowrap; }
+
+        .card-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; }
+        .tag-chip {
+            font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem;
+            border-radius: 10px; background: #f1f5f9; color: #64748b;
+        }
+
+        .card-preview {
+            font-size: 0.82rem; color: #64748b; line-height: 1.5;
+            flex: 1;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .card-view-btn {
+            margin-top: 0.75rem; align-self: flex-start;
+            background: none; border: 1.5px solid #e2e8f0; border-radius: 8px;
+            padding: 0.4rem 0.85rem; font-size: 0.8rem; font-weight: 600;
+            color: #3B82F6; cursor: pointer; font-family: inherit; transition: all 0.15s;
+        }
+        .card-view-btn:hover { background: #EFF6FF; border-color: #3B82F6; }
+
+        /* ── Expanded Detail ── */
+        .card-expanded { display: none; padding: 0 1.1rem 1.1rem; }
+        .story-card.expanded .card-expanded { display: block; }
+        .story-card.expanded .card-preview { display: none; }
+        .story-card.expanded .card-view-btn { display: none; }
+
+        .format-tabs { display: flex; gap: 0.3rem; margin-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.6rem; flex-wrap: wrap; }
+        .fmt-btn {
+            background: none; border: none; padding: 0.35rem 0.75rem;
+            border-radius: 6px; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; color: #64748b; font-family: inherit; transition: all 0.12s;
+        }
+        .fmt-btn:hover { background: #f1f5f9; }
+        .fmt-btn.active { background: #EFF6FF; color: #1D4ED8; }
+
+        .format-content { min-height: 80px; }
+
+        .fmt-text {
+            font-size: 0.875rem; line-height: 1.65; color: #334155;
+            white-space: pre-wrap;
+        }
+
+        .star-section { margin-bottom: 0.85rem; }
+        .star-label {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px;
+            text-transform: uppercase; color: #94a3b8; margin-bottom: 0.25rem;
+        }
+        .star-text { font-size: 0.875rem; line-height: 1.6; color: #334155; }
+
+        .card-actions { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9; }
+
+        .btn-copy {
+            background: #0A1E3D; color: white; border: none; border-radius: 7px;
+            padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: opacity 0.15s;
+        }
+        .btn-copy:hover { opacity: 0.85; }
+
+        .btn-edit-card, .btn-collapse {
+            background: white; border: 1.5px solid #e2e8f0; border-radius: 7px;
+            padding: 0.42rem 0.8rem; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; color: #475569; font-family: inherit; transition: all 0.12s;
+        }
+        .btn-edit-card:hover, .btn-collapse:hover { border-color: #94a3b8; }
+        .btn-collapse { margin-left: auto; }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center; padding: 4rem 2rem; color: #94a3b8;
+            grid-column: 1 / -1;
+        }
+        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state p { font-size: 1rem; font-weight: 500; }
+
+        /* ── Modal / Sheet ── */
+        .overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4); z-index: 200;
+            align-items: flex-end; justify-content: center;
+        }
+        .overlay.open { display: flex; }
+
+        .modal {
+            background: white; border-radius: 20px 20px 0 0;
+            width: 100%; max-width: 640px; max-height: 92vh;
+            overflow-y: auto; padding: 0 1.75rem 3rem;
+            animation: slideup 0.28s cubic-bezier(0.32,0.72,0,1);
+        }
+        @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-handle { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 12px auto 20px; }
+        .modal-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 1.25rem; }
+
+        .f-group { margin-bottom: 1rem; }
+        .f-lbl {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: #64748b; margin-bottom: 0.4rem;
+        }
+        .f-input, .f-textarea {
+            width: 100%; padding: 0.75rem 0.875rem;
+            border: 1.5px solid #e2e8f0; border-radius: 10px;
+            font-size: 0.9375rem; font-family: inherit; color: #1a202c;
+            background: #f8fafc; transition: border-color 0.15s, background 0.15s;
+        }
+        .f-input:focus, .f-textarea:focus { outline: none; border-color: #3B82F6; background: white; }
+        .f-textarea { resize: vertical; line-height: 1.6; }
+        .f-row { display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem; }
+
+        .tag-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+        .tag-check-btn {
+            display: flex; align-items: center; gap: 0.4rem;
+            padding: 0.45rem 0.6rem; border: 1.5px solid #e2e8f0;
+            border-radius: 8px; background: #f8fafc; cursor: pointer;
+            font-size: 0.78rem; font-weight: 600; color: #475569;
+            font-family: inherit; transition: all 0.12s; text-align: left;
+        }
+        .tag-check-btn:hover { background: #f1f5f9; }
+        .tag-check-btn.selected { background: #EFF6FF; border-color: #3B82F6; color: #1D4ED8; }
+
+        /* Collapsible form sections */
+        .coll-sect { margin-bottom: 0.25rem; border-top: 1px solid #f1f5f9; }
+        .coll-hd {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.9rem 0 0.6rem; cursor: pointer; user-select: none;
+        }
+        .coll-ttl { font-size: 0.875rem; font-weight: 700; color: #1e293b; }
+        .coll-sub { font-size: 0.75rem; color: #94a3b8; margin-top: 0.1rem; }
+        .coll-arr { font-size: 0.75rem; color: #94a3b8; transition: transform 0.2s; }
+        .coll-sect.open .coll-arr { transform: rotate(90deg); }
+        .coll-body { display: none; padding-bottom: 0.5rem; }
+        .coll-sect.open .coll-body { display: block; }
+
+        .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+        .btn-save {
+            flex: 1; padding: 0.875rem; background: linear-gradient(135deg, #0A1E3D, #3B82F6);
+            color: white; border: none; border-radius: 10px;
+            font-size: 1rem; font-weight: 600; cursor: pointer; font-family: inherit;
+        }
+        .btn-cancel {
+            padding: 0.875rem 1.25rem; background: none; color: #64748b;
+            border: 1.5px solid #e2e8f0; border-radius: 10px;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit;
+        }
+        .btn-delete-story {
+            width: 100%; margin-top: 0.5rem; padding: 0.75rem;
+            background: none; color: #ef4444; border: none;
+            font-size: 0.875rem; font-weight: 600; cursor: pointer; font-family: inherit;
+            border-radius: 8px; transition: background 0.12s;
+        }
+        .btn-delete-story:hover { background: #fef2f2; }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: rgba(0,0,0,0.8); color: white; padding: 0.6rem 1.25rem;
+            border-radius: 20px; font-size: 0.875rem; font-weight: 500;
+            opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 400; white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-top">
+            <div>
+                <h1>Pointer Story Bank</h1>
+                <p id="headerSub">Your private career arsenal</p>
+            </div>
+            <span class="header-private">🔒 Private</span>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search stories..." oninput="renderGrid()">
+        </div>
+        <div class="tag-filters" id="tagFilters"></div>
+        <button class="btn-add-story" onclick="openAdd()">+ Add Story</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-wrap">
+        <div class="story-grid" id="storyGrid"></div>
+    </div>
+
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">New Story</div>
+    <input type="hidden" id="editId">
+
+    <div class="f-row">
+        <div class="f-group">
+            <div class="f-lbl">Title</div>
+            <input class="f-input" id="fTitle" placeholder="e.g. CareerSpark Platform">
+        </div>
+        <div class="f-group">
+            <div class="f-lbl">Year / Period</div>
+            <input class="f-input" id="fYear" placeholder="e.g. 2025">
+        </div>
+    </div>
+
+    <div class="f-group">
+        <div class="f-lbl">Tags</div>
+        <div class="tag-grid" id="tagCheckGrid"></div>
+    </div>
+
+    <!-- Bullet -->
+    <div class="coll-sect open" id="fsect-bullet">
+        <div class="coll-hd" onclick="toggleFSect('bullet')">
+            <div><div class="coll-ttl">Bullet</div><div class="coll-sub">1-line resume accomplishment</div></div>
+            <span class="coll-arr">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <textarea class="f-textarea" id="fBullet" placeholder="Led [action] resulting in [impact]..." style="min-height:72px"></textarea>
+        </div>
+    </div>
+
+    <!-- Anecdote -->
+    <div class="coll-sect" id="fsect-anecdote">
+        <div class="coll-hd" onclick="toggleFSect('anecdote')">
+            <div><div class="coll-ttl">Anecdote</div><div class="coll-sub">2–3 sentence narrative, human &amp; memorable</div></div>
+            <span class="coll-arr">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <textarea class="f-textarea" id="fAnecdote" placeholder="Set the scene, make it specific, end with the impact..." style="min-height:100px"></textarea>
+        </div>
+    </div>
+
+    <!-- STAR -->
+    <div class="coll-sect" id="fsect-star">
+        <div class="coll-hd" onclick="toggleFSect('star')">
+            <div><div class="coll-ttl">STAR</div><div class="coll-sub">Situation · Task · Action · Result</div></div>
+            <span class="coll-arr">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <div class="f-group"><div class="f-lbl">Situation</div><textarea class="f-textarea" id="fStarS" style="min-height:68px" placeholder="Context — what was the challenge or opportunity?"></textarea></div>
+            <div class="f-group"><div class="f-lbl">Task</div><textarea class="f-textarea" id="fStarT" style="min-height:68px" placeholder="Your specific responsibility in this situation"></textarea></div>
+            <div class="f-group"><div class="f-lbl">Action</div><textarea class="f-textarea" id="fStarA" style="min-height:88px" placeholder="What you specifically did — the decisions, methods, leadership"></textarea></div>
+            <div class="f-group"><div class="f-lbl">Result</div><textarea class="f-textarea" id="fStarR" style="min-height:68px" placeholder="Concrete outcomes — numbers where possible"></textarea></div>
+        </div>
+    </div>
+
+    <!-- Case Study -->
+    <div class="coll-sect" id="fsect-casestudy">
+        <div class="coll-hd" onclick="toggleFSect('casestudy')">
+            <div><div class="coll-ttl">Case Study</div><div class="coll-sub">Full prose narrative with context &amp; lessons</div></div>
+            <span class="coll-arr">&#9654;</span>
+        </div>
+        <div class="coll-body">
+            <textarea class="f-textarea" id="fCaseStudy" style="min-height:160px" placeholder="The full story: context, approach, decisions, results, what you'd do differently..."></textarea>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button class="btn-save" onclick="saveStory()">Save Story</button>
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+    <div id="deleteRow" style="display:none">
+        <button class="btn-delete-story" onclick="deleteFromModal()">Delete this story</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════
+//  TAG CONFIG
+// ════════════════════════════════════════════════════
+
+const TAGS = {
+    'ai-tech':       { label: 'AI & Technology',      emoji: '🤖', color: '#3B82F6', bg: '#EFF6FF' },
+    'change-mgmt':   { label: 'Change Management',    emoji: '🔄', color: '#8B5CF6', bg: '#F5F3FF' },
+    'leadership':    { label: 'Leadership',            emoji: '⭐', color: '#F59E0B', bg: '#FFFBEB' },
+    'people-dev':    { label: 'People Development',   emoji: '🌱', color: '#10B981', bg: '#ECFDF5' },
+    'recognition':   { label: 'Recognition & Culture',emoji: '🏆', color: '#F97316', bg: '#FFF7ED' },
+    'space-planning':{ label: 'Space & Workplace',    emoji: '🏢', color: '#0891B2', bg: '#ECFEFF' },
+    'upskilling':    { label: 'Upskilling',            emoji: '📚', color: '#7C3AED', bg: '#F5F3FF' },
+    'remote-virtual':{ label: 'Virtual & Remote',     emoji: '💻', color: '#0284C7', bg: '#F0F9FF' },
+    'exec-visibility':{ label: 'Exec Visibility',     emoji: '👔', color: '#1D4ED8', bg: '#DBEAFE' },
+};
+
+// Primary tag color for accent bar (first tag in story's tag array)
+function accentColor(tags) {
+    const t = tags && tags[0];
+    return t && TAGS[t] ? TAGS[t].color : '#94a3b8';
+}
+
+// ════════════════════════════════════════════════════
+//  DEFAULT STORIES (pre-seeded content)
+// ════════════════════════════════════════════════════
+
+const DEFAULT_STORIES = [
+{
+    id: 'story_001',
+    title: 'CareerSpark — AI Career Development Platform',
+    year: '2025',
+    tags: ['ai-tech','change-mgmt','leadership','upskilling'],
+    bullet: 'Conceived, designed, and built CareerSpark — TIAA\'s AI-powered career development platform now enrolled by 16,000+ associates — driving enterprise adoption by personally presenting to 1,500+ employees across webinars, town halls, and expos.',
+    anecdote: 'When AI started reshaping the workforce, TIAA\'s associates had questions nobody had clear answers for. I saw the gap and filled it. I built CareerSpark from scratch — a platform that helps employees discover their strengths, map potential paths, and develop skills for an AI-augmented future. What started as an idea became TIAA\'s enterprise standard: embedded in TIAA University, presented by me to 1,500+ associates. While doing this work, I was named company-wide "Face of Values VIP" — knowing the entire time that my own office was closing.',
+    star: {
+        situation: 'TIAA\'s 16,000 associates were facing rapid AI disruption with no centralized resource to help them navigate what it meant for their careers. The organization had tools, but nothing that answered the fundamental question: "What do I do next?"',
+        task: 'Design, build, and drive adoption of an enterprise AI career development platform — from concept to launch — with no dedicated budget, no engineering team, and no existing playbook.',
+        action: 'I led every phase personally: product concept, UX design, content architecture, and development. Built the curriculum and platform with guidance from multiple AI tools: ChatGPT, Gemini, Perplexity, and TIAA\'s internal AI platforms, selecting the right tool for each job. CareerSpark is where I first learned to vibe code, describing what I needed in plain language and letting AI tools do the heavy lifting. No traditional development background required. Drove adoption myself: facilitated 30+ webinars and town halls, presented to 1,500+ associates directly, and coordinated with TIAA University to integrate it into the official enterprise curriculum.',
+        result: '16,000+ associates enrolled. CareerSpark became TIAA\'s official enterprise resource for AI career readiness. Recognized as company-wide "Face of Values VIP" — the highest cultural recognition at TIAA — delivered while knowing my own office was closing.'
+    },
+    caseStudy: `AI disruption created a new kind of uncertainty for TIAA's workforce: not fear of immediate job loss, but confusion about how roles, skills, and career paths were changing. There was no enterprise answer. I identified the opportunity and proposed building one.
+
+CareerSpark — named for the idea that AI should spark career growth, not extinguish it — is a guided, module-based platform I designed and built from the ground up. It walks associates through values clarification, self-assessment, skill gap analysis, and concrete development planning. The UX was built for someone in the middle of a busy day, not a training professional.
+
+The platform was built with guidance from multiple AI tools: ChatGPT, Gemini, Perplexity, and TIAA\'s internal AI platforms. CareerSpark is where I first learned to vibe code. I described what I needed in plain language and directed AI tools through content generation, curriculum structure, and prompt design. Not because I couldn\'t do it another way. Because this way was faster, smarter, and meant I could operate at a scale no individual could match alone.
+
+The build took months alongside my full-time role. I delivered a production-ready platform, then drove adoption myself: presenting at 30+ webinars and town halls, reaching 1,500+ associates directly. The platform was formally adopted into TIAA University's official curriculum.
+
+Final reach: 16,000+ associates enrolled enterprise-wide.
+
+The context that makes this story complete: I built something for an organization that was ending my chapter in it. My building was announced for closure during the project. I kept building anyway. I was named "Face of Values VIP" — TIAA's highest cultural recognition — while knowing that. That's the kind of leader I am: the work matters more than the circumstance.`
+},
+{
+    id: 'story_002',
+    title: 'Frisco Corporate Center: Grand Opening',
+    year: '2024',
+    tags: ['change-mgmt','space-planning','leadership'],
+    bullet: 'Led the Client Services change management workstream for TIAA\'s flagship 15-story Frisco Corporate Center opening, coordinating 500+ CS associate relocations across years of planning and creating touchpoints at every phase. Recognized as "Change Champion" at the grand opening.',
+    anecdote: 'Opening a new 15-story corporate headquarters is a different kind of challenge: it\'s not just logistics, it\'s identity. When TIAA opened its Frisco Corporate Center, Client Services represented the greatest share of associates making the move. I led the change journey for our CS associates, building every communication, every town hall, and every moment of "what does this mean for me?" into a structured experience. When the doors opened, I was recognized as "Change Champion," not because the building was beautiful, but because the people inside it felt ready.',
+    star: {
+        situation: 'TIAA was opening a flagship 15-story corporate center in Frisco, TX. Client Services represented the greatest percentage of associates relocating to the new space, and the division needed its own structured change management effort to ensure associate readiness and cultural continuity.',
+        task: 'Lead the Client Services change management workstream, ensuring CS associates arrived informed, prepared, and connected to the new space from day one.',
+        action: 'Managed years of pre-opening planning specific to CS associate needs. Built and executed an associate communications strategy covering phasing, amenities, and new ways of working. Facilitated town halls and Q&A sessions through every phase. Coordinated with Facilities, HR, IT, and Communications. Activated the space with programming that built identity and belonging before and after opening.',
+        result: 'Successful grand opening with high associate readiness and positive sentiment across the Client Services population. Recognized at the opening ceremony as "Change Champion" for outstanding contributions to the human side of the transition.'
+    },
+    caseStudy: `Moving hundreds of associates into a brand-new 15-story building is not a facilities exercise. It is a human one. People have routines, relationships with spaces, and real anxiety about change. My job was to make the transition feel intentional, not just inevitable.
+
+Client Services represented the greatest share of associates relocating to the Frisco Corporate Center. While the broader TIAA opening effort had its own workstream, I owned the CS change management piece: associate communications, space readiness updates, town halls, FAQ management, and cultural programming. I created touchpoints at every phase so that by opening day, associates were not arriving at a new place. They were arriving at their place.
+
+The Frisco Corporate Center grand opening was recognized as a milestone event for TIAA. I was named "Change Champion," a recognition given to the individual who most drove the human side of the transition.
+
+The lesson I carry from this project: the physical space is 20% of the move. The other 80% is narrative. My job was to tell the story of this new space so well that people arrived already belonging to it.`
+},
+{
+    id: 'story_003',
+    title: 'Lewisville Office Refresh: CEO Escalation',
+    year: '2022',
+    tags: ['space-planning','exec-visibility','leadership'],
+    bullet: 'Delivered a full office refresh for TIAA\'s Lewisville location in 2 weeks at zero cost, installing 12 custom digital displays and rebranding the entire space. Brought in because most Lewisville associates were Client Services members; the deadline was the return of associates from pandemic remote work following direct CEO escalation.',
+    anecdote: 'The CEO walked into the Lewisville office and said it needed to be fixed. I was brought in because most of the associates in that location were Client Services members, and the clock was running: they were returning from pandemic remote work and the space needed to be ready. Two weeks. No budget. Twelve digital displays to install. A full rebrand of the space. I had to move fast, get creative, and solve a problem with executive eyes on it. We delivered on time, at no cost to the business. That is the kind of problem I like, the ones where the constraint forces the creativity.',
+    star: {
+        situation: 'TIAA\'s CEO visited the Lewisville, TX office and identified it as needing immediate attention. The space was dated, lacked branded presence, and reflected poorly on the organization. The escalation went directly to my team. I was brought into the effort because most of the associates in the Lewisville location were Client Services members, and the hard deadline was their return from pandemic remote work.',
+        task: 'Refresh the space and elevate its professional appearance within 2 weeks, with minimal budget and no ability to delay, so that returning CS associates arrived at a space that reflected the organization they work for.',
+        action: 'Client Services had no budget for the digital displays, so I made the case to Global Corporate Services and specifically the A/V team to fund the installation by framing it as a company-wide asset, not a single business area improvement. That framing worked. Coordinated immediately with GCS, facilities, and internal design resources. Sourced, configured, and installed 12 custom digital displays throughout the space. Rebranded with updated signage, visual identity elements, and TIAA content. Managed every logistical detail at pace across a short timeline.',
+        result: 'Full office refresh delivered on the 2-week deadline at zero cost to Client Services. Executive-visible outcome: a CEO-identified problem fully resolved. The Lewisville office was transformed from a liability into a branded asset. The company-wide framing also opened the door to expand: I used the same approach to get digital displays installed at every other TIAA call center location, and they were built in as a requirement for the new Frisco Corporate Center from the start.'
+    },
+    caseStudy: `Executive escalations have a specific energy: the problem is real, the timeline is compressed, and the audience is watching. When the CEO identified Lewisville as a problem that needed fixing, my team was the answer.
+
+I was brought into the effort for a clear reason: most of the associates in the Lewisville location were Client Services members, and managing their workspace experience was my responsibility. The deadline was not arbitrary. Associates were returning from pandemic remote work, and they needed to come back to a space that reflected the organization they worked for, not the dated environment the CEO had flagged.
+
+Two weeks. No budget for Client Services. Twelve digital displays to source, configure, and install. Full visual rebrand of the space.
+
+Client Services had no funding for the digital displays, so I went a different direction. I made the case to Global Corporate Services and specifically the A/V team to fund the installation themselves, by framing the displays not as a Client Services improvement but as a company-wide asset. The argument was straightforward: these screens would benefit every associate who worked in or visited the space, not just one business area. That framing worked, and the A/V team funded the installation.
+
+I worked with the constraints instead of against them. Every vendor call was prioritized. Every facilities request was expedited. I managed the installation personally and kept stakeholders updated at each milestone. We hit the deadline, at zero cost to Client Services, with a result that exceeded expectations.
+
+The Lewisville screens did not stay in Lewisville. Once the model worked, I used the same company-wide framing to get digital displays installed at every other TIAA call center location. By the time the Frisco Corporate Center was being planned, digital displays were no longer a creative workaround. They were a standard requirement built into the building from the start.
+
+The outcome matters less than the pattern it demonstrates: I can operate at executive velocity, deliver under pressure, reframe constraints as opportunities, and turn a single escalation into a repeatable improvement across the enterprise.`
+},
+{
+    id: 'story_004',
+    title: 'Denver Office Restack',
+    year: '2024',
+    tags: ['change-mgmt','space-planning','leadership'],
+    bullet: 'Led TIAA\'s Denver office consolidation — moving approximately 700 associates to 5 fewer floors as lease restructuring required reducing the physical footprint, maintaining productivity and morale throughout.',
+    anecdote: 'Consolidating an office means telling people their space is shrinking. That\'s a hard story to tell well. In Denver, we moved roughly 700 associates from a larger footprint to five fewer floors as the lease restructured. My job was to make that transition feel like an upgrade, not a downgrade — to lead the change so well that people focused on what they were gaining rather than what they were losing. We did.',
+    star: {
+        situation: 'TIAA\'s Denver office required consolidation as the lease restructured — moving approximately 700 associates from a larger footprint into 5 fewer floors without disrupting operations or damaging morale.',
+        task: 'Lead the change management workstream to ensure a smooth transition, maintained associate satisfaction, and no meaningful productivity disruption.',
+        action: 'Managed space planning coordination alongside Facilities. Built a phased communication plan that addressed concerns before they became complaints. Facilitated town halls and space previews. Reframed the narrative: smaller space designed better, with more shared resources and fewer underused areas. Coordinated move logistics and post-move support.',
+        result: 'Successful consolidation delivered on schedule. Associate satisfaction maintained through the transition. The consolidated space operated at higher utilization with no significant productivity impact.'
+    },
+    caseStudy: `Every workplace consolidation carries a risk: that the people being consolidated feel diminished, not optimized. My job in Denver was to prevent that.
+
+The math was real — 700 people, 5 fewer floors. There was no way to hide the reduction. So I didn't try to. Instead, I led a communication approach that acknowledged the constraint honestly while telling a genuine story about the benefits: a more connected footprint, better-utilized shared spaces, and intentional design.
+
+Town halls were direct. Questions got real answers, not corporate hedging. The physical space planning was done with input from associates, not just executives. By the time move day arrived, most people understood the why — and a surprising number were actually looking forward to the new setup.
+
+The consolidation delivered on time. Satisfaction scores held. The lesson: in change management, the communication approach is 70% of the outcome. Get the narrative right and the logistics become manageable.`
+},
+{
+    id: 'story_005',
+    title: 'R&R Recognition Program: 395% Growth & Platform Selection',
+    year: '2021–2024',
+    tags: ['recognition','leadership','people-dev','exec-visibility'],
+    bullet: 'Grew TIAA Client Services recognition to 34-44% of all enterprise recognitions, managing a $500K budget and delivering a 395% increase in formal recognitions that outpaced the next 6 organizations combined, then was elevated to TIAA\'s corporate platform selection team to help prepare the RFP, evaluate vendor proposals, select the new enterprise-wide R&R platform, and support its company-wide launch.',
+    anecdote: 'Recognition programs fail when they feel like bureaucracy. They succeed when they feel personal. I inherited a recognition program that was flat and built it up to a 395% increase in formal recognitions, to the point where Client Services was responsible for 34 to 44 percent of all recognition activity across all of TIAA, outpacing the next six organizations combined. We weren\'t the biggest division. We were just the most intentional about celebrating people. That performance caught attention at the corporate level. When TIAA decided to modernize its enterprise R&R platform, they brought me onto the selection team, because Client Services was the biggest user of the existing system, and because the results I\'d driven spoke for themselves. I helped prepare the RFP, evaluated the vendor proposals, participated in selecting the new platform, and worked the implementation through to a company-wide launch. From running the program to shaping the infrastructure it runs on.',
+    star: {
+        situation: 'TIAA\'s Client Services & Technology division had recognition rates that lagged significantly behind other business units. Associate engagement surveys identified recognition as a gap, and retention data showed correlation. Later, TIAA\'s corporate leadership recognized that the existing enterprise R&R platform needed modernization — and turned to those who\'d demonstrated the deepest operational expertise with the system to help shape what came next.',
+        task: 'Revitalize the CS&T R&R program to create a genuine recognition culture while managing a $500K annual budget, and then contribute subject matter expertise to TIAA\'s corporate platform modernization: helping prepare the RFP, evaluating vendor proposals, participating in platform selection, and supporting its company-wide launch.',
+        action: 'For the program: redesigned recognition mechanics to make it easier, faster, and more personal. Built manager education and toolkits. Created internal campaigns that embedded recognition habits into team culture. Tracked adoption and iterated continuously across multiple years. For the platform modernization: invited onto the corporate selection team based on Client Services\' status as the largest user of the existing platform and the results I\'d generated. Co-created the RFP. Reviewed and evaluated submitted vendor proposals. Participated in final vendor selection. Joined the implementation team through to a successful company-wide launch.',
+        result: '395% increase in formal recognitions. Client Services reached 34-44% of all TIAA enterprise recognitions, outpacing the next 6 organizations combined. That track record earned the invitation to the corporate selection team. Delivered end-to-end: RFP prepared, vendor selected, implementation completed, new enterprise R&R platform launched company-wide to all TIAA associates.'
+    },
+    caseStudy: `Recognition fails when it's administered. It succeeds when it's felt. That's the insight that drove everything about how I rebuilt TIAA's CS&T recognition program.
+
+When I took over, the program was procedurally fine but culturally flat. People sent eCards because they were supposed to, not because they meant it. The numbers showed it: our recognition rate was unremarkable for a division of our size.
+
+I rebuilt it from the ground up. The mechanics: simplified nomination process, faster acknowledgment loops, more visible celebration moments. The culture layer: manager toolkits, team-level campaigns, and recognition tied to the moments that actually mattered to associates — not just performance reviews.
+
+Over three years, formal recognitions grew 395%. By the final year, CS&T was responsible for 34-44% of all TIAA enterprise recognitions, while being one of several major divisions. We outpaced the next six organizations combined.
+
+The number I'm most proud of isn't the volume. It's the consistency. This wasn't a one-year campaign. It was sustained culture change — which means it was real.
+
+But the story didn't end there.
+
+When TIAA's corporate leadership decided it was time to modernize the enterprise-wide R&R platform, they needed someone who understood how recognition programs actually work in practice — not just in theory. Client Services was the largest user of the existing platform. My results had been visible for years. I was invited onto the corporate selection team.
+
+The scope of that work: I co-created the RFP, reviewed and evaluated vendor proposals, participated in the final platform selection, and then joined the implementation team to make sure the transition went well — through to a company-wide launch for all TIAA associates.
+
+There's a particular satisfaction in that arc. I spent years running the program as an operator — understanding the mechanics, the friction points, what worked and what didn't. That operational depth is exactly what made my input valuable at the corporate level. I wasn't speculating about what a modern R&R platform needed. I knew from experience what the old one couldn't do, and what the new one had to. The credibility came from the results. The results made the seat at the table possible. That's how these things should work.`
+},
+{
+    id: 'story_006',
+    title: 'Return to Office — 15,000 Associates',
+    year: '2021–2022',
+    tags: ['change-mgmt','leadership','remote-virtual'],
+    bullet: 'Led TIAA\'s return-to-office for 15,000 associates across 5 locations after 18 months of pandemic remote work — building the strategy, communications, and policy framework from scratch with no industry playbook.',
+    anecdote: 'There was no playbook for bringing 15,000 people back to offices after 18 months of pandemic remote work. Nobody had done this before at this scale, in this environment. I built the strategy, the communications, the policy framework, and the space readiness approach — across five locations, with every associate asking different questions and every leader having different concerns. We navigated it. Not perfectly, but thoughtfully, and the organization came through it with its culture intact.',
+    star: {
+        situation: 'After 18 months of pandemic-mandated remote work, TIAA needed to return 15,000 associates to offices across 5 locations. No enterprise playbook existed. Sentiment was mixed — some associates were eager to return; many were anxious or resistant. The stakes were high: move too fast and damage trust; move too slow and lose business continuity.',
+        task: 'Design and execute a phased return-to-office strategy that balanced safety, associate wellbeing, business continuity, and cultural preservation — across multiple geographies simultaneously.',
+        action: 'Built the change management strategy from scratch with no external template to follow. Coordinated across 5 locations with distinct operational needs and local contexts. Created the policy framework, associate communication cadence, and leader toolkits. Facilitated hundreds of town halls and individual Q&A sessions. Partnered with Real Estate, HR, Legal, and Executive Communications to maintain a single coordinated voice.',
+        result: 'Successful phased return of 15,000 associates across all 5 locations. Culture continuity maintained — no major disruption events, no significant leadership credibility damage. The return framework became the internal model for subsequent location change efforts.'
+    },
+    caseStudy: `There is no "best practice" for bringing 15,000 people back to offices after a global pandemic. I know, because I looked for one.
+
+What existed was noise — op-eds, think pieces, and anecdotes from other companies that weren't TIAA, weren't our culture, and weren't operating under our constraints. I had to build something that was actually ours.
+
+The framework I developed centered on three principles: honesty about what we knew and didn't know, consistency of message across 5 locations, and genuine two-way communication rather than announcements disguised as conversations.
+
+In practice, that meant hundreds of town halls. It meant a policy that was clear on requirements and flexible on specifics. It meant leader toolkits that gave managers real answers to real questions — not talking points. It meant personally facilitating sessions where the questions got hard.
+
+The return wasn't perfect. No change of this scale is. But the organization came through it with its trust intact — which in 2021-22, was the actual goal. The framework we built became the template for the real estate changes that followed.`
+},
+{
+    id: 'story_007',
+    title: 'Skills of the Future Program',
+    year: '2024',
+    tags: ['upskilling','people-dev','ai-tech','leadership'],
+    bullet: 'Led TIAA\'s Skills of the Future program — building 5 curated training curricula with a 7-person team that reached 890 unique learners and became the model for future enterprise learning initiatives.',
+    anecdote: 'Upskilling at enterprise scale is easy to announce and hard to deliver. Skills of the Future was different because we made it specific. Instead of generic digital skills content, we built five targeted curricula matched to real career paths. A team of seven, 890 learners, and a measurable impact on career readiness. The best part: associates came back — because the content was actually useful.',
+    star: {
+        situation: 'TIAA\'s CS&T associates needed structured pathways to develop skills for AI and digital-first roles. Existing offerings were generic, poorly attended, and misaligned with where careers were actually heading.',
+        task: 'Build a comprehensive, curated upskilling program that associates would actually use — not just enroll in and forget.',
+        action: 'Led a 7-person cross-functional team through curriculum design, content curation, vendor coordination, and program launch. Built 5 distinct learning paths mapped to real role trajectories rather than abstract competency frameworks. Created a communications and enrollment campaign that built anticipation before launch. Facilitated program operations and gathered feedback for continuous improvement.',
+        result: '890 unique learners enrolled across the 5 curricula. Program became TIAA\'s referenced model for future learning initiatives. Measurable improvement in relevant skill acquisition across targeted associate cohorts.'
+    },
+    caseStudy: `Most corporate training fails at the same step: the moment the learner realizes the content has nothing to do with their actual job.
+
+Skills of the Future was designed around the opposite assumption. We started with where associates' careers were actually going — toward AI-augmented work, digital tools, and data fluency — and built backward to content that served those destinations specifically.
+
+The team of seven I led came from L&D, Technology, HR, and business operations. The diversity was intentional: I needed people who understood what the tools actually looked like in practice, not just what the competency models said they should look like.
+
+The result: 5 curated curricula, each mapped to a distinct career trajectory. 890 associates enrolled — and more importantly, a significant portion completed their tracks. That's the metric that matters in learning programs: completion, not enrollment.
+
+The program became TIAA's internal reference model for how to build targeted learning at scale. The approach — start with the career destination, build the path backward — is transferable to any upskilling initiative.`
+},
+{
+    id: 'story_008',
+    title: 'Ramp Upskilling Program',
+    year: '2023–2024',
+    tags: ['upskilling','people-dev','ai-tech'],
+    bullet: 'Led TIAA\'s Ramp upskilling program — enrolling 32 associates and directly enabling 2 career transitions into technology roles through targeted skill development and active hiring manager partnerships.',
+    anecdote: 'The Ramp program was about giving people the bridge they couldn\'t find on their own. Thirty-two associates enrolled. Two of them made career transitions into technology roles they genuinely wanted but didn\'t know how to reach. That\'s the outcome that matters — not completion rates or enrollment volume, but actual career change.',
+    star: {
+        situation: 'TIAA associates in non-technical roles were increasingly interested in transitioning to technology positions. Internal mobility data showed desire existed, but there was no structured pathway and no active support mechanism for the leap.',
+        task: 'Design and operate an upskilling program that creates real bridge opportunities — not just exposure to technical content, but genuine pathways to technical hiring.',
+        action: 'Built the Ramp program curriculum focused on foundational technical skills with direct application to TIAA\'s technology environment. Enrolled and coached 32 associates through the program. Coordinated actively with technology hiring managers to ensure program graduates had real hiring consideration, not just a credential.',
+        result: '32 associates completed the program. 2 associates successfully hired into technology roles — measurable career change, not just training completion. Established proof of concept for enterprise-scale internal mobility programs targeting non-traditional tech talent.'
+    },
+    caseStudy: `Internal mobility is one of the most expensive problems organizations don't solve. They spend heavily to hire external talent while qualified people already inside the organization go unrecognized and eventually leave.
+
+Ramp was my attempt to fix a corner of that problem at TIAA.
+
+The design was intentional: not a generic tech exposure program, but a structured pathway with active hiring manager partnerships built in. I knew that the moment of truth wasn't the training — it was the handoff to hiring. If I couldn't connect program graduates to real opportunities, the program was a credential, not a bridge.
+
+32 associates enrolled. The curriculum was practical and directly mapped to TIAA's technical environment, not abstract computer science concepts.
+
+Two associates were hired into technology roles. That number is small by volume but significant by outcome: two careers changed direction. Two people who saw no path forward from where they were found one. That's the kind of measurable human impact that matters more to me than aggregate metrics.
+
+The program also generated internal credibility for the concept. With proof of concept established, the model is extensible to larger cohorts and other talent populations.`
+},
+{
+    id: 'story_009',
+    title: 'Virtual Career Expo Platform — COVID Innovation',
+    year: '2020–Present',
+    tags: ['remote-virtual','ai-tech','people-dev','leadership'],
+    bullet: 'Built a custom-coded virtual Career Expo platform from scratch during COVID — reaching 800+ TIAA associates (700+ in week one alone), solving a systemic equity problem that had excluded regional offices from in-person events for years, earning TIAA\'s first-ever double-EXCEPTIONAL performance rating, pioneering a format replicated by 3+ teams enterprise-wide — then evolved it into the company-wide TIAA Product Expo, and currently adapting it for the Recordkeeping Transformation Expo, expanding the mission to make enterprise programming accessible to all associates globally.',
+    anecdote: 'In 2020, every in-person career event disappeared overnight. But the real problem was hidden underneath: associates in Cincinnati, smaller offices, regional locations had been systematically excluded from career events for years — they were only included when the format changed. I built a custom virtual platform, ran the first event, and 700+ people showed up in week one. 800+ total. Three other teams replicated the format. An associate from Cincinnati wrote: "I felt included with this format, not like a second thought." That sentence is the whole story. But it didn\'t stop there. That platform became the TIAA Product Expo — a company-wide solution. And now it\'s being updated for the Recordkeeping Transformation Expo. The mission keeps expanding: every associate, everywhere, included.',
+    star: {
+        situation: 'COVID-19 eliminated all in-person career development events at TIAA overnight. But the immediate crisis masked a deeper structural one: regional and smaller offices — Cincinnati and others — had been systematically excluded from in-person career events in normal times. Only associates in Denver, Charlotte, and NYC could routinely attend. The pandemic made visible a problem that had always existed.',
+        task: 'Continue enterprise career development programming in a fully virtual format — designed to address both the immediate crisis and the underlying equity problem that in-person events had always created — then evolve that solution into a scalable platform serving multiple enterprise use cases over time.',
+        action: 'Built a custom virtual event platform from scratch rather than waiting for procurement or IT to source a solution. Designed the format to preserve what made in-person events valuable — discovery, conversation, active participation — translated for a medium anyone with internet access could use. Ran the event, drove participation, iterated on the format. Three or more other TIAA teams independently adopted the platform. Evolved the platform into the company-wide TIAA Product Expo. Currently updating it for the Recordkeeping Transformation Expo — continuing to extend access to all associates globally.',
+        result: '800+ total participants reached. 700+ attended in the first week alone — a number never achieved with in-person events, because geography had always been the ceiling. Regional associates who had never been able to participate could now attend. Three or more TIAA teams replicated the format enterprise-wide. TIAA awarded its first-ever double-EXCEPTIONAL performance rating. The platform evolved into the company-wide TIAA Product Expo and is actively being updated for the Recordkeeping Transformation Expo — expanding the original mission to make enterprise programming accessible to every associate globally, not just those outside the three main office locations.'
+    },
+    caseStudy: `In 2020, in-person career events died overnight. That was the immediate crisis. But it took about a week of sitting with the problem before I saw the real one hiding underneath: the associates most affected by the loss weren't the ones in Charlotte, Denver, and New York — they'd been coming to events for years. The ones most affected were in Cincinnati, regional offices, smaller locations that were systematically excluded from in-person programming as a matter of logistics and budget.
+
+The pandemic didn't create their exclusion. It just made it visible.
+
+So I built a solution designed for both problems simultaneously. A custom virtual platform — not a video call dressed up as an event, but an actual interactive environment. Discovery. Conversation. Breakout formats. Active participation. The things that made in-person events worth attending, translated for a medium that anyone with internet access could use.
+
+The first event: 700+ associates in a single week. A number we'd never approached with in-person events, because geography had always been the ceiling.
+
+Total reach: 800+ associates. Three or more TIAA teams independently adopted the format for their own programs.
+
+The associate quote that mattered most came from Cincinnati: "Being located in Cincinnati, in-person-only events are not an option. I felt included with this format and a part of the plan, not as a second thought."
+
+My manager wrote: "Wow... just wow! Your commitment, creativity and innovation are unmatched."
+
+TIAA awarded me its first-ever double-EXCEPTIONAL performance rating — recognizing both What I accomplished and How I accomplished it. That distinction matters: it's not just that the platform worked. It's that the way I built it demonstrated something durable about how I operate.
+
+The platform didn't stop with the Career Expo. I turned that solution into the company-wide TIAA Product Expo — a broader enterprise application of the same virtual accessibility model. And I'm currently updating the platform for the Recordkeeping Transformation Expo, bringing the same format to one of TIAA's most significant ongoing transformation initiatives.
+
+The mission running underneath all of this has never changed: make enterprise programming accessible to every associate, everywhere. Now that we've demonstrated what's possible for those outside the main office locations, the next chapter is expanding that access to all associates globally. That's the work still in progress.
+
+Five years after the Career Expo, I built CareerSpark. What I built under pandemic constraint was the direct conceptual predecessor. What I built under pressure became the foundation for what I built with intention — and what I continue to build now. I've noticed that pattern throughout my career — necessity doesn't just drive invention, it reveals what you actually know how to do, and opens doors you didn't know existed.`
+},
+{
+    id: 'story_010',
+    title: 'Values VIP — Highest Cultural Recognition',
+    year: '2025',
+    tags: ['recognition','leadership','exec-visibility'],
+    bullet: 'Named TIAA company-wide "Face of Values VIP" — the highest cultural recognition at TIAA — while simultaneously building CareerSpark for 16,000+ associates and managing the announced closure of my own office.',
+    anecdote: 'The context matters: I was named TIAA\'s company-wide "Face of Values VIP" — the highest cultural honor — while building a platform to help others find their future, and while knowing my own office was closing. I didn\'t do the work for the recognition. The recognition came because I did the work anyway, in the hardest circumstances. That\'s the story.',
+    star: {
+        situation: 'TIAA\'s annual Values recognition identifies associates who exemplify company values in exceptional ways. In 2025, the company was navigating a significant restructuring, including the announced closure of the Charlotte office — my location.',
+        task: 'Continue to lead with integrity, deliver high-impact work, and support colleagues during a period of genuine organizational and personal uncertainty.',
+        action: 'Delivered CareerSpark for 16,000+ associates while managing my own career transition. Supported colleagues through the closure announcement with transparency and stability. Maintained full engagement and output quality throughout. Presented CareerSpark to senior leadership and 1,500+ associates while personally in transition.',
+        result: 'Named company-wide "Face of Values VIP" — the highest cultural recognition TIAA offers. Also named Client Services Values Champion. Both recognitions given during one of the most organizationally difficult periods in my tenure, which is precisely what makes them meaningful.'
+    },
+    caseStudy: `Awards that come in good times are one thing. Awards that come in hard times are something else entirely.
+
+In 2025, I was named TIAA's company-wide "Face of Values VIP" — the highest cultural recognition the company offers. The timing matters: I received this recognition while delivering CareerSpark for 16,000+ associates, while my building was under announced closure, and while navigating my own career transition.
+
+I didn't do any of that work to be recognized. I did it because it needed doing and because the people it served deserved my best effort regardless of what was happening with my own situation.
+
+The Values VIP recognition doesn't just say "this person did good work." It says "this person demonstrated what we aspire to be, in circumstances where it would have been easier to do less." That's the distinction that matters to me.
+
+There is no version of my career story that doesn't include this chapter: the year I built the most ambitious thing I've ever built, for an organization that was ending my chapter in it, and was recognized for the highest expression of its values while doing so. That's who I am as a professional.`
+},
+{
+    id: 'story_revolver',
+    title: 'Revolver LCMS — Enterprise Content Architecture',
+    year: '2001–2007',
+    tags: ['ai-tech','upskilling','leadership'],
+    bullet: 'Designed the knowledge architecture and drove Fortune 500 implementation of Revolver LCMS — an enterprise platform that separated content from delivery, allowing a single authored object to publish simultaneously to web, mobile, paper, expert review, and novice learning — dramatically reducing content development time and pioneering what the industry now calls "API-first" or "headless content" by two decades.',
+    anecdote: 'In 2001, I helped design a system that did something radical: it separated what you\'re teaching from how you\'re teaching it. Enter content once. Publish everywhere — web, mobile, paper, expert review, novice learner. We implemented it at three Fortune 500 companies. We called it Revolver. Today, the industry calls the same idea "API-first" or "headless content." We were doing it twenty years early. That principle — separate content from context — still shows up in everything I build.',
+    star: {
+        situation: 'In the early 2000s, enterprises moving training online were building content in silos — rebuilding the same knowledge from scratch for every medium, audience, and context. A course built for web learners couldn\'t become a paper job aid without starting over. Training teams were locked in redundant development cycles with no systematic path to reuse.',
+        task: 'Design the knowledge architecture for Revolver LCMS — a platform that would let enterprises author content once and deploy it appropriately across any context — and drive its implementation at Fortune 500 clients as Knowledge Architect and Sales Engineer.',
+        action: 'I served as Knowledge Architect, Instructional Designer, UX Designer, and Sales Engineer simultaneously. Designed the core content structure that decoupled what was being taught from how it was delivered. Implemented the system at 3 Fortune 500 companies. Traveled internationally training enterprise teams on a fundamentally different model: knowledge as organizational infrastructure, not one-off courses. Supported clients including Bank of America, Unilever, GE Capital, Regions Bank, and Verizon Wireless.',
+        result: '3 Fortune 500 implementations. Dramatic reduction in content development time through systematic reuse. Global deployment across organizations. The architectural principle I implemented in 2001 — separating content from delivery — is today standard industry practice under the names "API-first design" and "headless content management." We built it two decades early.'
+    },
+    caseStudy: `In 2001, eLearning was a gold rush with a serious infrastructure problem. Enterprises were racing to move training online, but every course was a silo. Build for web learners? Start over for field technicians. Need a paper job aid? Rebuild from scratch. The same knowledge was being re-authored dozens of times in different formats, with no systematic way to maintain consistency or reduce effort.
+
+The insight behind Revolver was simple and radical: separate what you're teaching from how you're teaching it.
+
+I was brought in as Knowledge Architect and Sales Engineer during the critical implementation phase. My job was to design how enterprises should structure their knowledge — and then travel the world teaching them to think differently about it.
+
+The platform I helped architect worked like this: authors entered content once, structured as learning objects. The system published that same object to any context — a full web-based lesson with exercises, a condensed field technician job aid on paper, a micro-learning snippet for mobile, a detailed expanded lesson for novice learners, a streamlined review format for subject matter experts. Same content. Different contexts. No redundant development.
+
+We implemented this at three Fortune 500 companies. The results were measurable: development time dropped dramatically, content stayed evergreen and consistent across mediums, and organizations could manage knowledge as infrastructure rather than as one-off projects.
+
+Here's what I find most significant in retrospect: what we called "content separation" in 2001, the industry spent the next twenty years slowly reinventing under different names. "API-first design." "Headless CMS." "Content as a Service." The core principle is identical — separate what from how, structure from presentation, content from context.
+
+I learned this in 2001. It shows up in everything I've built since. CareerSpark adapts content to learner level and context. My workplace change management work designs for multiple audience types from a single communication strategy. My AI adoption frameworks separate the technology layer from the human behavior layer. Same principle. Different domains. This is what a 25-year operating principle looks like in practice.`
+},
+{
+    id: 'story_lchannel',
+    title: 'Lucent Technologies — Multimedia Standards & L-Channel',
+    year: 'Early 2000s',
+    tags: ['ai-tech','upskilling','recognition','leadership'],
+    bullet: 'Served on Lucent Technologies\' core team establishing enterprise multimedia standards during the industry-wide transition from CD-ROM to web/browser-based instruction — and simultaneously built and produced training courseware for L-Channel, Lucent\'s satellite TV network reaching 200,000+ sales associates globally, writing teleprompter scripts and directing on-air talent from the broadcast control room — earning the Enterprise Networks Gold President\'s Award for Team Excellence and reducing training delivery costs by 80%.',
+    anecdote: 'At Lucent, I was doing two things simultaneously that most people have never done once. The first: sitting on the core team defining how a 200,000-person organization would convert its entire training library from CD-ROM to web-based instruction — setting the standards that would govern how the company taught at scale going forward. The second: producing that training for a satellite TV network, writing teleprompter scripts, and directing on-air talent from a broadcast control room. Standards architecture in the morning, live TV production in the afternoon. That combination — defining the rules and then executing under them in the hardest medium imaginable — taught me more about how learning systems actually work than anything before or since.',
+    star: {
+        situation: 'Lucent Technologies faced two simultaneous challenges at the turn of the millennium: the industry-wide shift from CD-ROM to web/browser-based instruction required establishing new enterprise multimedia standards from scratch, and the company needed to deliver consistent training to 200,000+ sales associates across multiple continents at a cost point that classroom delivery couldn\'t support.',
+        task: 'Serve on the core team defining Lucent\'s enterprise multimedia standards for the CD-ROM to web transition — while simultaneously developing and producing training courseware for L-Channel, Lucent\'s satellite TV training network, including teleprompter scripting and broadcast control room direction.',
+        action: 'As a core team member, helped establish the multimedia standards governing how Lucent would design, author, and deliver web-based instruction across the enterprise — defining the rules for a transition that would affect every training asset the company owned. Simultaneously: worked directly with subject matter experts to build L-Channel courseware; designed content for live broadcast constraints (no pause, no rewind, fixed pace); wrote teleprompter scripts for on-air talent; sat in the broadcast control room during production directing presenters through the training material in real time.',
+        result: '200,000+ sales associates reached globally via L-Channel. 80% reduction in training delivery costs. Enterprise Networks Gold President\'s Award for Team Excellence. Enterprise multimedia standards established, enabling Lucent\'s systematic transition from CD-ROM to web-based instruction at scale. Demonstrated the rare combination of standards architecture and live production execution.'
+    },
+    caseStudy: `At Lucent in the early 2000s, I was working two parallel tracks that rarely intersect in the same role.
+
+The first track: multimedia standards. The industry was in the middle of a fundamental shift — from CD-ROM based instruction to web and browser-based delivery. For a company with 200,000+ employees and a global training operation, that transition wasn't just a technology swap. It required establishing new standards from scratch: how content would be authored, structured, formatted, and delivered in the new medium. I was on the core team doing that work — defining the rules that would govern how Lucent designed and deployed instruction going forward.
+
+That kind of standards work is invisible when it succeeds. No one thinks about the governance layer that makes a well-designed learning system run consistently at scale. They just notice that things work. That's the point.
+
+The second track: L-Channel production. While the standards work was establishing the future, L-Channel was the present — a satellite television network delivering training to Lucent's sales and support staff around the world. My role wasn't just instructional design. It was full-cycle production.
+
+The process: work with subject matter experts to extract and structure what needed to be taught. Build the courseware for broadcast constraints — no pause, no rewind, fixed pacing, first-delivery has to work. Write the teleprompter scripts for the on-air talent. Then sit in the broadcast control room during production, directing those presenters through the material in real time.
+
+That last piece is something most instructional designers never experience. When a training broadcast goes live simultaneously to thousands of learners across multiple continents, with no ability to pause or correct, the consequences of design decisions become immediate and irreversible. There's no retry. You either built it right or you find out you didn't in the worst possible way.
+
+The results: 200,000+ sales associates reached, 80% cost reduction, Enterprise Networks Gold President's Award for Team Excellence.
+
+What I carried forward from Lucent is a set of operating principles I've never stopped using: understand the delivery context before you design anything; establish the standards that will govern execution before you build; and when you're in production, make sure your design can survive contact with reality. Those principles apply whether the medium is satellite television, a web browser, or an AI platform.`
+},
+{
+    id: 'story_ixl',
+    title: 'Information Architecture — Early Internet Era',
+    year: '2000–2002',
+    tags: ['ai-tech','leadership'],
+    bullet: 'Led information architecture and usability design as Senior Information Architect at iXL, Inc. — redesigning Budget.com\'s car rental booking engine and eCollege\'s assessment platform, pioneering user-centered IA methodologies for the early commercial internet before they became standard practice.',
+    anecdote: 'I spent years training people to use systems that were genuinely bad. At some point I decided it made more sense to fix the systems than to keep teaching workarounds. iXL was where that shift happened. As a Senior Information Architect during the early internet era, I stopped explaining complicated things and became the person who made things less complicated. The Budget.com booking engine. The eCollege assessment platform — which eventually became part of Pearson, the same company I\'d later work with on Revolver. Two different projects. One realization that has never left: design isn\'t decoration. It\'s how things work.',
+    star: {
+        situation: 'In the early 2000s, commercial internet applications were multiplying faster than design discipline could keep pace. Companies were building web applications that worked technically but failed experientially — creating user frustration, abandonment, and support costs. Budget.com needed its rental booking engine completely rethought; eCollege needed a redesigned assessment and survey development platform.',
+        task: 'Apply emerging information architecture and usability methodologies to make these early internet applications genuinely usable — translating functional complexity into clear, intuitive user experiences.',
+        action: 'Served as Senior Information Architect at iXL, Inc. Led complete redesign of Budget.com\'s car and truck rental booking engine, restructuring the flow around how users actually think about renting rather than how backend systems stored data. Designed the new assessment and survey development tool for eCollege.com. Applied and helped pioneer IA and usability testing methodologies that were not yet standard practice in commercial web development.',
+        result: 'Improved user experience and conversion performance for Budget.com\'s core booking flow. Delivered redesigned assessment platform for eCollege — later acquired by Pearson, the same organization I\'d collaborate with on Revolver. Established information architecture and usability as foundational disciplines in my own practice, marking the transition point in my career from explaining broken systems to designing better ones.'
+    },
+    caseStudy: `There's a moment in most careers where you stop tolerating the thing that bothers you and start trying to fix it. For me, that moment came after years of training people to use systems that were genuinely, frustratingly hard to use. The training kept improving. The systems stayed broken.
+
+I joined iXL, Inc. as a Senior Information Architect at the height of the internet boom — a moment when companies were building web applications as fast as possible, often with more technical ambition than design discipline.
+
+Information architecture is the structural design of how information is organized, labeled, and navigated so that users can find what they need and accomplish what they came to do. In 2001, this was not yet a widely recognized discipline. We were helping define what it meant in practice.
+
+The Budget.com engagement: a complete redesign of their car and truck rental booking engine. The existing flow made a simple task — rent a car — into a multi-step confusion. We redesigned it around how users actually think about renting, not how the system happened to store data internally. The principle sounds obvious in retrospect. In 2001, it wasn't.
+
+The eCollege engagement: a redesigned assessment and survey development tool for one of the early educational technology platforms. eCollege was later acquired by Pearson — the same organization I'd work with years later on Revolver. I didn't know at the time that I was orbiting an ecosystem I'd be embedded in for years.
+
+Both projects reinforced the same insight: design isn't decoration. Information architecture is about making complexity invisible from the user's perspective while preserving everything that made it complex in the first place. That's the hardest design problem — and it's the one I've been working on ever since, in every domain I've entered.`
+},
+{
+    id: 'story_vangent',
+    title: 'Automated Recruiting Solutions — Vangent Human Capital',
+    year: '2008–2011',
+    tags: ['ai-tech','people-dev','leadership'],
+    bullet: 'Directed design, development, and implementation of 3 automated recruiting solutions at Vangent Human Capital — reducing client hiring costs by 50–80% and increasing speed-to-hire by 50%+ — including the U.S. Department of Commerce\'s 2010 Census hiring operations and Extra Space Storage.',
+    anecdote: 'At Vangent, I learned what enterprise software buyers actually care about: not feature lists, but whether the thing works in practice and what it costs when it doesn\'t. I directed three automated recruiting solutions — products that took manual hiring processes and systematized them at scale. Extra Space Storage. The U.S. Census. Real organizations making real hiring decisions, faster and cheaper. 50 to 80 percent cost reduction. 50 percent faster time-to-hire. The numbers are clean. The lesson underneath them is messier: selling technology taught me that operational transformation is the product. The software is just the vehicle.',
+    star: {
+        situation: 'Enterprise organizations were spending enormous resources on manual recruiting processes — posting jobs, screening applicants, scheduling interviews, managing pipelines — all done by hand across hundreds of positions simultaneously. Vangent Human Capital had built automated recruiting platforms to address this, but each implementation required sophisticated customization and change management to deliver measurable ROI rather than just functional deployment.',
+        task: 'Direct the design, development, and implementation of automated recruiting solutions for enterprise clients — configuring each to deliver measurable outcomes and managing the full product lifecycle from requirements through go-live.',
+        action: 'Served simultaneously as Product Manager and Sales Engineer. Directed design and development of three automated recruiting products, setting priorities and allocating development resources to meet client timelines. Led corporate website redesign following company rebrand from Pearson Performance Solutions to Vangent Human Capital. Contributed to customization design and implementation for the U.S. Census Bureau\'s 2010 hiring operations — one of the largest periodic mass-hiring events in the federal government — as well as Enterprise clients including Extra Space Storage.',
+        result: '50–80% reduction in client hiring costs. 50%+ increase in speed-to-hire. Government-scale deployment for the 2010 U.S. Census with the accuracy, volume, and compliance requirements that federal hiring demands. Demonstrated that recruiting automation could deliver transformational — not incremental — operational improvement when implemented with outcome focus rather than feature focus.'
+    },
+    caseStudy: `Automated recruiting sounds straightforward. It's not. The technical problem — routing applications, matching candidates to roles, scheduling interviews — is solvable. The organizational problem is harder: enterprises have established hiring practices, compliance requirements, institutional habits, and managers who've done things a certain way for years. Deploying automation into that environment requires more than working software. It requires understanding what the organization actually does, what they're afraid will break, and what success looks like to the person who ultimately signs off.
+
+At Vangent, I directed three automated recruiting solutions as Product Manager and Sales Engineer. The dual role was intentional and formative: I was simultaneously building the products and selling them. That combination teaches you things about what enterprise buyers actually value that no amount of internal product work ever could.
+
+What they value: outcomes. Not features. The conversations that mattered weren't about system capabilities — they were about cost-per-hire before and after, days from requisition to offer, compliance exposure being eliminated. The technical architecture was invisible to the people who mattered. The business impact was everything.
+
+Results: 50–80% reduction in client hiring costs. 50%+ increase in speed-to-hire. The client list included Extra Space Storage and the U.S. Department of Commerce for the 2010 Census — one of the largest periodic mass-hiring operations in the federal government, with unique scale, timeline pressure, and compliance demands.
+
+The recruiting automation work taught me to think in terms of outcomes first, systems second. What problem are we actually solving? How will we know when we've solved it? That orientation — customer outcome as north star, technology as vehicle — has shaped every system I've designed since, from SharePoint governance at TIAA to CareerSpark's adoption strategy.`
+},
+{
+    id: 'story_mgmt_systems',
+    title: 'TIAA Management Systems Suite — SharePoint at Scale',
+    year: '2013–2015',
+    tags: ['leadership','people-dev','exec-visibility'],
+    bullet: 'Built TIAA\'s foundational 5-system Management Suite — covering Change, Finance, People, Operations, and Quality Management — in my first two years at TIAA, simultaneously scaling SharePoint governance to 200+ sites supporting 2,000 employees and establishing the operational infrastructure Client Services ran on for the next decade.',
+    anecdote: 'My first two years at TIAA weren\'t spent easing in — they were spent building the floor everyone else would walk on. I arrived alongside some of the organization\'s earliest formal change management work, and immediately took on two parallel challenges: designing five interconnected management systems from scratch, and scaling a SharePoint environment that had grown faster than its structure could support. 200+ sites. 2,000 people. Five systems covering every dimension of how leaders run their teams. The unglamorous work is often the most foundational. I built that foundation — and then spent the next decade building on top of it.',
+    star: {
+        situation: 'TIAA\'s Client Services organization had grown to a scale where informal management practices — ad hoc reporting, disconnected tools, inconsistent processes across teams — were creating real operational friction. This was my first two years at TIAA, also a period when the organization was beginning to formalize its change management practice. Leaders had no unified operational infrastructure, and every team was solving the same problems independently.',
+        task: 'Design and build a comprehensive management systems suite that gave people leaders across the organization consistent tools, reports, and frameworks — and assume ownership of the SharePoint infrastructure required to host and sustain it — all while contributing to the early change management capability taking shape simultaneously.',
+        action: 'Designed five interconnected management systems: Change Management, Finance Management, People Management, Operations Management, and Quality Management. Created comprehensive reports, dashboards, and operational toolkits for all leaders within Client Services. Assumed responsibility for the organization\'s SharePoint infrastructure, rapidly developing deep platform expertise. Established training programs to build organizational capability. Scaled governance model to manage 200+ sites with a model that empowered teams to solve their own problems rather than centralizing all support.',
+        result: '200+ SharePoint sites managed under a coherent, sustainable governance model. Five management systems operational across Client Services. 2,000 employees supported by consistent management infrastructure — delivered in my first two years at TIAA, establishing the operational foundation Client Services ran on for the next decade.'
+    },
+    caseStudy: `The least glamorous work in any large organization is often the most foundational. Management infrastructure — the tools, systems, reports, and processes that leaders use to actually run their teams — tends to be built piecemeal, inconsistently, and without strategic intent. The result is leaders spending time recreating what should already exist, and organizations making decisions from inconsistent data.
+
+In my first two years at TIAA, I arrived into exactly that situation — and took on the project of fixing it systematically. This was also the period when TIAA's Client Services was beginning to formalize its change management practice. I was simultaneously building the operational infrastructure and contributing to the early change management capability that would grow significantly in the years ahead.
+
+The scope: five interconnected management systems. Change Management — a framework and toolkit for navigating organizational transitions coherently. Finance Management — budget tracking, forecasting, and reporting standardized across the division. People Management — performance tracking, development planning, and talent tools for every leader. Operations Management — process documentation, workflow tools, and performance metrics. Quality Management — compliance tracking, issue resolution, and continuous improvement frameworks.
+
+Each system required understanding how leaders actually worked before designing anything. Management systems fail when built for an idealized, always-available manager with unlimited time for process. I built for real managers, in real conditions, with real competing priorities.
+
+Alongside the five systems, I assumed ownership of Client Services' SharePoint environment: 200+ sites, 2,000 users, and a governance model that had grown organically enough to need structural thinking. I built that structure, created training programs to establish organizational capability, and designed a governance model specifically aimed at enabling teams to solve their own problems — not creating a queue of support requests for a central team.
+
+The measure of good infrastructure is that you stop noticing it. That's what happened: the systems worked so reliably, and the governance model was self-sustaining enough, that the organization could focus on its actual work rather than on maintaining its tools. I delivered this in my first two years at TIAA — and then spent the next decade building on top of that foundation. Building things that become invisible is harder than building things that get noticed. It's also more valuable.`
+},
+{
+    id: 'story_manager_guide',
+    title: 'CareerSpark Manager Guide — Built in One Week with Amazon Q',
+    year: '2025',
+    tags: ['ai-tech','leadership','upskilling'],
+    bullet: 'Identified the need for a CareerSpark companion Manager Guide and built it with Amazon Q in one week — work that would have taken months by traditional development methods.',
+    anecdote: 'Nobody asked me to build the Manager Guide. I noticed that managers were a missing link in CareerSpark adoption. Associates were using the platform, but leaders didn\'t have the tools to coach with it. I built the companion guide myself using Amazon Q. One week. Months of traditional development work, done in one week. The guide went from identified need to finished product before most projects would have finished their scoping conversation.',
+    star: {
+        situation: 'CareerSpark was gaining traction with associates, but managers lacked the tools to use it as a coaching resource. The platform was built for individual career exploration, but without manager-facing guidance, the leadership layer of adoption was missing.',
+        task: 'Build a companion Manager Guide that equipped leaders to use CareerSpark as a coaching tool in development conversations, without adding complexity or requiring formal training.',
+        action: 'Identified the gap myself and built the solution without being asked. Used Amazon Q to design, write, and produce the complete Manager Guide. Selected Amazon Q specifically because of its ability to act as an agentic collaborator, not just a prompt-and-response tool. Directed the AI through multi-step content development, review, and refinement. Delivered a complete, polished guide ready for enterprise use.',
+        result: 'Full Manager Guide delivered in one week. Work that would have taken months by traditional development methods. Guide expanded CareerSpark adoption to the manager layer, completing the ecosystem. Demonstrated that agentic AI tools can compress development timelines by an order of magnitude when directed with precision.'
+    },
+    caseStudy: `Nobody asked me to build the Manager Guide. That\'s the part of the story worth paying attention to.
+
+CareerSpark was working. Associates were using it. The adoption numbers were building. But I noticed something: managers didn\'t have the tools to participate as coaches. The platform gave associates a path forward, but it didn\'t give their leaders the language or framework to reinforce that journey in development conversations. That was a gap.
+
+I built the companion Manager Guide to close it.
+
+I used Amazon Q, an agentic AI tool that doesn\'t just respond to prompts but takes autonomous action across multi-step tasks. I directed it through the full development cycle: content architecture, writing, structuring, reviewing, and refinement. I wasn\'t writing copy by hand. I was directing an AI collaborator with precision toward a defined outcome.
+
+One week. That\'s how long it took from identified need to finished product.
+
+The same scope by traditional development methods would have taken months. Requirements gathering. Content reviews. Multiple draft cycles. Stakeholder sign-off loops. All of that compressed into a week because I knew what I needed, knew how to direct the tool, and didn\'t wait for a project team to form around something I could build myself.
+
+The Manager Guide completed the CareerSpark ecosystem: associates had a structured path, and now their managers had the coaching tools to reinforce it.
+
+The broader lesson is the one I carry forward: an agentic AI tool in the hands of someone who knows what they\'re trying to accomplish isn\'t just a productivity tool. It\'s a capability multiplier that makes one person work like a team.`
+},
+{
+    id: 'story_vibe_coding',
+    title: 'From Vibe Coding to Agentic AI: Building at the Speed of Imagination',
+    year: '2024–2025',
+    tags: ['ai-tech','leadership'],
+    bullet: 'Evolved from learning to vibe code while building CareerSpark to directing agentic AI tools like Amazon Q, compressing months of development work into days and shifting from being limited by existing skills to being limited only by imagination.',
+    anecdote: 'For most of my career, what I could build was constrained by what I already knew how to build technically. That changed when I started vibe coding during CareerSpark. I described what I needed. The AI built it. Then Amazon Q showed me what agentic AI actually meant: not just a tool that responds, but one that acts, sequences, and delivers. The Manager Guide took one week. The Slide Presentation System replaced PowerPoint at TIAA. I\'m building things now that I couldn\'t have conceived of building alone two years ago.',
+    star: {
+        situation: 'Traditional development timelines and technical skill requirements had long been a ceiling on what any individual contributor could build independently. AI tools were changing this, but most professionals were using them only for narrow tasks rather than as full production collaborators.',
+        task: 'Develop genuine fluency with AI as a build partner, not just a research or writing assistant, and apply that fluency to deliver real enterprise-grade output at a pace traditional methods couldn\'t match.',
+        action: 'Started learning to vibe code while building CareerSpark: describing what I needed in plain language and directing multiple AI tools (ChatGPT, Gemini, Perplexity, TIAA internal platforms) to generate curriculum, content, and structure. Evolved from prompt-and-response AI use to agentic AI use with Amazon Q, directing multi-step, autonomous AI execution toward defined outcomes. Built the CareerSpark Manager Guide in one week with Amazon Q. Built a custom TIAA Slide Presentation System through vibe coding that replaced my PowerPoint workflow entirely.',
+        result: 'Manager Guide delivered in one week compared to months by traditional methods. Slide Presentation System in active daily use at TIAA. CareerSpark curriculum and platform built by one person with no engineering team. Tool-agnostic AI fluency at this level is a professional force multiplier, not just a productivity enhancement.'
+    },
+    caseStudy: `For most of my career, what I could build was bounded by what I already knew how to build technically. Writing skills, design instincts, systems thinking, all useful, all limited by execution speed and technical capacity. That ceiling came down when I started vibe coding.
+
+Vibe coding means describing what you want in plain language and letting AI tools handle the execution. Not just asking an AI a question and getting an answer. Directing a collaborator through a full build: content architecture, draft generation, revision cycles, structure, formatting, production. I didn\'t learn vibe coding in a course. I learned it by doing it, while building CareerSpark.
+
+CareerSpark required content at a scale and specificity I couldn\'t have generated manually alongside a full-time role. So I directed AI tools to generate it: ChatGPT, Gemini, Perplexity, and TIAA\'s internal AI platforms, each selected for what it does best. I wasn\'t loyal to one tool. I was loyal to the outcome. That orientation, tool-agnostic fluency in service of a defined goal, is what separates a genuine AI practitioner from someone who uses one tool for everything.
+
+Then Amazon Q changed what I understood was possible.
+
+Amazon Q is an agentic AI tool. The distinction matters: agentic AI doesn\'t just respond to prompts. It takes autonomous action across multi-step tasks, maintains context across a longer sequence of work, and delivers outcomes rather than individual outputs. When I started directing Amazon Q, vibe coding took on new meaning. I wasn\'t just asking for content. I was directing a system that could execute the whole build.
+
+The Manager Guide was the proof point. I identified the need, directed Amazon Q through the full development process, and delivered a finished enterprise-ready product in one week. The same scope by traditional methods: months.
+
+The Slide Presentation System was a different kind of proof. I built my own PowerPoint replacement at TIAA through vibe coding, and I use it actively every day. Not a prototype. Not an experiment. A production tool I built and rely on.
+
+The shift in how I work is this: I used to be limited by my existing skills. Now I\'m limited by my imagination. That\'s not a metaphor. It\'s a description of what changes when you develop genuine fluency with agentic AI tools.`
+},
+{
+    id: 'story_culture_survey',
+    title: 'Culture Survey Feedback Loop',
+    year: '2019\u20132025',
+    tags: ['leadership','recognition'],
+    bullet: 'Partnered with leadership to analyze Culture Survey results, identify focus areas, and re-evaluate after each cycle to measure improvement over time, sustaining 395% recognition increase across multiple years.',
+    anecdote: 'We didn\'t just run a recognition program and hope it worked. After each Culture Survey, I sat down with leadership to review results against the areas we\'d targeted. We identified what moved and what didn\'t, then adjusted our approach for the next cycle. That feedback loop is why we sustained a 395% increase over multiple years, not just a one-time spike.',
+    star: {
+        situation: 'Culture Survey results showed engagement gaps in Client Services that needed systematic attention, not one-off fixes.',
+        task: 'Create a repeatable process connecting recognition and development programs to measurable survey outcomes.',
+        action: 'Established baselines from survey data, identified specific focus areas, aligned R&R program efforts to those gaps, and re-evaluated results after each survey cycle. Adjusted strategy based on what moved and what didn\'t.',
+        result: 'Sustained 395% recognition increase over multiple years. Client Services grew from 34% to 44% of all company-wide recognitions. Named Recognition Champion for TIAA.'
+    }
+},
+{
+    id: 'story_ai_no_engineers',
+    title: 'Orchestrating AI Development Without Engineers',
+    year: '2024\u20132025',
+    tags: ['ai-tech','leadership'],
+    bullet: 'Secured AI leadership signoff on CareerSpark platform design while orchestrating development independently, without requiring dedicated engineering resources.',
+    anecdote: 'The greatest thing I\'ve learned about AI-based development is that I can orchestrate a lot of it without needing engineers. For CareerSpark, I brought AI leadership in for signoff and governance review, but the actual design, prompt engineering, and deployment \u2014 I drove that independently. That\'s the future of this work: the people closest to the business problem can build the solution.',
+    star: {
+        situation: 'Needed to build and deploy an AI career platform at enterprise scale without a dedicated engineering team.',
+        task: 'Get leadership buy-in and governance approval while maintaining speed and ownership of the build.',
+        action: 'Designed the platform architecture and prompt frameworks independently. Brought AI leadership in for strategic review and signoff. Partnered with Risk & Compliance on guardrails.',
+        result: 'CareerSpark launched as the primary career tool for 16,000+ associates, built faster than a traditional engineering-led project would have allowed.'
+    }
+},
+{
+    id: 'story_lean_cert',
+    title: 'Lean for Financial Services \u2014 Inaugural Graduating Class',
+    year: '2013\u20132014',
+    tags: ['upskilling','leadership'],
+    bullet: 'Completed Lean for Financial Services certification at TIAA as part of the inaugural graduating class, which later evolved into White Belt and Green Belt programs.',
+    anecdote: 'I was in the very first class TIAA offered for Lean in Financial Services. The program was so new it didn\'t even have belt levels yet. That first cohort was the seed that grew into their formal White Belt and Green Belt certification tracks. It gave me a process improvement foundation that still shapes how I approach transformation work today.',
+    star: {
+        situation: 'TIAA launched its first Lean process improvement program for financial services professionals.',
+        task: 'Selected for the inaugural class to build process improvement capability across the organization.',
+        action: 'Completed full Lean for Financial Services curriculum, applied methodology to operational workflows within Client Services.',
+        result: 'Founding class established the model that TIAA scaled into formal White Belt and Green Belt certification programs. Process improvement mindset became a foundation for all subsequent transformation work.'
+    }
+},
+{
+    id: 'story_careerspark_redesign',
+    title: 'CareerSpark as Process Redesign, Not Just a Tool',
+    year: '2024\u20132025',
+    tags: ['ai-tech','change-mgmt'],
+    bullet: 'Redesigned how 16,000+ associates approach career development by replacing fragmented manual workflows with an AI-enabled experience, measuring adoption and employee feedback to demonstrate value.',
+    anecdote: 'I\'m careful not to call CareerSpark a technology deployment. It was a process redesign. Before it, career development at TIAA was fragmented: different tools, different processes, different levels of access depending on your location or role. We didn\'t add AI on top of that. We redesigned the workflow so AI was embedded in how people actually navigate their careers. Then we measured whether it was working, not just whether people logged in.',
+    star: {
+        situation: 'Career development at TIAA was fragmented across multiple tools and processes with uneven access depending on location and role.',
+        task: 'Create an AI-enabled career experience that replaced manual workflows and could demonstrate measurable value beyond usage metrics.',
+        action: 'Designed CareerSpark as an end-to-end career platform with AI at the core. Tracked adoption and usage metrics. Measured employee experience and feedback to demonstrate real value.',
+        result: 'Platform became the primary career tool for 16,000+ associates with sustained daily usage and positive employee feedback. Reframed how leadership thinks about AI deployment: process redesign first, technology second.'
+    }
+},
+{
+    id: 'story_bmo_as_hr',
+    title: 'Building an HR Function Inside a Business Management Office',
+    year: '2019\u20132025',
+    tags: ['leadership','people-dev','change-mgmt','upskilling','recognition'],
+    bullet: 'Built and ran what amounted to a full HR portfolio from a non-HR seat in TIAA\'s Client Services Business Management Office, owning recognition ($500K budget, 395% growth), career development (CareerSpark, 16,000+ enrolled), employee engagement, workforce transitions (3,000+ associates, zero retention crisis), and upskilling programs that outperformed HR-led initiatives across the enterprise.',
+    anecdote: 'My title said Business Management Office. My work said HR. At TIAA, the BMO was designed to own operational excellence, but the problems that kept landing on my desk were people problems: How do we recognize associates at scale? How do we help 16,000 people navigate career uncertainty? How do we move 3,000 associates through unwanted changes without losing them? At most companies, those questions live in HR. At TIAA Client Services, they lived with me. I built the recognition program from flat participation to 395% growth, outpacing the next six organizations combined. I created CareerSpark, an AI career development platform that became the enterprise standard. I led return-to-office transitions, office consolidations, and a new corporate center opening. I ran upskilling programs and a virtual career expo that solved a 20-year access inequity. Every one of those initiatives would sit in an HR org chart at most companies. I just happened to deliver them from a different seat.',
+    star: {
+        situation: 'TIAA\'s Client Services Business Management Office was structured for operational excellence, but the division\'s most pressing challenges were people challenges: engagement was stagnant, career development resources were fragmented, recognition participation was minimal, and multiple large-scale workforce transitions were on the horizon. These are functions that typically live in HR, but at TIAA they fell to the BMO because they were embedded in the business, not centralized.',
+        task: 'Build and operate what amounted to a comprehensive HR function from a non-HR seat, covering recognition and engagement, career development, workforce transitions, change management, and upskilling, all while maintaining the BMO\'s core operational responsibilities.',
+        action: 'Took ownership of the full people portfolio across Client Services. Rebuilt the recognition program with intentional strategy, growing it from minimal participation to 34-44% of all enterprise recognitions and managing a $500K annual budget. Designed and built CareerSpark, an AI-powered career development platform, from concept through enterprise adoption. Led change management for return-to-office (3,000+ associates across 6 locations), the Denver office consolidation (700 associates, 5 fewer floors, 44% efficiency gain), and the Frisco Corporate Center grand opening (500+ associates). Created and ran a virtual career expo during COVID that reached 800+ associates and solved a 20-year geographic access inequity. Launched upskilling programs including Skills of the Future and Ramp. Built management systems across People, Finance, Operations, and Quality domains. Each initiative was designed, led, and delivered from the BMO, partnering with HR but not reporting through HR.',
+        result: 'Enterprise-level impact across every traditional HR domain, delivered from a business operations seat. Recognition results outpaced the next six organizations combined, earning a seat on the corporate platform selection team. CareerSpark enrolled 16,000+ associates and became TIAA\'s official career development resource. All workforce transitions completed with zero retention crisis. Recognized with 5 enterprise awards including Values VIP (highest cultural recognition), Change Champion, and first-ever double-EXCEPTIONAL performance rating. The pattern these results demonstrate: HR expertise is defined by outcomes, not org chart placement.'
+    },
+    caseStudy: `There is a version of my career story where the punchline is "I did HR work without being in HR." But that framing undersells what actually happened. The real story is that TIAA\'s Client Services BMO became the most effective people function in the division precisely because it sat inside the business, not alongside it.
+
+At most companies, recognition programs, career development platforms, workforce transition planning, upskilling initiatives, and employee engagement strategies all report up through HR. At TIAA Client Services, they reported through me, in the BMO. Not because HR was absent, but because these challenges were so tightly woven into the business that they needed someone embedded in operations to solve them.
+
+The recognition program is a good example. When I took it over, participation was minimal. I didn\'t treat it as an HR compliance exercise. I treated it as a culture-building strategy with measurable outcomes. Within a few years, Client Services was generating 34-44% of all recognition activity across all of TIAA, outpacing the next six organizations combined. The $500K annual budget I managed was not about gift cards. It was about making 8,000+ associates feel seen. That performance earned me a seat on the corporate team that selected TIAA\'s next enterprise-wide recognition platform.
+
+CareerSpark followed the same pattern. Career development at TIAA was fragmented. HR had tools, but nothing that answered the question associates were actually asking: "AI is changing everything. What do I do?" I built the answer from scratch. An AI-powered career development platform with 9 modules, from values clarification to interview preparation. I presented it to 1,500+ associates personally. It enrolled 16,000+. It became the enterprise standard, embedded in TIAA University. That is an HR outcome by any definition.
+
+The workforce transitions tell the same story from a different angle. Return-to-office for 3,000+ associates across 6 locations. Denver consolidation: 700 people, 5 fewer floors, 44% real estate efficiency. Frisco Corporate Center: 500+ associates into a new 15-story building. Every one of those projects required the skills that define HR leadership: stakeholder management, communication strategy, employee experience design, change management. Zero retention crisis across all of them.
+
+The upskilling work rounds out the picture. Skills of the Future, Ramp, the virtual career expo that reached 800+ associates and solved a 20-year geographic access inequity. These are L&D and talent mobility initiatives, built and delivered from a business operations seat.
+
+Five enterprise awards confirm the impact: Values VIP (the highest cultural recognition at TIAA), Change Champion, and the first-ever double-EXCEPTIONAL performance rating in both the "What" and the "How" categories.
+
+The lesson I carry from this chapter is simple: HR leadership is not about where you sit on an org chart. It is about whether you can design programs that develop people, build cultures that retain them, and lead transitions that respect them. I did all of that. The fact that my business card said BMO instead of HR does not change what I built or who it served.`
+}
+];
+
+// ════════════════════════════════════════════════════
+//  STORAGE
+// ════════════════════════════════════════════════════
+
+function getStories() {
+    try { return JSON.parse(localStorage.getItem('storyBank') || 'null') || null; }
+    catch(e) { return null; }
+}
+
+function putStories(arr) {
+    localStorage.setItem('storyBank', JSON.stringify(arr));
+}
+
+function initStories() {
+    if (!getStories()) {
+        putStories(DEFAULT_STORIES);
+    }
+}
+
+function loadStories() { return getStories() || []; }
+
+function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+}
+
+// ════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════
+
+let activeTag    = 'all';
+let activeFormats = {};  // id → format key: 'bullet'|'anecdote'|'star'|'casestudy'
+let expandedIds  = new Set();
+
+// ════════════════════════════════════════════════════
+//  RENDER TAG FILTERS
+// ════════════════════════════════════════════════════
+
+function renderTagFilters() {
+    const stories = loadStories();
+    const usedTags = new Set(stories.flatMap(s => s.tags || []));
+
+    let html = `<button class="tag-btn${activeTag==='all'?' active':''}" onclick="setTag('all')">All</button>`;
+    Object.entries(TAGS).forEach(([key, meta]) => {
+        if (usedTags.has(key)) {
+            html += `<button class="tag-btn${activeTag===key?' active':''}" onclick="setTag('${key}')">${meta.emoji} ${meta.label}</button>`;
+        }
+    });
+    document.getElementById('tagFilters').innerHTML = html;
+}
+
+function setTag(tag) {
+    activeTag = tag;
+    renderTagFilters();
+    renderGrid();
+}
+
+// ════════════════════════════════════════════════════
+//  RENDER GRID
+// ════════════════════════════════════════════════════
+
+function renderGrid() {
+    const stories = loadStories();
+    const query   = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+
+    const filtered = stories.filter(s => {
+        const tagMatch  = activeTag === 'all' || (s.tags || []).includes(activeTag);
+        const textMatch = !query || s.title.toLowerCase().includes(query);
+        return tagMatch && textMatch;
+    });
+
+    document.getElementById('headerSub').textContent =
+        `Your private career arsenal · ${stories.length} stor${stories.length===1?'y':'ies'}`;
+
+    if (filtered.length === 0) {
+        document.getElementById('storyGrid').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">📖</div>
+                <p>${stories.length === 0 ? 'No stories yet — add your first.' : 'No stories match your filter.'}</p>
+            </div>`;
+        return;
+    }
+
+    document.getElementById('storyGrid').innerHTML = filtered.map(s => buildCard(s)).join('');
+}
+
+function buildCard(s) {
+    const color    = accentColor(s.tags);
+    const tagChips = (s.tags || []).map(t =>
+        `<span class="tag-chip">${TAGS[t]?.emoji || ''} ${TAGS[t]?.label || t}</span>`
+    ).join('');
+    const preview  = (s.bullet || '').slice(0, 120) + ((s.bullet||'').length > 120 ? '…' : '');
+    const isOpen   = expandedIds.has(s.id);
+    const fmt      = activeFormats[s.id] || 'bullet';
+
+    return `
+    <div class="story-card${isOpen?' expanded':''}" id="card-${s.id}">
+        <div class="card-accent-bar" style="background:${color}"></div>
+        <div class="card-inner">
+            <div class="card-top">
+                <div class="card-title">${esc(s.title)}</div>
+                <div class="card-year">${esc(s.year)}</div>
+            </div>
+            <div class="card-tags">${tagChips}</div>
+            <div class="card-preview">${esc(preview)}</div>
+            ${!isOpen ? `<button class="card-view-btn" onclick="toggleCard('${s.id}')">View Story</button>` : ''}
+            ${isOpen ? buildExpanded(s, fmt) : ''}
+        </div>
+    </div>`;
+}
+
+function buildExpanded(s, fmt) {
+    const fmts = [
+        { key:'bullet',    label:'Bullet' },
+        { key:'anecdote',  label:'Anecdote' },
+        { key:'star',      label:'STAR' },
+        { key:'casestudy', label:'Case Study' }
+    ];
+
+    const tabsHtml = fmts.map(f =>
+        `<button class="fmt-btn${fmt===f.key?' active':''}" onclick="setFormat('${s.id}','${f.key}')">${f.label}</button>`
+    ).join('');
+
+    let contentHtml = '';
+    if (fmt === 'bullet') {
+        contentHtml = `<div class="fmt-text">${esc(s.bullet || '—')}</div>`;
+    } else if (fmt === 'anecdote') {
+        contentHtml = `<div class="fmt-text">${esc(s.anecdote || '—')}</div>`;
+    } else if (fmt === 'star') {
+        const st = s.star || {};
+        contentHtml = `
+            <div class="star-section"><div class="star-label">S — Situation</div><div class="star-text">${esc(st.situation||'—')}</div></div>
+            <div class="star-section"><div class="star-label">T — Task</div><div class="star-text">${esc(st.task||'—')}</div></div>
+            <div class="star-section"><div class="star-label">A — Action</div><div class="star-text">${esc(st.action||'—')}</div></div>
+            <div class="star-section"><div class="star-label">R — Result</div><div class="star-text">${esc(st.result||'—')}</div></div>`;
+    } else if (fmt === 'casestudy') {
+        contentHtml = `<div class="fmt-text">${esc(s.caseStudy || '—')}</div>`;
+    }
+
+    return `
+    <div class="card-expanded">
+        <div class="format-tabs">${tabsHtml}</div>
+        <div class="format-content" id="fmt-${s.id}">${contentHtml}</div>
+        <div class="card-actions">
+            <button class="btn-copy" onclick="copyFormat('${s.id}')">📋 Copy</button>
+            <button class="btn-edit-card" onclick="openEdit('${s.id}')">Edit</button>
+            <button class="btn-collapse" onclick="toggleCard('${s.id}')">▲ Collapse</button>
+        </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════
+//  CARD INTERACTIONS
+// ════════════════════════════════════════════════════
+
+function toggleCard(id) {
+    if (expandedIds.has(id)) {
+        expandedIds.delete(id);
+    } else {
+        expandedIds.add(id);
+        if (!activeFormats[id]) activeFormats[id] = 'bullet';
+    }
+    renderGrid();
+    // Scroll card into view
+    setTimeout(() => {
+        const el = document.getElementById('card-'+id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
+}
+
+function setFormat(id, fmt) {
+    activeFormats[id] = fmt;
+    // Re-render just this card's expanded section efficiently
+    renderGrid();
+}
+
+function copyFormat(id) {
+    const s   = loadStories().find(x => x.id === id);
+    if (!s) return;
+    const fmt = activeFormats[id] || 'bullet';
+
+    let text = '';
+    if (fmt === 'bullet') {
+        text = s.bullet || '';
+    } else if (fmt === 'anecdote') {
+        text = s.anecdote || '';
+    } else if (fmt === 'star') {
+        const st = s.star || {};
+        text = `SITUATION:\n${st.situation||''}\n\nTASK:\n${st.task||''}\n\nACTION:\n${st.action||''}\n\nRESULT:\n${st.result||''}`;
+    } else if (fmt === 'casestudy') {
+        text = s.caseStudy || '';
+    }
+
+    navigator.clipboard.writeText(text).then(() => {
+        const labels = { bullet:'Bullet', anecdote:'Anecdote', star:'STAR', casestudy:'Case Study' };
+        showToast(`${labels[fmt]} copied to clipboard`);
+    }).catch(() => showToast('Copy failed — please select and copy manually'));
+}
+
+// ════════════════════════════════════════════════════
+//  MODAL — ADD / EDIT
+// ════════════════════════════════════════════════════
+
+let modalTagSel = new Set();
+
+function buildTagCheckGrid(selected) {
+    return Object.entries(TAGS).map(([key, meta]) => {
+        const sel = selected.has(key);
+        return `<button class="tag-check-btn${sel?' selected':''}" onclick="toggleModalTag('${key}')" id="tck-${key}">
+            ${meta.emoji} ${meta.label}
+        </button>`;
+    }).join('');
+}
+
+function toggleModalTag(key) {
+    if (modalTagSel.has(key)) { modalTagSel.delete(key); } else { modalTagSel.add(key); }
+    document.querySelectorAll('.tag-check-btn').forEach(b => {
+        const k = b.id.replace('tck-','');
+        b.classList.toggle('selected', modalTagSel.has(k));
+    });
+}
+
+function openAdd() {
+    modalTagSel = new Set();
+    document.getElementById('editId').value = '';
+    document.getElementById('modalTitle').textContent = 'New Story';
+    document.getElementById('fTitle').value   = '';
+    document.getElementById('fYear').value    = '';
+    document.getElementById('fBullet').value  = '';
+    document.getElementById('fAnecdote').value = '';
+    document.getElementById('fStarS').value   = '';
+    document.getElementById('fStarT').value   = '';
+    document.getElementById('fStarA').value   = '';
+    document.getElementById('fStarR').value   = '';
+    document.getElementById('fCaseStudy').value = '';
+    document.getElementById('tagCheckGrid').innerHTML = buildTagCheckGrid(modalTagSel);
+    document.getElementById('deleteRow').style.display = 'none';
+    // open bullet by default, close rest
+    ['bullet','anecdote','star','casestudy'].forEach(n => {
+        const el = document.getElementById('fsect-'+n);
+        if (el) el.classList.toggle('open', n === 'bullet');
+    });
+    document.getElementById('overlay').classList.add('open');
+    setTimeout(() => document.getElementById('fTitle').focus(), 300);
+}
+
+function openEdit(id) {
+    const s = loadStories().find(x => x.id === id);
+    if (!s) return;
+    modalTagSel = new Set(s.tags || []);
+    document.getElementById('editId').value   = id;
+    document.getElementById('modalTitle').textContent = 'Edit Story';
+    document.getElementById('fTitle').value   = s.title || '';
+    document.getElementById('fYear').value    = s.year || '';
+    document.getElementById('fBullet').value  = s.bullet || '';
+    document.getElementById('fAnecdote').value = s.anecdote || '';
+    document.getElementById('fStarS').value   = s.star?.situation || '';
+    document.getElementById('fStarT').value   = s.star?.task || '';
+    document.getElementById('fStarA').value   = s.star?.action || '';
+    document.getElementById('fStarR').value   = s.star?.result || '';
+    document.getElementById('fCaseStudy').value = s.caseStudy || '';
+    document.getElementById('tagCheckGrid').innerHTML = buildTagCheckGrid(modalTagSel);
+    document.getElementById('deleteRow').style.display = 'block';
+    // auto-open sections that have data
+    if (s.anecdote)  document.getElementById('fsect-anecdote').classList.add('open');
+    if (s.star?.situation) document.getElementById('fsect-star').classList.add('open');
+    if (s.caseStudy) document.getElementById('fsect-casestudy').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+
+function handleOverlayClick(e) {
+    if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+function toggleFSect(name) {
+    document.getElementById('fsect-'+name).classList.toggle('open');
+}
+
+function saveStory() {
+    const title = document.getElementById('fTitle').value.trim();
+    if (!title) {
+        document.getElementById('fTitle').style.borderColor = '#ef4444';
+        document.getElementById('fTitle').focus();
+        setTimeout(() => document.getElementById('fTitle').style.borderColor = '', 2000);
+        return;
+    }
+
+    const patch = {
+        title,
+        year:    document.getElementById('fYear').value.trim(),
+        tags:    [...modalTagSel],
+        bullet:  document.getElementById('fBullet').value.trim(),
+        anecdote:document.getElementById('fAnecdote').value.trim(),
+        star: {
+            situation: document.getElementById('fStarS').value.trim(),
+            task:      document.getElementById('fStarT').value.trim(),
+            action:    document.getElementById('fStarA').value.trim(),
+            result:    document.getElementById('fStarR').value.trim()
+        },
+        caseStudy: document.getElementById('fCaseStudy').value.trim()
+    };
+
+    const stories = loadStories();
+    const eid = document.getElementById('editId').value;
+
+    if (eid) {
+        const i = stories.findIndex(x => x.id === eid);
+        if (i >= 0) { stories[i] = { ...stories[i], ...patch }; }
+        putStories(stories);
+        showToast('Story updated');
+    } else {
+        stories.push({ id: 'story_' + Date.now(), ...patch });
+        putStories(stories);
+        showToast('Story added');
+    }
+
+    closeModal();
+    renderTagFilters();
+    renderGrid();
+}
+
+function deleteFromModal() {
+    const id = document.getElementById('editId').value;
+    if (!id) return;
+    closeModal();
+    deleteStory(id);
+}
+
+function deleteStory(id) {
+    if (!confirm('Delete this story? This cannot be undone.')) return;
+    const stories = loadStories().filter(x => x.id !== id);
+    putStories(stories);
+    expandedIds.delete(id);
+    delete activeFormats[id];
+    showToast('Story deleted');
+    renderTagFilters();
+    renderGrid();
+}
+
+// ════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ════════════════════════════════════════════════════
+//  MIGRATION — add new default stories to existing banks
+// ════════════════════════════════════════════════════
+
+function migrateAddMissing() {
+    const stories = getStories();
+    if (!stories) return; // initStories will handle the empty case
+    let changed = false;
+    DEFAULT_STORIES.forEach(def => {
+        if (!stories.find(s => s.id === def.id)) {
+            stories.push(def);
+            changed = true;
+        }
+    });
+    if (changed) putStories(stories);
+}
+
+// Replace specific stories whose content has been enriched since first seed
+function migrateUpdateStories() {
+    const stories = getStories();
+    if (!stories) return;
+    let changed = false;
+
+    // story_009: detect old versions by absence of 'Product Expo' in bullet
+    const idx009 = stories.findIndex(s => s.id === 'story_009');
+    if (idx009 >= 0 && !(stories[idx009].bullet || '').includes('Product Expo')) {
+        const enriched = DEFAULT_STORIES.find(s => s.id === 'story_009');
+        if (enriched) { stories[idx009] = enriched; changed = true; }
+    }
+
+    // story_mgmt_systems: detect old version by year containing '2018'
+    const idxMgmt = stories.findIndex(s => s.id === 'story_mgmt_systems');
+    if (idxMgmt >= 0 && (stories[idxMgmt].year || '').includes('2018')) {
+        const enriched = DEFAULT_STORIES.find(s => s.id === 'story_mgmt_systems');
+        if (enriched) { stories[idxMgmt] = enriched; changed = true; }
+    }
+
+    // story_003: detect old version by absence of 'pandemic' (missing return-from-remote context)
+    const idx003 = stories.findIndex(s => s.id === 'story_003');
+    if (idx003 >= 0 && !(stories[idx003].star?.situation || '').includes('pandemic')) {
+        const enriched = DEFAULT_STORIES.find(s => s.id === 'story_003');
+        if (enriched) { stories[idx003] = enriched; changed = true; }
+    }
+
+    // story_002: detect old version by presence of 'Led change management for TIAA' (overclaims scope)
+    const idx002 = stories.findIndex(s => s.id === 'story_002');
+    if (idx002 >= 0 && (stories[idx002].bullet || '').includes('Led change management for TIAA')) {
+        const enriched = DEFAULT_STORIES.find(s => s.id === 'story_002');
+        if (enriched) { stories[idx002] = enriched; changed = true; }
+    }
+
+    // story_005: detect old versions by absence of 'RFP' OR presence of old '$250K' budget figure
+    const idx005 = stories.findIndex(s => s.id === 'story_005');
+    if (idx005 >= 0 && (
+        !(stories[idx005].bullet || '').includes('RFP') ||
+        (stories[idx005].bullet || '').includes('250K')
+    )) {
+        const enriched = DEFAULT_STORIES.find(s => s.id === 'story_005');
+        if (enriched) { stories[idx005] = enriched; changed = true; }
+    }
+
+    // story_lchannel: detect old versions by absence of 'sales associates' in result
+    const idxLC = stories.findIndex(s => s.id === 'story_lchannel');
+    if (idxLC >= 0 && !(stories[idxLC].star?.result || '').includes('sales associates')) {
+        const enriched = DEFAULT_STORIES.find(s => s.id === 'story_lchannel');
+        if (enriched) { stories[idxLC] = enriched; changed = true; }
+    }
+
+    if (changed) putStories(stories);
+}
+
+// ════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════
+
+initStories();
+migrateAddMissing();
+migrateUpdateStories();
+renderTagFilters();
+renderGrid();
+</script>
+</body>
+</html>

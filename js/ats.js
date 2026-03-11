@@ -14,12 +14,17 @@ const CATEGORY_RESUME_MAP = {
 };
 
 const RESUME_LABELS = {
-    executive:   'Full Resume — Default',
-    technical:   'Full Resume — Tech',
-    energy:      'Full Resume — Energy / Utility',
-    healthcare:  'Full Resume — Healthcare',
-    finance:     'Full Resume — Finance',
-    consulting:  'Full Resume — Consulting',
+    executive:      'Full Resume — Default',
+    technical:      'Full Resume — Tech',
+    energy:         'Full Resume — Energy / Utility',
+    healthcare:     'Full Resume — Healthcare',
+    finance:        'Full Resume — Finance',
+    consulting:     'Full Resume — Consulting',
+    'human-agency': 'Tailored — Human Agency',
+    deltek:         'Tailored — Deltek',
+    schwab:         'Tailored — Schwab',
+    'charles-schwab': 'Tailored — Schwab',
+    'tri-state':    'Tailored — Tri-State',
 };
 
 function recommendResume(categoryResults) {

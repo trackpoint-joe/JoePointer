@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div class="app-shell">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-mark">JP</div>
+            <div>
+                <div class="sidebar-brand-title">Command Center</div>
+                <div class="sidebar-brand-sub">Joe Pointer</div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="sidebar-nav-section-label">Workspace</div>
+            <button class="sidebar-nav-item active" id="nav-tracker" onclick="switchTab('tracker')">
+                <span class="sidebar-nav-icon">📋</span>
+                <span>Applications</span>
+                <span class="sidebar-nav-badge" id="sidebarAppCount"></span>
+            </button>
+            <button class="sidebar-nav-item" id="nav-dashboard" onclick="switchTab('dashboard')">
+                <span class="sidebar-nav-icon">📊</span>
+                <span>Dashboard</span>
+            </button>
+            <button class="sidebar-nav-item" id="nav-generator" onclick="switchTab('generator')">
+                <span class="sidebar-nav-icon">🔗</span>
+                <span>Quick Share</span>
+            </button>
+            <button class="sidebar-nav-item" id="nav-stories" onclick="openStoryBank()" title="Open Story Bank in new tab">
+                <span class="sidebar-nav-icon">📖</span>
+                <span>Story Bank</span>
+                <span class="sidebar-nav-badge" id="storyBankCount"></span>
+            </button>
+        </nav>
+
+        <div class="sidebar-pipeline" id="sidebarPipeline"></div>
+
+        <div class="sidebar-footer">
+            <button class="sidebar-icon-btn" onclick="exportData()" title="Export backup">↓</button>
+            <button class="sidebar-icon-btn" onclick="openSettings()" title="Settings">⚙</button>
+            <button class="sidebar-icon-btn" onclick="openHelp()" title="Help &amp; Instructions">?</button>
+        </div>
+    </aside>
+
+    <!-- ═══ MAIN PANEL ═══ -->
+    <div class="main-panel">
+
+    <!-- ═══ TAB: APPLICATION TRACKER ═══ -->
+    <div id="tab-tracker" class="tab-content active">
+
+        <div class="section-page-header">
+            <div>
+                <div class="section-page-title">Applications</div>
+                <div class="section-page-sub" id="trackerSubline">Loading…</div>
+            </div>
+            <button class="btn-add" onclick="resetForm(); openFormPanel();">+ New Application</button>
+        </div>
+
+        <!-- Dashboard summary cards -->
+        <div class="dashboard-cards" id="dashCards">
+            <div class="dash-card" id="dashCardTotal" onclick="filterApps('all','dashCardTotal')" title="Show all applications">
+                <div class="dash-card-num" id="dashTotal">0</div>
+                <div class="dash-card-label">Total Applied</div>
+            </div>
+            <div class="dash-card" id="dashCardPipeline" style="border-color:#8B5CF6" onclick="filterApps('pipeline','dashCardPipeline')" title="Show applications in active pipeline">
+                <div class="dash-card-num" style="color:#6D28D9" id="dashPipeline">0</div>
+                <div class="dash-card-label">In Pipeline</div>
+            </div>
+            <div class="dash-card" id="dashCardOffers" style="border-color:#10B981" onclick="filterApps('offer','dashCardOffers')" title="Show offers">
+                <div class="dash-card-num" style="color:#065F46" id="dashOffers">0</div>
+                <div class="dash-card-label">Offers</div>
+            </div>
+            <div class="dash-card" id="dashCardOverdue" onclick="filterApps('overdue','dashCardOverdue')" title="Show overdue follow-ups">
+                <div class="dash-card-num" id="dashOverdue">0</div>
+                <div class="dash-card-label">Follow-ups Due</div>
+            </div>
+        </div>
+
+        <!-- List controls -->
+        <div class="list-controls">
+            <div class="filter-bar" id="filterBar">
+                <button class="filter-btn active" onclick="filterApps('all')" data-filter="all">All</button>
+                <button class="filter-btn" onclick="filterApps('applied')" data-filter="applied">Applied</button>
+                <button class="filter-btn" onclick="filterApps('phone')" data-filter="phone">Phone Screen</button>
+                <button class="filter-btn" onclick="filterApps('technical')" data-filter="technical">Technical</button>
+                <button class="filter-btn" onclick="filterApps('final')" data-filter="final">Final Round</button>
+                <button class="filter-btn" onclick="filterApps('offer')" data-filter="offer">Offer</button>
+                <button class="filter-btn" onclick="filterApps('rejected')" data-filter="rejected">No Longer Active</button>
+            </div>
+            <div class="list-actions">
+                <button class="btn-utility" onclick="exportCSV()" title="Download as spreadsheet (Excel / Google Sheets)">↓ CSV</button>
+                <button class="btn-utility" onclick="exportData()" title="Download full backup (use to restore)">↓ JSON</button>
+                <button class="btn-utility" onclick="importData()" title="Restore applications from JSON backup">↑ Import</button>
+                <button class="btn-utility muted" onclick="seedSampleData()" title="Load sample applications to preview the dashboard">🎭 Samples</button>
+            </div>
+        </div>
+        <input type="file" id="importInput" accept=".json" onchange="handleImport(event)" style="display:none">
+
+        <!-- Industry filter banner (shown when filtering from dashboard) -->
+        <div id="industryFilterBanner" style="display:none;align-items:center;gap:0.5rem;margin-bottom:0.75rem;padding:0.4rem 0.75rem;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;font-size:0.82rem;"></div>
+
+        <!-- Application list -->
+        <div class="app-list" id="appList"></div>
+
+    </div>
+
+    <!-- ═══ TAB: DASHBOARD ═══ -->
+    <div id="tab-dashboard" class="tab-content"></div>
+
+    <!-- ═══ SLIDE-IN FORM PANEL ═══ -->
+    <div id="tab-add-app" class="form-panel">
+    <div class="form-panel-inner">
+        <div class="form-panel-header">
+            <div class="form-title" id="formTitle" style="margin-bottom:0;">New Application</div>
+            <button class="form-panel-close" onclick="closeFormPanel()">✕ Close</button>
+        </div>
+
+        <form id="appForm" onsubmit="saveApplication(event)">
+            <input type="hidden" id="editId">
+            <input type="hidden" id="formIndustry">
+
+            <div class="form-grid">
+
+                <!-- Row 1: Company + Role -->
+                <div class="form-group">
+                    <label>Company Name *</label>
+                    <input type="text" id="fCompany" placeholder="e.g., Kaiser Permanente" required oninput="updateUrlPreview()">
+                </div>
+                <div class="form-group">
+                    <label>Role / Job Title *</label>
+                    <input type="text" id="fRole" placeholder="e.g., Director of AI Adoption" required>
+                </div>
+
+                <!-- Row 2: Status + Applied Date -->
+                <div class="form-group">
+                    <label>Application Status</label>
+                    <select id="fStatus">
+                        <option value="applied">Applied</option>
+                        <option value="phone">Phone Screen</option>
+                        <option value="technical">Technical Interview</option>
+                        <option value="final">Final Round</option>
+                        <option value="offer">Offer</option>
+                        <option value="rejected">No Longer Active</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Applied Date</label>
+                    <input type="date" id="fAppliedDate">
+                </div>
+
+                <!-- Row 3: Source + Referred By -->
+                <div class="form-group">
+                    <label>Source <span class="optional">(optional)</span></label>
+                    <select id="fSource">
+                        <option value="">— Select —</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="indeed">Indeed</option>
+                        <option value="referral">Referral / Network</option>
+                        <option value="company">Company Website</option>
+                        <option value="recruiter">Recruiter Outreach</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Referred By <span class="optional">(optional)</span></label>
+                    <input type="text" id="fReferredBy" placeholder="e.g., Jane Smith (former colleague)">
+                </div>
+
+                <!-- Industry Template -->
+                <div class="form-group full">
+                    <label>Industry Template</label>
+                    <div class="template-mini-grid">
+                        <div class="template-mini" data-ind="finance" role="button" tabindex="0" aria-label="Select Finance template" onclick="selectIndustry(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectIndustry(this);}">
+                            <div class="template-dot finance-dot"></div>Finance
+                        </div>
+                        <div class="template-mini" data-ind="tech" role="button" tabindex="0" aria-label="Select Tech template" onclick="selectIndustry(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectIndustry(this);}">
+                            <div class="template-dot tech-dot"></div>Tech
+                        </div>
+                        <div class="template-mini" data-ind="consulting" role="button" tabindex="0" aria-label="Select Consulting template" onclick="selectIndustry(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectIndustry(this);}">
+                            <div class="template-dot consulting-dot"></div>Consulting
+                        </div>
+                        <div class="template-mini" data-ind="energy" role="button" tabindex="0" aria-label="Select Energy template" onclick="selectIndustry(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectIndustry(this);}">
+                            <div class="template-dot tech-dot"></div>Energy
+                        </div>
+                        <div class="template-mini" data-ind="healthcare" role="button" tabindex="0" aria-label="Select Healthcare template" onclick="selectIndustry(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectIndustry(this);}">
+                            <div class="template-dot healthcare-dot"></div>Healthcare
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="form-group full">
+                    <label>Welcome Message <span class="optional">(optional)</span></label>
+                    <textarea id="fWelcome" placeholder="e.g., Thank you for considering my application. I prepared this portfolio specifically for the [Company] team and look forward to discussing how my experience can support your goals." style="min-height:80px;"></textarea>
+                    <div class="help-text">Appears at the top of your portfolio when the employer opens their personalized link.</div>
+                </div>
+
+                <!-- Portfolio URL preview -->
+                <div class="form-group full">
+                    <label>Portfolio URL</label>
+                    <div class="url-preview-row">
+                        <div class="url-preview empty" id="fUrlPreview">Enter a company name to generate URL</div>
+                        <button type="button" class="url-copy-btn" onclick="copyPreviewUrl()">🔗 Copy</button>
+                        <button type="button" class="url-copy-btn" onclick="copyPreviewUrlAsLink()" title="Copy as HTML hyperlink for Gmail/Outlook">📎 Link</button>
+                    </div>
+                    <div class="help-text">This is the personalized link you'll share with this employer. Updates as you type. Use "📎 Link" then in your email: type link text, select it, press Ctrl+K, paste.</div>
+                </div>
+
+                <!-- Details toggle -->
+                <button type="button" class="details-toggle" id="detailsToggle" onclick="toggleFormDetails()">
+                    <span id="detailsToggleLabel">+ More Details</span>
+                    <span class="toggle-arrow">▼</span>
+                </button>
+
+                <!-- Collapsible details -->
+                <div id="formDetails" class="form-details">
+
+                <div class="form-group">
+                    <label>Resume Version <span class="optional">(optional)</span></label>
+                    <select id="fResume">
+                        <optgroup label="Industry Templates">
+                            <option value="executive">Full Resume — Default</option>
+                            <option value="technical">Full Resume — Tech</option>
+                            <option value="energy">Full Resume — Energy / Utility</option>
+                            <option value="healthcare">Full Resume — Healthcare</option>
+                            <option value="finance">Full Resume — Finance</option>
+                            <option value="consulting">Full Resume — Consulting</option>
+                        </optgroup>
+                        <optgroup label="Company-Specific">
+                            <option value="human-agency">Tailored — Human Agency</option>
+                            <option value="deltek">Tailored — Deltek</option>
+                            <option value="schwab">Tailored — Schwab</option>
+                            <option value="tri-state">Tailored — Tri-State</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Last Contact Date <span class="optional">(optional)</span></label>
+                    <input type="date" id="fLastContact">
+                </div>
+                <div class="form-group">
+                    <label>Follow-up Reminder</label>
+                    <input type="date" id="fFollowUp">
+                </div>
+
+                <div class="form-group">
+                    <label>Salary Range Min <span class="optional">(optional)</span></label>
+                    <input type="text" id="fSalaryMin" placeholder="e.g., $150,000"
+                           onblur="formatSalaryField(this)" onfocus="unformatSalaryField(this)">
+                </div>
+                <div class="form-group">
+                    <label>Salary Range Max <span class="optional">(optional)</span></label>
+                    <input type="text" id="fSalaryMax" placeholder="e.g., $200,000"
+                           onblur="formatSalaryField(this)" onfocus="unformatSalaryField(this)">
+                </div>
+
+                <hr class="section-divider">
+                <div class="section-label">Contacts</div>
+
+                <div class="form-group">
+                    <label>Recruiter Name <span class="optional">(optional)</span></label>
+                    <input type="text" id="fRecruiterName" placeholder="e.g., Sarah Chen">
+                </div>
+                <div class="form-group">
+                    <label>Recruiter Email <span class="optional">(optional)</span></label>
+                    <input type="email" id="fRecruiterEmail" placeholder="recruiter@company.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Hiring Manager Name <span class="optional">(optional)</span></label>
+                    <input type="text" id="fHMName" placeholder="e.g., Dr. Rivera">
+                </div>
+                <div class="form-group">
+                    <label>Hiring Manager Email <span class="optional">(optional)</span></label>
+                    <input type="email" id="fHMEmail" placeholder="hm@company.com">
+                </div>
+
+                <hr class="section-divider">
+                <div class="section-label">Notes &amp; Context</div>
+
+                <div class="form-group full">
+                    <label>Notes</label>
+                    <textarea id="fNotes" style="min-height: 120px;" placeholder="Interview notes, recruiter insights, culture observations, next steps, questions to ask..."></textarea>
+                </div>
+
+                <hr class="section-divider">
+                <div class="section-label">Activity Log</div>
+
+                <div class="form-group full">
+                    <div class="activity-log-list" id="activityLogList"></div>
+                    <div class="activity-add-row">
+                        <select class="activity-stage-sel" id="activityStage">
+                            <option value="general">General Note</option>
+                            <option value="applied">Applied</option>
+                            <option value="phone">Phone Screen</option>
+                            <option value="technical">Technical</option>
+                            <option value="final">Final Round</option>
+                            <option value="offer">Offer</option>
+                            <option value="rejected">No Longer Active</option>
+                        </select>
+                        <textarea class="activity-textarea" id="activityText" rows="2" placeholder="What happened? What did you learn? Next steps?"></textarea>
+                        <button type="button" class="btn-add-entry" onclick="addLogEntry()">+ Add</button>
+                    </div>
+                    <div class="help-text">Build a timeline of events for this application. Entries are appended and cannot be edited.</div>
+                </div>
+
+                <div class="form-group full">
+                    <label>Job Description <span class="optional">(paste for ATS analysis)</span></label>
+                    <textarea id="fJobDesc" style="min-height: 120px;" placeholder="Paste the full job description here to analyze keyword match with your resume..."></textarea>
+                    <button type="button" class="btn-analyze" onclick="runATS()">🔍 Analyze Keywords</button>
+
+                    <!-- ATS Results Panel -->
+                    <div class="ats-panel" id="atsPanel">
+                        <div class="ats-score-row">
+                            <div class="ats-score-num" id="atsScoreNum">—</div>
+                            <div style="flex:1">
+                                <div class="ats-match-count" id="atsMatchCount">Paste a job description and click Analyze</div>
+                                <div class="ats-bar-wrap">
+                                    <div class="ats-bar-fill" id="atsBar" style="width:0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ats-resume-rec" id="atsResumeRec"></div>
+                        <div class="ats-section-label">Matched — Already in your resume</div>
+                        <div class="ats-keywords" id="atsMatched"></div>
+                        <div class="ats-section-label" id="atsGapLabel" style="display:none">Gaps — Consider addressing in cover letter</div>
+                        <div class="ats-keywords" id="atsGaps"></div>
+                    </div>
+                </div>
+
+                </div><!-- /formDetails -->
+
+            </div><!-- /form-grid -->
+
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeFormPanel()">Cancel</button>
+                <button type="submit" class="btn-primary" id="formSubmitBtn">Save Application</button>
+            </div>
+        </form>
+    </div><!-- /form-panel-inner -->
+    </div><!-- /form-panel -->
+
+    <!-- ═══ TAB: URL GENERATOR ═══ -->
+    <div id="tab-generator" class="tab-content">
+        <p class="gen-subtitle">Create custom, industry-specific URLs for different employers</p>
+
+        <div class="sample-section-label">Quick Preview — Sample Companies</div>
+        <div class="sample-grid">
+            <a class="sample-card" href="https://joepointer.com/" target="_blank" style="grid-column: 1 / -1; display: flex; align-items: stretch;">
+                <div style="width: 12px; flex-shrink: 0; background: linear-gradient(180deg, #0A1E3D, #2A3E50, #C9A961);"></div>
+                <div class="sample-card-body" style="flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                    <div>
+                        <div class="sample-company">Default Portfolio ★</div>
+                        <div class="sample-industry">Navy + Gold — Original Signature Design</div>
+                    </div>
+                    <div class="sample-open" style="white-space: nowrap;">→ Open Preview</div>
+                </div>
+            </a>
+            <a class="sample-card" href="https://joepointer.com/?company=Goldman+Sachs" target="_blank">
+                <div class="sample-card-banner" style="background: linear-gradient(135deg, #1a365d, #b8860b);"></div>
+                <div class="sample-card-body">
+                    <div class="sample-company">Goldman Sachs</div>
+                    <div class="sample-industry">Finance / Banking Template</div>
+                    <div class="sample-open">→ Open Preview</div>
+                </div>
+            </a>
+            <a class="sample-card" href="https://joepointer.com/?company=Microsoft" target="_blank">
+                <div class="sample-card-banner" style="background: linear-gradient(135deg, #0A1E3D, #3B82F6);"></div>
+                <div class="sample-card-body">
+                    <div class="sample-company">Microsoft</div>
+                    <div class="sample-industry">Tech / Startup Template</div>
+                    <div class="sample-open">→ Open Preview</div>
+                </div>
+            </a>
+            <a class="sample-card" href="https://joepointer.com/?company=McKinsey+%26+Company" target="_blank">
+                <div class="sample-card-banner" style="background: linear-gradient(135deg, #334155, #d97706);"></div>
+                <div class="sample-card-body">
+                    <div class="sample-company">McKinsey &amp; Company</div>
+                    <div class="sample-industry">Consulting Template</div>
+                    <div class="sample-open">→ Open Preview</div>
+                </div>
+            </a>
+            <a class="sample-card" href="https://joepointer.com/?company=UnitedHealth+Group" target="_blank">
+                <div class="sample-card-banner" style="background: linear-gradient(135deg, #002677, #00A3AD);"></div>
+                <div class="sample-card-body">
+                    <div class="sample-company">UnitedHealth Group</div>
+                    <div class="sample-industry">Healthcare / Pharma Template</div>
+                    <div class="sample-open">→ Open Preview</div>
+                </div>
+            </a>
+        </div>
+        <hr style="border: none; border-top: 1px solid #e2e8f0; margin-bottom: 2rem;">
+
+        <form id="templateForm">
+            <div class="form-group-gen">
+                <label>Industry Template</label>
+                <div class="template-preview">
+                    <div class="template-card" data-industry="finance">
+                        <div class="color-preview finance-preview"></div>
+                        <strong>Finance/Banking</strong>
+                        <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Conservative &amp; Trusted</div>
+                    </div>
+                    <div class="template-card" data-industry="tech">
+                        <div class="color-preview tech-preview"></div>
+                        <strong>Tech/Startups ✨</strong>
+                        <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Modern Blue Monochrome</div>
+                    </div>
+                    <div class="template-card" data-industry="consulting">
+                        <div class="color-preview consulting-preview"></div>
+                        <strong>Consulting</strong>
+                        <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Analytical &amp; Strategic</div>
+                    </div>
+                    <div class="template-card" data-industry="healthcare">
+                        <div class="color-preview healthcare-preview"></div>
+                        <strong>Healthcare/Pharma ✨</strong>
+                        <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Professional Blue/Teal</div>
+                    </div>
+                </div>
+                <input type="hidden" id="genIndustry" required>
+            </div>
+            <div class="form-group-gen">
+                <label for="genCompany">Company Name <span class="optional">(optional)</span></label>
+                <input type="text" id="genCompany" placeholder="e.g., Goldman Sachs">
+                <div class="help-text">Appears as "Prepared for [Company Name]" on portfolio</div>
+            </div>
+            <div class="form-group-gen">
+                <label for="genWelcome">Welcome Message <span class="optional">(optional)</span></label>
+                <textarea id="genWelcome" placeholder="e.g., Thank you for considering my application for the Director of AI Adoption role..."></textarea>
+                <div class="help-text">Personal message shown at top of portfolio</div>
+            </div>
+            <button type="submit" class="btn-gen">Generate Custom URL</button>
+        </form>
+
+        <div class="result-box" id="genResultBox">
+            <h3>✅ Your Custom URL</h3>
+            <div class="url-display" id="genUrlDisplay"></div>
+            <div class="gen-btn-row">
+                <button class="btn-sm" onclick="copyGenUrl()">📋 Copy URL</button>
+                <button class="btn-sm" onclick="openGenPreview()">👁️ Preview</button>
+                <button class="btn-sm" onclick="saveGenProfile()">💾 Save Profile</button>
+                <button class="btn-sm accent" onclick="saveAsApplication()">➕ Save as Application</button>
+            </div>
+        </div>
+
+        <div class="saved-profiles">
+            <h3 style="color:#334155;margin-bottom:1rem;font-size:1rem;">Saved Employer Profiles</h3>
+            <div id="profileChips"></div>
+        </div>
+    </div>
+
+    </div><!-- /main-panel -->
+</div><!-- /app-shell -->
+
+<!-- ═══ INTERVIEW PREP PANEL ═══ -->
+<div id="prepPanel" class="prep-panel" role="dialog" aria-modal="true" aria-labelledby="prepPanelTitle">
+<div class="prep-panel-inner">
+
+    <div class="prep-panel-header">
+        <div id="prepPanelTitle">
+            <div class="prep-company" id="prepCompany"></div>
+            <div class="prep-role" id="prepRole"></div>
+            <div class="prep-stage-badge" id="prepStageBadge"></div>
+        </div>
+        <div class="prep-panel-header-actions">
+            <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Dark background — less visible to interviewer on shared screen">🌙 Dark</button>
+            <button class="btn-interview-mode" id="btnInterviewMode" onclick="toggleInterviewMode()" title="Live Mode — minimal view optimized for use during interviews">🎯 Live Mode</button>
+            <button class="form-panel-close" onclick="closePrepPanel()">✕ Close</button>
+        </div>
+    </div>
+
+    <!-- Interview Rounds selector -->
+    <div class="prep-rounds-bar" id="prepRoundsBar"></div>
+    <div class="prep-round-creator" id="prepRoundCreator" style="display:none">
+        <div class="prep-round-creator-label">Name this interview round</div>
+        <div class="round-name-chips" id="roundNameChips">
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Phone Screen')">Phone Screen</button>
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Video Interview')">Video Interview</button>
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Technical Interview')">Technical Interview</button>
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Panel Interview')">Panel Interview</button>
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Group Interview')">Group Interview</button>
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Case Study')">Case Study</button>
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Presentation')">Presentation</button>
+            <button class="round-name-chip" onclick="selectRoundChip(this,'Culture Fit')">Culture Fit</button>
+        </div>
+        <div class="prep-round-name-row">
+            <input type="text" class="prep-round-name-input" id="newRoundName"
+                   placeholder="Or type a custom name…" maxlength="50"
+                   onkeydown="if(event.key==='Enter')confirmNewRound();if(event.key==='Escape')cancelNewRound()">
+        </div>
+        <div class="prep-round-creator-actions">
+            <button class="btn-utility muted" onclick="cancelNewRound()">Cancel</button>
+            <button class="btn-utility" onclick="confirmNewRound()">Create Round →</button>
+        </div>
+    </div>
+
+    <!-- API Key -->
+    <div class="prep-api-section" id="prepApiSection">
+        <div class="prep-api-section-title">Anthropic API Key</div>
+        <div id="prepApiInputRow">
+            <div class="prep-api-row">
+                <input type="password" class="prep-api-input" id="prepApiKeyInput"
+                       placeholder="sk-ant-api03-…" autocomplete="off">
+                <button class="btn-utility" onclick="saveApiKey()">Save Key</button>
+            </div>
+            <div class="prep-api-note">Stored in browser localStorage only. Never shared externally.
+                <a href="https://console.anthropic.com/settings/keys" target="_blank">Get a key →</a>
+            </div>
+        </div>
+        <div id="prepApiStatusRow" style="display:none">
+            <span class="prep-api-status">✓ API Key Set</span>
+            <button class="prep-api-update-link" onclick="showApiKeyInput()">Update</button>
+            <button class="prep-api-remove-btn" onclick="removeApiKey()">Remove</button>
+        </div>
+    </div>
+
+    <button class="btn-generate" id="btnGenerate" onclick="generatePrepQuestions()" disabled>
+        ✨ Generate Interview Prep
+    </button>
+
+    <div class="prep-loading" id="prepLoading">
+        <div class="prep-spinner"></div>
+        <div>Generating your personalized prep…</div>
+    </div>
+
+    <div class="prep-results" id="prepResults">
+        <div id="prepGenMeta" class="prep-gen-meta"></div>
+        <div class="prep-search-row">
+            <span class="prep-search-icon">🔍</span>
+            <input type="text" id="prepSearch" class="prep-search-input"
+                   placeholder="Search questions… (or press /)" oninput="filterPrepQuestions(this.value)" autocomplete="off">
+            <button class="prep-search-clear" id="prepSearchClear" onclick="clearPrepSearch()" aria-label="Clear search">✕</button>
+        </div>
+        <div class="prep-inner-tabs">
+            <button class="prep-inner-tab active" id="ptab-ask" onclick="switchPrepTab('ask')">
+                📌 Ask Them <span class="prep-tab-count" id="ptabCount-ask">8</span>
+            </button>
+            <button class="prep-inner-tab" id="ptab-prep" onclick="switchPrepTab('prep')">
+                🎯 My Prep <span class="prep-tab-count" id="ptabCount-prep">8</span>
+            </button>
+            <button class="prep-inner-tab prep-tab-combined" id="ptab-combined" onclick="switchPrepTab('combined')" title="All questions in one scrollable list">📋 Combined</button>
+        </div>
+        <div class="prep-cat-jumps" id="prepCatJumps"></div>
+        <div class="prep-tab-pane active" id="prepTabAsk">
+            <div id="prepListAsk"></div>
+        </div>
+        <div class="prep-tab-pane" id="prepTabPrep">
+            <div id="prepListPrep"></div>
+        </div>
+
+        <!-- Post-interview debrief — hidden in Live Mode -->
+        <div class="prep-debrief" id="prepDebrief">
+            <div class="prep-debrief-title">📝 Post-Interview Notes</div>
+            <label class="prep-debrief-label">How did it go overall?</label>
+            <textarea class="prep-debrief-input" id="debriefOverall"
+                placeholder="First impressions, energy level, rapport with the interviewer…"
+                oninput="scheduleDebriefSave()" rows="3"></textarea>
+            <label class="prep-debrief-label">What to improve next time?</label>
+            <textarea class="prep-debrief-input" id="debriefTakeaways"
+                placeholder="Questions I fumbled, topics they focused on, what surprised me…"
+                oninput="scheduleDebriefSave()" rows="3"></textarea>
+            <div class="prep-debrief-saved" id="debriefSaved"></div>
+        </div>
+    </div>
+
+    <div class="prep-footer" id="prepFooter" style="display:none">
+        <button class="btn-utility" onclick="copySelectedQuestions()">📋 Copy Selected</button>
+        <button class="btn-utility" onclick="window.print()">🖨 Print</button>
+        <button class="btn-utility muted" onclick="generatePrepQuestions()">↺ Regenerate</button>
+    </div>
+
+</div><!-- /prep-panel-inner -->
+</div><!-- /prepPanel -->
+
+<!-- ═══ SETTINGS MODAL ═══ -->
+<div id="settingsOverlay" class="help-overlay" onclick="closeSettingsOnOverlay(event)" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="help-card" style="max-width: 480px;">
+        <div class="help-header">
+            <div>
+                <div class="help-header-title" id="settingsModalTitle">Settings</div>
+                <div class="help-header-sub">Job Search Command Center</div>
+            </div>
+            <button class="help-close" onclick="closeSettings()" aria-label="Close settings">×</button>
+        </div>
+        <div class="help-body">
+            <div class="help-section">
+                <div class="help-section-title">📧 Email Platform</div>
+                <p style="margin-bottom:1rem;">Choose your email client. Used when clicking the 📧 Draft Email button on any application.</p>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.75rem;border:1.5px solid #e2e8f0;border-radius:8px;">
+                        <input type="radio" name="emailPlatform" value="gmail"> <span><strong>Gmail</strong> <span style="color:#6B7280;font-size:0.85rem;">— Opens in browser</span></span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.75rem;border:1.5px solid #e2e8f0;border-radius:8px;">
+                        <input type="radio" name="emailPlatform" value="outlook_web"> <span><strong>Outlook Web</strong> <span style="color:#6B7280;font-size:0.85rem;">— Opens in browser</span></span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.75rem;border:1.5px solid #e2e8f0;border-radius:8px;">
+                        <input type="radio" name="emailPlatform" value="outlook_desktop"> <span><strong>Outlook Desktop</strong> <span style="color:#6B7280;font-size:0.85rem;">— Opens the app</span></span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.75rem;border:1.5px solid #e2e8f0;border-radius:8px;">
+                        <input type="radio" name="emailPlatform" value="apple_mail"> <span><strong>Apple Mail</strong> <span style="color:#6B7280;font-size:0.85rem;">— Opens the app</span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="help-section" style="margin-top:1.5rem;">
+                <div class="help-section-title">🔗 Portfolio Preview URL</div>
+                <p style="margin-bottom:1rem;">Choose which portfolio to open when clicking preview or copy links. Use <strong>Local</strong> while testing, switch to <strong>Production</strong> when ready to share.</p>
+                <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                    <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.75rem;border:1.5px solid #e2e8f0;border-radius:8px;">
+                        <input type="radio" name="previewEnv" value="local"> <span><strong>Local</strong> <span style="color:#6B7280;font-size:0.85rem;">— http://localhost:8080/index.html</span></span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:0.75rem;cursor:pointer;padding:0.75rem;border:1.5px solid #e2e8f0;border-radius:8px;">
+                        <input type="radio" name="previewEnv" value="production"> <span><strong>Production</strong> <span style="color:#6B7280;font-size:0.85rem;">— https://joepointer.com/</span></span>
+                    </label>
+                </div>
+                <button class="btn-add" onclick="saveSettings()" style="margin-top:1.25rem;width:100%;">Save Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ HELP MODAL ═══ -->
+<div id="helpOverlay" class="help-overlay" onclick="closeHelpOnOverlay(event)" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
+    <div class="help-card">
+        <div class="help-header">
+            <div>
+                <div class="help-header-title" id="helpModalTitle">Help &amp; Instructions</div>
+                <div class="help-header-sub">Job Search Command Center</div>
+            </div>
+            <button class="help-close" onclick="closeHelp()" aria-label="Close help">×</button>
+        </div>
+        <div class="help-body">
+            <div class="help-section">
+                <div class="help-section-title">What is this tool?</div>
+                <p>The <strong>Job Search Command Center</strong> is your private, browser-based tracker for managing job applications and sending personalized portfolio links to employers — all without a backend or login.</p>
+                <p>Your data lives entirely in your browser's localStorage. Nothing is sent to a server. Use the JSON backup/restore feature to move data between devices.</p>
+            </div>
+            <div class="help-section">
+                <div class="help-section-title">📋 Applications Tab</div>
+                <p>Your master list of applications. Each row shows company, role, status badge, applied date, and follow-up date.</p>
+                <ul>
+                    <li><strong>🔗 Copy URL</strong> — Copies your personalized portfolio link to clipboard</li>
+                    <li><strong>👁 Preview</strong> — Opens your portfolio with the company's industry template applied</li>
+                    <li><strong>📧 Draft Email</strong> — Opens your mail client with subject, welcome message, and portfolio URL pre-filled</li>
+                    <li><strong>🗑 Delete</strong> — Permanently removes the application (shows a confirmation prompt first)</li>
+                </ul>
+                <p>Use the <strong>filter buttons</strong> to narrow the list. Click any row to edit the full record.</p>
+                <div class="help-tip">⚠️ Rows with overdue follow-up dates display a red warning flag. Check the Dashboard tab to see all overdue items at a glance.</div>
+            </div>
+            <div class="help-section">
+                <div class="help-section-title">📊 Dashboard Tab</div>
+                <p>A visual summary of your search health — stats cards, pipeline breakdown pie chart, industry chart, and overdue follow-up alerts. Click any pie slice or legend item to filter the Applications tab.</p>
+            </div>
+            <div class="help-section">
+                <div class="help-section-title">➕ New Application</div>
+                <p>Opens in Quick Add mode. Click <em>"+ More Details"</em> to expand dates, salary, contacts, notes, and ATS analysis fields.</p>
+                <ul>
+                    <li><strong>Industry Template</strong> — Sets the color scheme on the employer's personalized link</li>
+                    <li><strong>Welcome Message</strong> — Personal note shown at the top of the portfolio page</li>
+                    <li><strong>Job Description</strong> — Paste and click Analyze Keywords to see resume match. Green = in your resume; yellow = gaps to address</li>
+                </ul>
+                <div class="help-tip">💡 The "Applied Date" defaults to today. Set a follow-up reminder for 7–10 days after applying.</div>
+            </div>
+            <div class="help-section">
+                <div class="help-section-title">🎤 Interview Prep</div>
+                <p>Appears on any application in Phone Screen, Technical, or Final Round stage. Uses the Claude API (your key) to generate 8 questions to ask + 8 questions to prepare, all personalized to the company, role, and stage. Story Bank matches suggest which career story to tell for each prep question.</p>
+            </div>
+            <div class="help-section">
+                <div class="help-section-title">💾 Backup &amp; Restore</div>
+                <p>Your data is stored in <strong>this browser on this device only</strong>.</p>
+                <ul>
+                    <li><strong>↓ CSV</strong> — Spreadsheet-compatible export (Excel / Google Sheets)</li>
+                    <li><strong>↓ JSON</strong> — Full backup. Use to move between devices or restore after clearing storage</li>
+                    <li><strong>↑ Import</strong> — Restores from a JSON backup. Merges with existing data</li>
+                </ul>
+                <div class="help-tip">🔒 Recommended: export a JSON backup at the end of each week.</div>
+            </div>
+            <div class="help-section">
+                <div class="help-section-title">💡 Pro Tips</div>
+                <ul>
+                    <li>Click <strong>🎭 Samples</strong> to load realistic sample data and preview all dashboard features</li>
+                    <li>Click any <strong>pie chart slice</strong> in the Dashboard to instantly filter by that status or industry</li>
+                    <li>Press <strong>Escape</strong> to close any open panel or modal</li>
+                    <li>The 🔗 URL generates a link your employer opens directly — no login required on their end</li>
+                </ul>
+            </div>
+        </div><!-- /help-body -->
+    </div><!-- /help-card -->
+</div><!-- /helpOverlay -->
+
+<!-- Accessible live region for toast announcements -->
+<div id="toastLive" aria-live="polite" aria-atomic="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;"></div>
+
+<!-- ═══ JS MODULES — load order is critical ═══ -->
+<script src="js/utils.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/ats.js"></script>
+<script src="js/tracking.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/prep.js"></script>
+<script>
+    // Init — runs after all modules are fully loaded
+    migrateProfiles();
+    renderAppList();
+    loadGenProfiles();
+</script>
+
+</body>
+</html>
