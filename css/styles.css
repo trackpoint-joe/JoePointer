@@ -1738,6 +1738,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    /* Hide era badges on mobile — info already in description text */
+    .era-badge {
+        display: none !important;
+    }
+
     /* Add padding for fixed headers and eliminate bottom white space */
     .hero {
         padding: 160px var(--space-lg) var(--space-sm); /* Reduced from 260px to show headshot + key content on load */
