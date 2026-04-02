@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Vision for Tri-State | Joe Pointer</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ts-blue: #005a9c;
+            --ts-dark: #003d6b;
+            --ts-blue2: #0073cf;
+            --ts-light: #e8f1fa;
+            --gold: #c9a961;
+            --dark: #1a1a2e;
+            --gray: #666;
+            --light-bg: #f8f9fa;
+            --white: #fff;
+            --red: #e74c3c;
+            --green: #27ae60;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--dark); background: var(--light-bg); line-height: 1.7; }
+
+        /* --- Hero --- */
+        .hero {
+            background: linear-gradient(135deg, var(--ts-dark) 0%, var(--ts-blue) 60%, var(--ts-blue2) 100%);
+            color: white; padding: 4rem 2rem; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .hero::after {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+        .hero-label {
+            display: inline-block; background: rgba(255,255,255,0.12); padding: 0.3rem 1rem;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em;
+            text-transform: uppercase; margin-bottom: 1.25rem;
+        }
+        .hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1.3; }
+        .hero p { font-size: 1.1rem; opacity: 0.85; max-width: 600px; margin: 0 auto 2rem; }
+        .hero-meta { font-size: 0.85rem; opacity: 0.6; }
+
+        /* --- Container --- */
+        .container { max-width: 800px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+        /* --- Section --- */
+        .section { margin-bottom: 3rem; }
+        .section-label {
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--ts-blue); margin-bottom: 0.5rem;
+        }
+        .section h2 { font-size: 1.6rem; font-weight: 700; color: var(--ts-dark); margin-bottom: 1rem; }
+        .section p { margin-bottom: 1rem; color: #444; }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--white); border-radius: 12px; padding: 1.75rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 1.25rem;
+        }
+        .card h3 { font-size: 1.1rem; color: var(--ts-dark); margin-bottom: 0.5rem; }
+        .card p { color: #555; }
+
+        /* --- Conversation Reference --- */
+        .conversation-ref {
+            background: var(--ts-light); border-left: 4px solid var(--ts-blue);
+            padding: 1rem 1.25rem; border-radius: 0 8px 8px 0;
+            margin: 1.25rem 0; font-style: italic; color: #444;
+        }
+        .conversation-ref::before {
+            content: "From our conversation:";
+            display: block; font-style: normal; font-weight: 600;
+            font-size: 0.75rem; color: var(--ts-blue); margin-bottom: 0.3rem;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        /* --- Timeline --- */
+        .timeline { display: grid; gap: 1.25rem; margin: 1.5rem 0; }
+        .timeline-phase {
+            background: var(--white); border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--ts-blue);
+        }
+        .timeline-phase h4 {
+            color: var(--ts-blue); font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 0.05em; margin-bottom: 0.25rem;
+        }
+        .timeline-phase h3 { font-size: 1.1rem; color: var(--ts-dark); margin-bottom: 0.75rem; }
+        .timeline-phase ul { margin: 0.5rem 0 0 1.25rem; color: #555; }
+        .timeline-phase li { margin-bottom: 0.4rem; }
+
+        /* --- CTA / Dashboard Link --- */
+        .cta-block {
+            background: linear-gradient(135deg, var(--ts-dark), var(--ts-blue));
+            border-radius: 12px; padding: 2rem; text-align: center; color: white;
+            margin: 2rem 0;
+        }
+        .cta-block h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .cta-block p { opacity: 0.85; margin-bottom: 1.25rem; }
+        .cta-btn {
+            display: inline-block; background: var(--white); color: var(--ts-dark);
+            padding: 0.85rem 2rem; border-radius: 8px; text-decoration: none;
+            font-weight: 700; font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+        /* --- Closing --- */
+        .closing {
+            background: var(--white); border-radius: 12px; padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06); text-align: center;
+        }
+        .closing h2 { color: var(--ts-dark); margin-bottom: 1rem; }
+        .closing p { color: #555; max-width: 600px; margin: 0 auto 1rem; }
+        .signature { margin-top: 1.5rem; font-weight: 600; color: var(--ts-dark); font-size: 1.1rem; }
+        .signature-sub { color: var(--gray); font-size: 0.9rem; }
+
+        /* --- Footer --- */
+        .footer { text-align: center; padding: 2rem; color: #aaa; font-size: 0.75rem; }
+
+        /* --- Responsive --- */
+        @media (max-width: 640px) {
+            .hero { padding: 2.5rem 1.25rem; }
+            .hero h1 { font-size: 1.6rem; }
+            .container { padding: 1.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="hero-content">
+        <div class="hero-label">Prepared for Dominick Maddalone, CITO</div>
+        <h1>An AI Vision for Tri-State Generation & Transmission</h1>
+        <p>How practical AI can help Tri-State reduce costs, retain members, and navigate the energy transition — starting in the first 90 days.</p>
+        <div class="hero-meta">Prepared by Joe Pointer | April 2026</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- THANK YOU + CONVERSATION REFERENCE -->
+    <div class="section">
+        <div class="section-label">Following Our Conversation</div>
+        <h2>Thank You, Dominick</h2>
+        <p>I appreciated the opportunity to speak with you about the Senior Manager of AI & Innovation role. Our conversation reinforced my belief that Tri-State is at an inflection point where the right AI approach can create real, measurable value for your members.</p>
+
+        <!--
+        =====================================================
+        JOSEPH: CUSTOMIZE THESE AFTER THE INTERVIEW
+        Replace the placeholder text with specific things
+        Dominick said or topics you discussed.
+        =====================================================
+        -->
+        <div class="conversation-ref">
+            [CUSTOMIZE: Reference something specific Dominick said about a challenge, priority, or question he raised. Example: "You mentioned that one of the biggest challenges is helping member cooperatives see the value of staying with Tri-State. That resonated with me because..."]
+        </div>
+
+        <div class="conversation-ref">
+            [CUSTOMIZE: Reference a second topic. Example: "When you described the SPP RTO West transition and the new data flows it will create, I immediately started thinking about how AI could help your trading desk..."]
+        </div>
+
+        <p>I left our conversation thinking about what I could do in the first 90 days to make an immediate impact. Here's what I came up with.</p>
+    </div>
+
+    <!-- THE CORE THESIS -->
+    <div class="section">
+        <div class="section-label">My Perspective</div>
+        <h2>Tri-State's AI Opportunity</h2>
+
+        <div class="card">
+            <h3>The Insight</h3>
+            <p>Tri-State doesn't have a technology deficit. You have engineers, you have data, you have operational expertise. What's missing is the connective layer — someone who can translate AI capabilities into solutions that your teams actually adopt and use to make better decisions.</p>
+            <p>That's where 70% of AI initiatives fail. Not in the technology, but in the adoption. And that's where I've spent my career.</p>
+        </div>
+
+        <div class="card">
+            <h3>Three Immediate Opportunities</h3>
+            <p>Based on our conversation and my research, these are the AI use cases I'd prioritize:</p>
+            <ol style="margin: 0.75rem 0 0 1.25rem; color: #555;">
+                <li style="margin-bottom: 0.75rem;"><strong>Member Retention Intelligence</strong> — AI-driven early warning system monitoring board activity, rate sentiment, and exit signals across your member cooperatives. The pattern from departed members (United Power, LPEA) shows 12-24 months of visible signals before each exit. AI can flag those signals early enough to act.</li>
+                <li style="margin-bottom: 0.75rem;"><strong>SPP Market Optimization</strong> — With RTO West now live, you have new market data flows. Price forecasting and dispatch optimization AI could improve purchasing decisions and reduce wholesale costs passed to members.</li>
+                <li style="margin-bottom: 0.75rem;"><strong>Compliance Intelligence</strong> — An AI document assistant for NERC CIP standards, tariff documents, and regulatory filings. The fastest win in any organization — reducing the hours your compliance and legal teams spend searching for information.</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- LIVE PROTOTYPE -->
+    <div class="cta-block">
+        <h3>I Designed a Working Prototype</h3>
+        <p>Rather than describe what AI could look like at Tri-State, I built it. Five AI capabilities, each one tied to a real challenge you're facing.</p>
+        <a href="https://tristate-ai-dashboard-production.up.railway.app/" class="cta-btn" target="_blank">Explore the Live Dashboard</a>
+    </div>
+
+    <!-- 30/60/90 -->
+    <div class="section">
+        <div class="section-label">Action Plan</div>
+        <h2>What I'd Do in the First 90 Days</h2>
+
+        <p>This isn't a theoretical plan. It's grounded in what I've learned about Tri-State's specific situation and what worked in my experience leading adoption at TIAA.</p>
+
+        <div class="timeline">
+            <div class="timeline-phase">
+                <h4>Days 1–30</h4>
+                <h3>Listen, Learn, and Find the Quick Wins</h3>
+                <ul>
+                    <li>Stakeholder listening tour across every business unit — understanding real problems, not pitching AI</li>
+                    <li>Map the data landscape and regulatory boundaries (NERC CIP constraints)</li>
+                    <li>Identify 2-3 low-risk, high-visibility quick wins</li>
+                    <li>Deliver an "AI Landscape Assessment" brief to you with prioritized opportunities</li>
+                </ul>
+            </div>
+
+            <div class="timeline-phase">
+                <h4>Days 31–60</h4>
+                <h3>Establish Governance and Launch First Pilot</h3>
+                <ul>
+                    <li>Stand up the AI Council — cross-functional, tiered risk framework, clear decision paths</li>
+                    <li>Design and launch first pilot with adoption built in from day one</li>
+                    <li>Begin AI literacy program designed around people's actual jobs, not abstract concepts</li>
+                    <li>Evaluate build/buy/blend options for AI platform stack</li>
+                </ul>
+            </div>
+
+            <div class="timeline-phase">
+                <h4>Days 61–90</h4>
+                <h3>Scale What's Working, Present the Roadmap</h3>
+                <ul>
+                    <li>Document pilot results into a repeatable adoption playbook</li>
+                    <li>Build champion network inside business units</li>
+                    <li>Present enterprise AI roadmap to the leadership team — grounded in real results, not theory</li>
+                    <li>Pipeline the next 2-3 initiatives based on demand and impact</li>
+                </ul>
+            </div>
+        </div>
+
+        <!--
+        =====================================================
+        JOSEPH: ADD A CUSTOMIZED NOTE HERE AFTER THE INTERVIEW
+        Reference something Dominick said about priorities or timeline
+        =====================================================
+        -->
+        <div class="conversation-ref">
+            [CUSTOMIZE: Connect the plan to something he said. Example: "You mentioned wanting to see AI value demonstrated quickly. That's why I've structured this to deliver a working pilot within 60 days — not just a strategy deck, but a tool someone is actually using."]
+        </div>
+    </div>
+
+    <!-- WHY ME -->
+    <div class="section">
+        <div class="section-label">Why Me</div>
+        <h2>What I Bring That's Different</h2>
+
+        <div class="card">
+            <p><strong>I've solved the adoption problem before — at scale.</strong><br>
+            16,000+ associates adopted CareerSpark at TIAA. 44% workspace reduction without retention crisis. 2,000+ Culture Champions. Most AI leaders can build models. Almost none can get an organization to actually use them.</p>
+        </div>
+
+        <div class="card">
+            <p><strong>I design for humans, not just systems.</strong><br>
+            Tri-State has 1,200 employees who've never used AI in their daily work, and 40 member cooperatives who need to see value. The AI Council this role chairs isn't just about technology governance — it's about building trust across an organization going through a lot of change at once.</p>
+        </div>
+
+        <div class="card">
+            <p><strong>I bring fresh eyes and fast execution.</strong><br>
+            I designed the prototype dashboard you saw in a couple of hours — for a domain I'd never worked in. I used AI tools to accelerate the build, which is itself a demonstration of how I work. I understand problems, I design solutions, and I leverage the best tools to bring them to life.</p>
+        </div>
+
+        <div class="card">
+            <p><strong>I come from a regulated industry.</strong><br>
+            TIAA is a Fortune 100 financial services company with heavy compliance requirements. I know what it means to innovate inside regulatory constraints — and I know that governance done right accelerates innovation rather than slowing it down.</p>
+        </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="closing">
+        <h2>Let's Build This Together</h2>
+        <p>The question isn't whether AI can create value for Tri-State. It's how fast you want to start.</p>
+        <p>I'm ready to bring the same energy to Tri-State that I've brought to every challenge in my career — learn fast, design with purpose, and make sure what we build actually gets used.</p>
+
+        <!--
+        =====================================================
+        JOSEPH: CUSTOMIZE THE CLOSING LINE AFTER THE INTERVIEW
+        =====================================================
+        -->
+        <p>[CUSTOMIZE: One personal sentence referencing something from the conversation that shows you were listening. Example: "I'm still thinking about what you said regarding the cooperative culture and how decisions need stakeholder alignment. That's exactly the kind of environment where my approach thrives."]</p>
+
+        <div class="signature">Joe Pointer</div>
+        <div class="signature-sub">
+            <a href="https://joepointer.com" style="color: var(--ts-blue); text-decoration: none;">joepointer.com</a> |
+            <a href="https://linkedin.com/in/josephpointer" style="color: var(--ts-blue); text-decoration: none;">LinkedIn</a> |
+            <a href="https://joepointer.com/tristate/" style="color: var(--ts-blue); text-decoration: none;">Live Dashboard</a>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    Prepared exclusively for Tri-State Generation & Transmission Association | Confidential
+</div>
+
+</body>
+</html>
