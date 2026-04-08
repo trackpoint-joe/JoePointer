@@ -2051,6 +2051,7 @@ body {
     padding: var(--space-xl);
     box-shadow: var(--shadow-md);
     border: 1px solid rgba(0,0,0,0.06);
+    scroll-margin-top: 220px;
     transition: all var(--transition-base);
     position: relative;
     overflow: hidden;
@@ -2139,6 +2140,7 @@ body {
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.5);
     transition: all var(--transition-base);
+    scroll-margin-top: 220px;
 }
 
 .principle-details:hover {

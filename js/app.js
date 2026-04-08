@@ -86,11 +86,7 @@ var employerProfiles = {
     'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf',
         chatContext: 'Visitor is from Charles Schwab, evaluating Joe for a role in financial services. Emphasize Fortune 100 experience at TIAA, responsible AI governance in regulated environments, workforce transformation, and data-driven decision making.' },
     'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf',
-        chatContext: 'Visitor is from Human Agency, evaluating Joe for Chief of Staff to the Managing Director of AI. Emphasize 11 years of management consulting at Pearson delivering enterprise solutions to Fortune 500 clients globally, AI implementation methodology from discovery through sustained adoption, repeatable frameworks, responsible AI governance, and multi-client delivery instincts.' },
-    'ai-vp-insurance': { industry: 'finance', company: 'VP AI Strategy', welcome: '',
-        chatContext: 'Visitor is evaluating Joe for Vice President, AI Strategy and Transformation at an insurance company. This is his strongest-fit role. Emphasize: conceived and launched CareerSpark AI platform for 16,000+ associates with full lifecycle ownership (use case identification, responsible AI governance with Risk/Compliance/Legal, deployment, adoption measurement). Built Skills of the Future identifying capability gaps proactively. Hands-on AI builder: CareerSpark Manager Guide with Amazon Q, Future Me Answered (agentic platform built independently with Claude, Next.js, Vercel AI SDK). Works across ChatGPT, Claude, Gemini, Amazon Q daily. 15 years in regulated financial services (TIAA, Fortune 100). Led enterprise change management for 3,000+ associates. Enterprise technology consulting at Pearson (Fortune 500 clients). Governance-first approach that enables innovation within regulatory constraints.' },
-    'github': { industry: 'tech', company: 'GitHub', welcome: '', resume: 'resources/Joe_Pointer_Resume_GitHub.pdf',
-        chatContext: 'Visitor is from GitHub, evaluating Joe for Senior AI Transformation Manager, HR (People Team). Emphasize: conceived and launched CareerSpark AI career platform for 16,000+ associates with full lifecycle ownership from use case identification through adoption measurement. Built Skills of the Future upskilling program (5 curriculum tracks, 890 users). Built Ramp upskilling program producing direct career transitions into technology roles. Built CareerSpark Manager Guide using Amazon Q in one week. Hands-on AI builder across ChatGPT, Claude, Gemini, Amazon Q, and GitHub Copilot. Led enterprise change management for 3,000+ associates across 6 locations. 10 years enterprise technology consulting (Fortune 500 clients including Unilever, Bank of America, Verizon). M.S. Instructional Technology. Unique combination of deep HR/People strategy experience with hands-on AI implementation capability, exactly what GitHub needs for this role.' }
+        chatContext: 'Visitor is from Human Agency, evaluating Joe for Chief of Staff to the Managing Director of AI. Emphasize 11 years of management consulting at Pearson delivering enterprise solutions to Fortune 500 clients globally, AI implementation methodology from discovery through sustained adoption, repeatable frameworks, responsible AI governance, and multi-client delivery instincts.' }
 };
 
 // Apply industry template based on URL path or query parameter
@@ -798,6 +794,19 @@ window.addEventListener('resize', () => {
     });
 })();
 
+// When any expandable section closes, scroll back into view
+document.querySelectorAll('details.principle-details').forEach(details => {
+    details.addEventListener('toggle', () => {
+        if (!details.open) {
+            // Short cards (principles): scroll to the card
+            // Long cards (projects): scroll to the details element itself so user keeps their place
+            const principleCard = details.closest('.principle-card');
+            const target = principleCard || details;
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
 // ============================================
 // PRIORITY 3: PROJECT SUB-NAVIGATION ACTIVE STATE
 // ============================================
@@ -807,6 +816,7 @@ window.addEventListener('resize', () => {
 
     const projectCards = [
         document.getElementById('project-careerspark'),
+        document.getElementById('project-futureme'),
         document.getElementById('project-workplace'),
         document.getElementById('project-revolver'),
         document.getElementById('project-rr'),
