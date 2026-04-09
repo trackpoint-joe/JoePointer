@@ -164,6 +164,7 @@ body {
     z-index: 1001;
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
+    margin-top: -1px; /* close sub-pixel gap between banner and nav on high-DPI screens */
 }
 
 .nav.scrolled {
@@ -2350,6 +2351,7 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-md);
+    margin-top: -1px; /* close sub-pixel gap between nav and subnav on high-DPI screens */
     margin-bottom: var(--space-xl);
     padding: var(--space-sm) var(--space-md);
     background: rgba(255,255,255,0.97);
@@ -2393,7 +2395,15 @@ body {
     white-space: nowrap;
 }
 
-.project-subnav-pill:hover,
+/* On devices with a real pointer (mouse), show hover */
+@media (hover: hover) {
+    .project-subnav-pill:hover {
+        background: var(--accent, var(--gold));
+        color: var(--primary, var(--midnight));
+        border-color: var(--accent, var(--gold));
+    }
+}
+/* Active state controlled by JS scroll tracking */
 .project-subnav-pill.active {
     background: var(--accent, var(--gold));
     color: var(--primary, var(--midnight));
@@ -2681,7 +2691,9 @@ body {
     color: #5c4609;
 }
 
-[data-industry="finance"] .project-subnav-pill:hover,
+@media (hover: hover) {
+    [data-industry="finance"] .project-subnav-pill:hover { color: #1a365d !important; }
+}
 [data-industry="finance"] .project-subnav-pill.active {
     color: #1a365d !important;
 }
@@ -2800,7 +2812,9 @@ body {
     color: #2563EB;
 }
 
-[data-industry="tech"] .project-subnav-pill:hover,
+@media (hover: hover) {
+    [data-industry="tech"] .project-subnav-pill:hover { color: #ffffff !important; }
+}
 [data-industry="tech"] .project-subnav-pill.active {
     color: #ffffff !important;
 }
@@ -2924,7 +2938,9 @@ body {
     color: #1e293b;
 }
 
-[data-industry="consulting"] .project-subnav-pill:hover,
+@media (hover: hover) {
+    [data-industry="consulting"] .project-subnav-pill:hover { color: #1e293b !important; }
+}
 [data-industry="consulting"] .project-subnav-pill.active {
     color: #1e293b !important;
 }
@@ -3042,7 +3058,9 @@ body {
     color: #006B72;
 }
 
-[data-industry="healthcare"] .project-subnav-pill:hover,
+@media (hover: hover) {
+    [data-industry="healthcare"] .project-subnav-pill:hover { color: #ffffff !important; }
+}
 [data-industry="healthcare"] .project-subnav-pill.active {
     color: #ffffff !important;
 }

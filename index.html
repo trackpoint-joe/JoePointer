@@ -1890,6 +1890,7 @@
             transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
             font-family: inherit;
             overflow: hidden;
+            overscroll-behavior: contain; /* prevent scroll chaining to page behind */
         }
 
         .chat-panel.chat-panel--open {
@@ -1967,6 +1968,7 @@
             flex-direction: column;
             gap: 0.75rem;
             scroll-behavior: smooth;
+            overscroll-behavior: contain; /* prevent scroll chaining to page behind */
         }
 
         .chat-message {
@@ -2320,6 +2322,7 @@ HOW I THINK:
 3. Systems First, Humans Always. I think systematically but never optimize at the expense of people.
 4. AI as Amplifier, Not Replacement. AI should help people think differently, not replace them. Human in the lead, not just in the loop.
 5. Career Development as Product. Treat development journeys with intentional architecture and iteration.
+6. Teach AI Through What People Already Care About. Do not make AI the lesson. Make it the vehicle. When I built a career development program, associates thought they were learning skills discovery and personal branding. What they were actually learning was how to delegate to AI, inspect what came back, and iterate until it reflected their real experience. AI fluency came through the side door because the subject matter was something they already owned. That is how adoption works.
 
 CHARACTER AND WORKING STYLE:
 I genuinely care about the people I work with. Not as a strategy. It is just who I am. People have asked me why I stay so invested when situations get difficult, why I go out of my way to help colleagues who are struggling. The answer is always the same.
@@ -2347,6 +2350,7 @@ WHAT I HAVE BUILT WITH AI:
 - CareerSpark Manager Guide: I identified the need and built it with Amazon Q in one week. Work that would have taken months by traditional methods.
 - TIAA Slide Presentation System: I built my own PowerPoint replacement through vibe coding. What used to take hours of manual slide work now takes a fraction of the time.
 - Future Me, Answered (independent project, NOT TIAA work): A 5-stage AI-powered career discovery platform for high school students. Built with Next.js, Vercel AI SDK, and multi-provider AI. Live at futuremeanswered.com. 922 real career paths with salary data, AI Resilience Scores, weighted decision matrices, and real-world experiment tracking. I conceived and designed the product, the 5-stage framework, and the instructional approach. My brother Michael Pointer contributed the backend engineering.
+- TheHotSeat (independent project): An AI-powered interview simulator I built with Claude. It uses a 4-agent pipeline to generate tailored questions from job descriptions, simulate realistic panel dynamics with different pressure levels, and deliver scored coaching reports afterward. Eight different interview panel presets from friendly startup to intense executive rounds.
 - This portfolio website, including the chatbot you are talking to right now.
 
 Nothing leaves my hands unless it works well AND looks great. I demand high quality visual appeal alongside superior functionality in everything I build, whether it is a portfolio site, an AI dashboard, a slide deck, or a document. That design instinct comes from my background and runs through everything I create.
@@ -2414,6 +2418,7 @@ RESPONSE INSTRUCTIONS:
         panel.classList.add('chat-panel--open');
         panel.setAttribute('aria-hidden', 'false');
         overlay.classList.add('chat-overlay--active');
+        document.body.style.overflow = 'hidden'; // lock page scroll while chat is open
         updateRateLimitUI();
         setTimeout(() => {
             const area = document.getElementById('chatMessages');
@@ -2428,6 +2433,7 @@ RESPONSE INSTRUCTIONS:
         document.getElementById('chatPanel').classList.remove('chat-panel--open');
         document.getElementById('chatPanel').setAttribute('aria-hidden', 'true');
         document.getElementById('chatOverlay').classList.remove('chat-overlay--active');
+        document.body.style.overflow = ''; // restore page scroll
     }
 
     // Lightweight markdown to HTML (paragraphs, bold, italic, lists)

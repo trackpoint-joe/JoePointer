@@ -357,8 +357,8 @@ window.addEventListener('scroll', () => {
 
 // Intersection Observer for fade-in animations
 const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.05,
+    rootMargin: '0px 0px 0px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -370,8 +370,10 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe cards
-document.querySelectorAll('.card, .trust-card, .testimonial-card, .project-card').forEach(el => {
+// Observe cards (exclude project-cards — they're sequential content within
+// a section the user is already reading; fade-in causes invisible cards
+// that don't appear until scrolled past on mobile)
+document.querySelectorAll('.card, .trust-card, .testimonial-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
     el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
@@ -724,9 +726,9 @@ window.addEventListener('resize', () => {
         }
 
         // Math.round: closest integer to the real nav bottom.
-        // Avoids the 0.74px sub-pixel gap (ceil) and the possible 1px under-
-        // shoot (floor) — at worst 0.5px overlap with the nav, which is
-        // invisible at any DPI.
+        // Sub-pixel gaps between banner/nav/subnav are closed by a
+        // -1px margin-top on the subnav (CSS), not by rounding up
+        // which shifts everything down and creates gaps higher up.
         const navBottomPx = Math.round(navBCRBottom) + 'px';
         document.documentElement.style.setProperty('--nav-bottom', navBottomPx);
 
@@ -846,10 +848,23 @@ document.querySelectorAll('details.principle-details').forEach(details => {
 
         pills.forEach(pill => {
             pill.classList.remove('active');
-            if (activeCard && pill.getAttribute('href') === '#' + activeCard.id) {
-                pill.classList.add('active');
-            }
         });
+
+        if (activeCard) {
+            const activePill = Array.from(pills).find(p => p.getAttribute('href') === '#' + activeCard.id);
+            if (activePill) {
+                activePill.classList.add('active');
+                // Auto-scroll the subnav container so the active pill is visible
+                const scrollContainer = activePill.closest('.project-subnav');
+                if (scrollContainer && scrollContainer.scrollWidth > scrollContainer.clientWidth) {
+                    const pillLeft = activePill.offsetLeft;
+                    const pillWidth = activePill.offsetWidth;
+                    const containerWidth = scrollContainer.clientWidth;
+                    const targetScroll = pillLeft - (containerWidth / 2) + (pillWidth / 2);
+                    scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+                }
+            }
+        }
     }
 
     window.addEventListener('scroll', updateActivePill, { passive: true });
