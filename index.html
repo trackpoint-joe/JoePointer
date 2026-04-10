@@ -2537,6 +2537,17 @@ RESPONSE INSTRUCTIONS:
         incrementCount();
         updateRateLimitUI();
 
+        // Track chatbot question in GA4
+        if (typeof gtag === 'function') {
+            const employer = window.location.pathname.replace(/^\/|\/$/g, '').toLowerCase() || 'direct';
+            gtag('event', 'ask_joe_question', {
+                event_category: 'chatbot',
+                question_text: text.substring(0, 100),
+                employer_context: employer,
+                message_number: chatHistory.filter(m => m.role === 'user').length
+            });
+        }
+
         try {
             const res = await fetch('https://joe-portfolio-chat.joe-pointer.workers.dev', {
                 method: 'POST',
