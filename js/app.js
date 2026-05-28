@@ -75,24 +75,21 @@ var employerProfiles = {
     'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' },
 
     // Active Applications
-    'deltek': { industry: 'tech', company: 'Deltek', welcome: '', resume: 'resources/Joe_Pointer_Resume_Deltek.pdf',
-        chatContext: 'Visitor is from Deltek, evaluating Joe for Senior Principal, AI Transformation Lead. Emphasize enterprise AI adoption methodology, change management at scale, and building repeatable frameworks that drive sustained adoption in regulated environments.' },
-    'tri-state': { industry: 'tech', company: 'Tri-State', welcome: '', resume: 'resources/Joe_Pointer_Resume_Tri_State.pdf',
-        chatContext: 'Visitor is from Tri-State Generation and Transmission, evaluating Joe for Senior Manager AI and Innovation. Emphasize AI strategy, innovation leadership, workforce augmentation, and experience driving technology adoption across large organizations.' },
-    'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '',
-        chatContext: 'Visitor is from Cherry Bekaert, evaluating Joe for AI Agent Architect. Emphasize hands-on AI building experience, agentic AI workflows, prompt engineering, and practical AI solution design alongside enterprise consulting delivery.' },
-    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf',
-        chatContext: 'Visitor is from Charles Schwab, evaluating Joe for a role in financial services. Emphasize Fortune 100 experience at TIAA, responsible AI governance in regulated environments, workforce transformation, and data-driven decision making.' },
-    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf',
-        chatContext: 'Visitor is from Charles Schwab, evaluating Joe for a role in financial services. Emphasize Fortune 100 experience at TIAA, responsible AI governance in regulated environments, workforce transformation, and data-driven decision making.' },
-    'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf',
-        chatContext: 'Visitor is from Human Agency, evaluating Joe for Chief of Staff to the Managing Director of AI. Emphasize 10 years of management consulting delivering enterprise solutions to Fortune 500 clients globally, AI implementation methodology from discovery through sustained adoption, repeatable frameworks, responsible AI governance, and multi-client delivery instincts.' },
-    'ai-vp-insurance': { industry: 'finance', company: 'VP AI Strategy', welcome: '',
-        chatContext: 'Visitor is evaluating Joe for Vice President, AI Strategy and Transformation at an insurance company. This is his strongest-fit role. Emphasize: conceived and launched CareerSpark AI platform for 16,000+ associates with full lifecycle ownership (use case identification, responsible AI governance with Risk/Compliance/Legal, deployment, adoption measurement). Built Skills of the Future identifying capability gaps proactively. Hands-on AI builder: CareerSpark Manager Guide with Amazon Q, Future Me Answered (agentic platform built independently with Claude, Next.js, Vercel AI SDK). Works across ChatGPT, Claude, Gemini, Amazon Q daily. 15 years in regulated financial services (TIAA, Fortune 100). Led enterprise change management for 3,000+ associates. 10 years enterprise technology consulting (Fortune 500 clients). Governance-first approach that enables innovation within regulatory constraints.' },
-    'github': { industry: 'tech', company: 'GitHub', welcome: '', resume: 'resources/Joe_Pointer_Resume_GitHub.pdf',
-        chatContext: 'Visitor is from GitHub, evaluating Joe for Senior AI Transformation Manager, HR (People Team). Emphasize: conceived and launched CareerSpark AI career platform for 16,000+ associates with full lifecycle ownership from use case identification through adoption measurement. Built Skills of the Future upskilling program (5 curriculum tracks, 890 users). Built Ramp upskilling program producing direct career transitions into technology roles. Built CareerSpark Manager Guide using Amazon Q in one week. Hands-on AI builder across ChatGPT, Claude, Gemini, Amazon Q, and GitHub Copilot. Led enterprise change management for 3,000+ associates across 6 locations. 10 years enterprise technology consulting (Fortune 500 clients including Unilever, Bank of America, Verizon). M.S. Instructional Technology. Unique combination of deep HR/People strategy experience with hands-on AI implementation capability, exactly what GitHub needs for this role.' },
-    'davita': { industry: 'healthcare', company: 'DaVita', welcome: '', resume: 'resources/Joe_Pointer_Resume_DaVita.pdf',
-        chatContext: 'Visitor is from DaVita, evaluating Joe for Director, Performance & Capability Design. Emphasize: M.S. Instructional Technology grounding in performance design (not content production), diagnostic-first methodology that treats training as one input among process, tools, environment, and skills. CareerSpark as full capability ecosystem (9 modules, 16,000+ associates) built with intentional architecture and defined pedagogy, not as a training course. Skills of the Future identifying capability gaps proactively (5 curriculum tracks, 890 users). 10 years management consulting for Fortune 500 clients including Unilever, Bank of America, Verizon Wireless, GE Capital, and Royal Bank of Canada. Member of TIAA Recordkeeping Transformation program team leading the associate-transformation workstream. Denver-based, ready for hybrid in-office.' }
+    // NOTE: Per-company chatContext (Joe's private positioning strategy) has been
+    // moved SERVER-SIDE into the Cloudflare Worker so it is no longer readable in
+    // this public file. These entries keep only the non-sensitive fields the page
+    // needs client-side (industry, company, welcome, resume). The Worker re-derives
+    // the same slug from ?company= and appends the matching chatContext itself.
+    'deltek': { industry: 'tech', company: 'Deltek', welcome: '', resume: 'resources/Joe_Pointer_Resume_Deltek.pdf' },
+    'tri-state': { industry: 'tech', company: 'Tri-State', welcome: '', resume: 'resources/Joe_Pointer_Resume_Tri_State.pdf' },
+    'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' },
+    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf' },
+    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '', resume: 'resources/Joe_Pointer_Resume_Schwab.pdf' },
+    'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf' },
+    'ai-vp-insurance': { industry: 'finance', company: 'VP AI Strategy', welcome: '' },
+    'github': { industry: 'tech', company: 'GitHub', welcome: '', resume: 'resources/Joe_Pointer_Resume_GitHub.pdf' },
+    'davita': { industry: 'healthcare', company: 'DaVita', welcome: '', resume: 'resources/Joe_Pointer_Resume_DaVita.pdf' },
+    'ge-aerospace': { industry: 'tech', company: 'GE Aerospace', welcome: '', resume: 'resources/Joe_Pointer_Resume_GE_Aerospace.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
@@ -118,20 +115,26 @@ function applyIndustryTemplate() {
 
         // Employer profile industry always wins over URL parameter
         let derivedCompany = companyParam || '';
+        let derivedResume = '';
         if (companyParam) {
             const slug = companyParam.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
             const bySlug = employerProfiles[slug];
             const byName = !bySlug && Object.values(employerProfiles).find(
                 ep => ep.company && ep.company.toLowerCase() === companyParam.toLowerCase()
             );
-            if (bySlug) { derivedIndustry = bySlug.industry; derivedCompany = bySlug.company || derivedCompany; }
-            else if (byName) { derivedIndustry = byName.industry; derivedCompany = byName.company || derivedCompany; }
+            const matched = bySlug || byName;
+            if (matched) {
+                derivedIndustry = matched.industry;
+                derivedCompany = matched.company || derivedCompany;
+                derivedResume = matched.resume || '';
+            }
         }
 
         profile = {
             industry: derivedIndustry,
             company: derivedCompany,
-            welcome: welcomeParam ? decodeURIComponent(welcomeParam) : ''
+            welcome: welcomeParam ? decodeURIComponent(welcomeParam) : '',
+            resume: derivedResume
         };
     }
 
@@ -139,8 +142,10 @@ function applyIndustryTemplate() {
         // Apply industry template
         if (profile.industry) {
             document.body.setAttribute('data-industry', profile.industry);
-            applyResumeVersion(profile.industry);
         }
+
+        // Serve company-specific resume when available, else industry default
+        applyResumeVersion(profile.industry, profile.resume);
 
         // Update company name if provided
         if (profile.company) {
@@ -157,17 +162,18 @@ function applyIndustryTemplate() {
     }
 }
 
-// Swap resume download links to the industry-tailored version.
+// Swap resume download links. A company-specific resume (explicitResume) wins;
+// otherwise fall back to the industry template, then the default.
 // The `download` attribute is always set to "Joe_Pointer_Resume.pdf" so the
 // file saves with a clean name regardless of the internal filename served.
-function applyResumeVersion(industry) {
+function applyResumeVersion(industry, explicitResume) {
     const resumeMap = {
         tech:        'resources/Joe_Pointer_Resume_Tech.pdf',
         healthcare:  'resources/Joe_Pointer_Resume_Healthcare.pdf',
         consulting:  'resources/Joe_Pointer_Resume_Consulting.pdf',
         finance:     'resources/Joe_Pointer_Resume.pdf',
     };
-    const file = resumeMap[industry] || 'resources/Joe_Pointer_Resume.pdf';
+    const file = explicitResume || resumeMap[industry] || 'resources/Joe_Pointer_Resume.pdf';
     document.querySelectorAll('a[href*="Joe_Pointer_Resume"]').forEach(link => {
         // Only swap the 1-page resume button, not the Executive Brief
         if (link.href.includes('Resume_Full')) return;
