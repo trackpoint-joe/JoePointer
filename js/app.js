@@ -89,7 +89,8 @@ var employerProfiles = {
     'ai-vp-insurance': { industry: 'finance', company: 'VP AI Strategy', welcome: '' },
     'github': { industry: 'tech', company: 'GitHub', welcome: '', resume: 'resources/Joe_Pointer_Resume_GitHub.pdf' },
     'davita': { industry: 'healthcare', company: 'DaVita', welcome: '', resume: 'resources/Joe_Pointer_Resume_DaVita.pdf' },
-    'ge-aerospace': { industry: 'tech', company: 'GE Aerospace', welcome: '', resume: 'resources/Joe_Pointer_Resume_GE_Aerospace.pdf' }
+    'ge-aerospace': { industry: 'tech', company: 'GE Aerospace', welcome: '', resume: 'resources/Joe_Pointer_Resume_GE_Aerospace.pdf' },
+    'amplify': { industry: 'tech', company: 'Amplify', welcome: '', resume: 'resources/Joe_Pointer_Resume_Amplify.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
