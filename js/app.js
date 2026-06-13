@@ -345,11 +345,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Scroll progress indicator
+// Scroll progress indicator removed in the restraint pass. The element is
+// gone from index.html; guard stays so older cached pages don't throw.
 window.addEventListener('scroll', () => {
+    const bar = document.getElementById('scrollProgress');
+    if (!bar) return;
     const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (window.scrollY / windowHeight) * 100;
-    document.getElementById('scrollProgress').style.width = scrolled + '%';
+    bar.style.width = (window.scrollY / windowHeight) * 100 + '%';
 });
 
 // Nav scroll effect
@@ -423,6 +425,7 @@ function openMobileMenu() {
     mobileMenuToggle.classList.add('active');
     mobileOverlay.classList.add('active');
     mobileMenuToggle.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('menu-open'); // hides floating buttons under the drawer
     document.body.style.overflow = 'hidden'; // Prevent scrolling
 
     // Update active nav link when menu opens to ensure correct highlighting
@@ -435,6 +438,7 @@ function closeMobileMenu() {
     mobileMenuToggle.classList.remove('active');
     mobileOverlay.classList.remove('active');
     mobileMenuToggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('menu-open');
     document.body.style.overflow = ''; // Restore scrolling
 }
 
@@ -751,6 +755,11 @@ window.addEventListener('resize', () => {
         if (subnav) subnav.style.top = navBottomPx;
     }
     window.addEventListener('load', updateNavGeometry);
+    // Web fonts can land after `load` and change the banner's height by a few
+    // pixels — re-measure once they are ready so the nav sits flush below it.
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(updateNavGeometry);
+    }
     window.addEventListener('resize', function () {
         clearTimeout(window._navGeoTimeout);
         window._navGeoTimeout = setTimeout(updateNavGeometry, 80);
@@ -909,5 +918,37 @@ document.querySelectorAll('details.principle-details').forEach(details => {
             btn.textContent = 'Collapsed';
             setTimeout(() => { btn.textContent = orig; }, 1200);
         });
+    });
+})();
+
+// ============================================
+// MOBILE CASE-STUDY TOGGLES
+// On phones each project card shows its header and metrics; the full
+// story opens on demand. CSS (≤768px) hides .project-story on cards
+// without .story-open and shows the .story-toggle button. At desktop
+// widths the button is display:none and every story stays visible.
+// ============================================
+(function() {
+    document.querySelectorAll('.project-card').forEach(card => {
+        const story = card.querySelector('.project-story');
+        if (!story) return;
+
+        const toggle = document.createElement('button');
+        toggle.className = 'story-toggle';
+        toggle.textContent = 'View case study';
+        toggle.setAttribute('aria-expanded', 'false');
+
+        toggle.addEventListener('click', () => {
+            const open = card.classList.toggle('story-open');
+            toggle.textContent = open ? 'Close case study' : 'View case study';
+            toggle.setAttribute('aria-expanded', String(open));
+            if (!open) {
+                // Keep the reader anchored on the card they just closed
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+
+        // The toggle sits between the metrics row and the story
+        story.parentNode.insertBefore(toggle, story);
     });
 })();

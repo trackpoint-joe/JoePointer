@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /storybank.html
+Disallow: /resources/
+Allow: /resources/Joe_Pointer_Resume_Full.pdf
+Allow: /resources/Joe_Pointer_Resume.pdf
 
 Sitemap: https://joepointer.com/sitemap.xml
