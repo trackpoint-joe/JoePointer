@@ -398,14 +398,14 @@
                             <span class="label">Stage Journey</span>
                         </div>
                         <div class="project-metric">
-                            <span class="number">1-10</span>
-                            <span class="label">AI Resilience Score</span>
+                            <span class="number">3</span>
+                            <span class="label">Data Pillars Behind the AI Resilience Signal</span>
                         </div>
                     </div>
 
                     <div class="project-story">
                         <!-- Quick Summary -->
-                        <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: var(--space-xl);">The deeper I went into AI, the more a personal question kept nagging me: is college still worth it for my kids? Students pick from 10-15 careers they've heard of when 900+ exist, schools funnel everyone toward degrees, and nobody tells them which paths AI is about to reshape. So I built <a href="https://www.futuremeanswered.com" target="_blank" style="color: var(--gold-dark); text-decoration: underline;">Future Me, Answered</a>, a career discovery platform that starts with who you are, treats college, trades, military, and direct-to-work as equals, and includes an AI Resilience Score (1-10) so students see how automation-proof each path is before they invest.</p>
+                        <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: var(--space-xl);">The deeper I went into AI, the more a personal question kept nagging me: is college still worth it for my kids? Students pick from 10-15 careers they've heard of when 900+ exist, schools funnel everyone toward degrees, and nobody tells them which paths AI is about to reshape. So I built <a href="https://www.futuremeanswered.com" target="_blank" style="color: var(--gold-dark); text-decoration: underline;">Future Me, Answered</a>, a career discovery platform that starts with who you are, treats college, trades, military, and direct-to-work as equals, and includes an AI Resilience signal grounded in Labor Department data and published AI-exposure research, so students see how exposed each path is before they invest.</p>
 
                         <!-- Expandable Section 1: Why I Built This -->
                         <details class="principle-details">
@@ -417,7 +417,7 @@
                             </summary>
                             <div class="principle-content">
                                 <p>41% of college graduates end up underemployed. Schools funnel nearly everyone toward a four-year degree when trades, military, and direct-to-work paths offer great opportunities that get overlooked entirely. And nobody is telling students which of those paths are about to be disrupted by the same AI tools I'm using every day.</p>
-                                <p>"What do you want to be when you grow up?" is one of the hardest questions anyone faces, and the tools to help answer it haven't kept up. I wanted to give the next generation a better answer, one that's honest about where AI is headed and treats every path with equal respect.</p>
+                                <p>"What do you want to be when you grow up?" is one of the hardest questions anyone faces, and the tools to help answer it haven't kept up. I wanted to give kids facing that question a better answer, one that's honest about where AI is headed and treats every path with equal respect.</p>
                             </div>
                         </details>
 
@@ -433,7 +433,7 @@
                                 <p>I designed a 5-stage instructional framework grounded in learning science principles I've applied across my career (and formalized through my M.S. in Instructional Technology):</p>
                                 <ol style="margin: var(--space-md) 0; padding-left: var(--space-lg); line-height: 1.8;">
                                     <li><strong>Discover:</strong> 15 behavioral questions surface who you are, your strengths, interests, values, environment preferences. AI generates a shareable identity archetype.</li>
-                                    <li><strong>Explore:</strong> AI suggests 12+ diverse career paths backed by O*NET data (900+ occupations) and Bureau of Labor Statistics salary information. Every suggestion includes an AI Resilience Score, a 1-10 rating of how likely automation is to reshape that career. The more paths they dismiss, the smarter the suggestions get. No sugarcoating.</li>
+                                    <li><strong>Explore:</strong> AI suggests 12+ diverse career paths backed by O*NET data (900+ occupations) and Bureau of Labor Statistics salary information. Every suggestion includes an AI Resilience signal, a Strong, Moderate, or Watch read built from U.S. Labor Department task data and published AI-exposure research, not an AI guess. The more paths they dismiss, the smarter the suggestions get. No sugarcoating.</li>
                                     <li><strong>Compare:</strong> A weighted decision matrix where students set their own priorities (salary, growth, lifestyle, AI resilience) and AI scores each path against their criteria.</li>
                                     <li><strong>Test:</strong> Real-world experiments like shadow days, informational interviews, and apprenticeships. AI reflects on what they learned and how it validates or contradicts their assumptions.</li>
                                     <li><strong>Decide:</strong> A concrete 30-day action plan with next steps, timelines, and accountability.</li>
@@ -451,9 +451,9 @@
                             </summary>
                             <div class="principle-content">
                                 <p><strong>Equal paths.</strong> College, trades, military, and direct-to-work are presented as equals. Every AI suggestion round must include multiple path types. No hierarchy, no "fallback" framing. A licensed electrician and a software engineer get the same visual treatment, the same data depth, and the same respect.</p>
-                                <p><strong>Honest AI assessment.</strong> Every career includes an AI Resilience Score. If a student is considering a path that's highly vulnerable to automation, they see that clearly before investing four years and six figures.</p>
-                                <p><strong>Real data.</strong> Every suggestion is backed by O*NET (U.S. Department of Labor, 900+ occupations) and Bureau of Labor Statistics salary and growth data. Not opinions. Verified labor market information.</p>
-                                <p><strong>Multi-stakeholder.</strong> Students navigate the journey. Counselors manage 400+ student cohorts with AI-powered "Spark" nudges. Parents access scoped portals. Administrators configure AI models and prompts. FERPA-compliant architecture ready for school district adoption.</p>
+                                <p><strong>Honest, research-grounded AI assessment.</strong> Every career carries an AI Resilience signal built from U.S. Labor Department task data (the human judgment and physical presence each job demands) and published AI-exposure research, not an AI opinion. If a path is highly exposed to automation, students see that clearly before investing four years and six figures.</p>
+                                <p><strong>Real data.</strong> Every suggestion is backed by O*NET (U.S. Department of Labor, 900+ occupations) and Bureau of Labor Statistics salary and growth data. Verified labor market information, not guesses.</p>
+                                <p><strong>Multi-stakeholder.</strong> Students navigate the journey. Counselors manage 400+ student cohorts and send "Spark" nudges to students who stall. Parents access scoped portals. Administrators configure AI models and prompts. FERPA-aligned architecture, built for school district adoption.</p>
                             </div>
                         </details>
 
@@ -467,7 +467,7 @@
                             </summary>
                             <div class="principle-content">
                                 <p>I conceived and designed the product, the 5-stage framework, and the instructional approach. I orchestrated AI using Claude Code to build the platform. My brother, Michael Pointer, contributed the backend engineering.</p>
-                                <p><strong>Tech stack:</strong> Next.js, React, TypeScript, Vercel AI SDK with multi-provider LLM abstraction (Gemini, GPT-4o, Claude, Amazon Bedrock), switchable per task from an admin dashboard. AI prompts are stored in the database and editable without deploying code, with per-prompt model and temperature overrides. O*NET and CareerOneStop APIs for real labor market data, Stripe for payments, Zod-validated AI outputs, and FERPA-compliant architecture with role-based access control across four user types.</p>
+                                <p><strong>Tech stack:</strong> Next.js, React, TypeScript, Vercel AI SDK with multi-provider LLM abstraction (Claude as the primary provider, with Gemini, GPT-4o, and Amazon Bedrock switchable per task from an admin dashboard). AI prompts are stored in the database and editable without deploying code, with per-prompt model and temperature overrides. O*NET and CareerOneStop APIs for real labor market data, Stripe for payments, Zod-validated AI outputs, and FERPA-aligned architecture with role-based access control across four user types.</p>
                                 <p>This is the same pattern as CareerSpark: I don't just advise on AI. I use it to build real products. The difference is that CareerSpark was built for an enterprise. Future Me, Answered was built from a parent's kitchen table because the problem mattered enough to solve on my own time.</p>
                             </div>
                         </details>
