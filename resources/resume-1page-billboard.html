@@ -10,135 +10,184 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Calibri', 'Arial', sans-serif;
-            line-height: 1.4;
+            line-height: 1.35;
             color: #333;
             max-width: 8.5in;
             margin: 0 auto;
-            padding: 0.5in 0.75in;
+            padding: 0.25in 0.55in;
             background: white;
         }
-        
+
         @media print {
             body {
-                padding: 0.5in 0.75in;
+                padding: 0.25in 0.55in;
             }
         }
-        
+
         header {
             text-align: center;
-            margin-bottom: 0.12in;
-            padding-bottom: 0.12in;
-            border-bottom: 2px solid #2c5282;
+            margin-bottom: 0.05in;
+            padding-bottom: 0.06in;
+            border-bottom: 2px solid #1a365d;
         }
-        
+
         h1 {
-            font-size: 20pt;
+            font-size: 21pt;
             font-weight: bold;
             color: #1a365d;
-            margin-bottom: 0.05in;
+            letter-spacing: 0.03em;
+            margin-bottom: 0.02in;
         }
-        
+
         .tagline {
             font-size: 10pt;
             color: #2c5282;
             font-weight: 600;
-            margin-bottom: 0.05in;
+            margin-bottom: 0.02in;
+            letter-spacing: 0.02em;
         }
-        
+
+        .award-line {
+            font-size: 8.5pt;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 0.03in;
+        }
+
         .contact {
-            font-size: 10pt;
+            font-size: 9.5pt;
             color: #555;
         }
-        
+
         .contact a {
             color: #2c5282;
             text-decoration: none;
         }
-        
+
+        .stat-strip {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 0.06in 0;
+            padding: 0.05in 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .stat {
+            flex: 1;
+        }
+
+        .stat-num {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #1a365d;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 8.5pt;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.02in;
+        }
+
         h2 {
-            font-size: 12pt;
+            font-size: 11.5pt;
             font-weight: bold;
             color: #1a365d;
             text-transform: uppercase;
-            margin-top: 0.12in;
-            margin-bottom: 0.06in;
-            padding-bottom: 0.03in;
-            border-bottom: 1px solid #cbd5e0;
+            margin-top: 0.1in;
+            margin-bottom: 0.05in;
+            padding-bottom: 0.02in;
+            border-bottom: 1.5px solid #cbd5e0;
+            letter-spacing: 0.05em;
         }
-        
+
         .summary {
             font-size: 10.5pt;
-            line-height: 1.5;
+            line-height: 1.45;
+            margin-bottom: 0.08in;
+        }
+
+        .job {
             margin-bottom: 0.1in;
         }
-        
-        .job {
-            margin-bottom: 0.12in;
-        }
-        
+
         .job-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 0.05in;
+            margin-bottom: 0.03in;
         }
-        
+
         .job-title {
             font-size: 11pt;
             font-weight: bold;
             color: #1a365d;
         }
-        
+
         .job-company {
             font-size: 10.5pt;
             font-weight: 600;
             color: #2c5282;
         }
-        
+
         .job-dates {
             font-size: 10pt;
             color: #666;
             font-style: italic;
         }
-        
+
         .job-context {
-            font-size: 10pt;
+            font-size: 9.5pt;
             color: #555;
-            margin-bottom: 0.05in;
+            margin-bottom: 0.04in;
             font-style: italic;
         }
-        
+
         ul {
-            margin-left: 0.25in;
-            margin-top: 0.05in;
+            margin-left: 0.22in;
+            margin-top: 0.03in;
         }
-        
+
         li {
             font-size: 10pt;
-            line-height: 1.4;
+            line-height: 1.35;
             margin-bottom: 0.04in;
         }
-        
+
         .skills {
             font-size: 10pt;
-            line-height: 1.5;
+            line-height: 1.4;
         }
-        
+
         .skills strong {
             color: #1a365d;
         }
-        
-        .education {
+
+        .builds-line {
             font-size: 10pt;
-        }
-        
-        .education-item {
+            line-height: 1.4;
             margin-bottom: 0.05in;
         }
-        
+
+        .builds-line strong {
+            color: #1a365d;
+        }
+
+        .education {
+            font-size: 10pt;
+            line-height: 1.4;
+        }
+
+        .education-item {
+            margin-bottom: 0.03in;
+        }
+
         .degree {
             font-weight: 600;
             color: #1a365d;
@@ -148,77 +197,71 @@
 <body>
     <header>
         <h1>JOSEPH POINTER</h1>
-        <div class="tagline">2025 "Face of TIAA" Values VIP (Top 4 of 16,000 Associates)</div>
-        <div class="tagline" style="margin-top: 0.03in; font-size: 10pt;">Director-Level AI Transformation & Adoption Strategist | Workplace Modernization Leader</div>
+        <div class="tagline">VP-Level AI Adoption Leader, Workforce Transformation, Hands-On Builder</div>
+        <div class="award-line">Three-time TIAA Values Champion (2022, 2025, 2026) and 2025 "Face of TIAA" Values VIP (Top 4 of 16,000 Associates)</div>
         <div class="contact">
             Denver Metro Area | 303-888-3151 | <a href="mailto:joepointer@comcast.net">joepointer@comcast.net</a><br>
-            <a href="https://www.linkedin.com/in/josephpointer">linkedin.com/in/josephpointer</a> | <a href="https://www.joepointer.com">www.joepointer.com</a>
+            <a href="https://www.linkedin.com/in/josephpointer">linkedin.com/in/josephpointer</a> | <a href="https://www.joepointer.com">joepointer.com</a>
         </div>
     </header>
 
     <section>
         <h2>Professional Profile</h2>
         <div class="summary">
-            Most transformations fail at adoption. I close that gap by designing human-centered enterprise initiatives where change feels intentional, not imposed. At TIAA: launched CareerSpark (16,000+ users), led workplace transformations (700+ associates, 44% footprint reduction), and drove 395% increases in recognition and engagement.
+            I close the gap between AI investment and real workforce change. At TIAA (Fortune 100, $1.6T AUM), I conceived and launched CareerSpark, a 9-module AI capability platform available to 16,000+ associates enterprise-wide. I built and ran an operating framework connecting seven Client Services business areas and led workplace modernization for 3,000+ associates across six locations.
         </div>
     </section>
 
     <section>
         <h2>Professional Experience</h2>
-        
+
         <div class="job">
             <div class="job-header">
                 <div>
-                    <div class="job-title">Director, Workplace Experience & Associate Engagement</div>
+                    <div class="job-title">Director, Business Management</div>
                     <div class="job-company">TIAA (Fortune 100 Financial Services)</div>
                 </div>
-                <div class="job-dates">2011 – Present</div>
+                <div class="job-dates">February 2022 - Present</div>
             </div>
-            <div class="job-context">
-                Led enterprise initiatives impacting 16,000+ associates. Administered recognition program (~$500K budget). Built cross-functional coalitions to drive adoption at scale.
-            </div>
+            <div class="job-context">Business Manager (2016-2022) | Sr. Management Specialist (2013-2016) | Business Consultant (2011-2013)</div>
             <ul>
-                <li><strong>AI Platform Innovation:</strong> Conceived CareerSpark, 9-module AI career platform serving 16,000+ associates. Designed human-centered learning experiences that reduced AI anxiety. Reached 1,500+ through live sessions. Built the CareerSpark Manager Guide with Amazon Q in one week vs. months of traditional development.</li>
-                <li><strong>Enterprise Transformation:</strong> Led workplace transformations: Denver (700 associates, 44% footprint reduction), Frisco (500+ associates), Charlotte. Managed hoteling transitions across multiple locations. As Recognition Champion administering ~$500K program over 10 years, drove 395% recognition increase; Client Services: 44% of all recognitions.</li>
-                <li><strong>Pandemic Innovation:</strong> Designed virtual career fair reaching 800+ associates when COVID eliminated in-person events. Regional offices gained equitable access for the first time. Replicated by 3+ teams enterprise-wide.</li>
+                <li><strong>CareerSpark, AI Capability Platform:</strong> Conceived, designed, and launched a 9-module AI-powered capability platform available to 16,000+ TIAA associates enterprise-wide. Full lifecycle ownership from discovery through governance, deployment, and adoption. 30+ townhalls and events reaching 1,500+ associates directly.</li>
+                <li><strong>Operating Framework, Seven Business Areas:</strong> Built and ran the framework that connected seven Client Services business areas through liaisons, peer learning, and shared strategy across Workplace, Engagement, and Recognition while keeping each business moving at its own pace.</li>
+                <li><strong>Workplace Modernization at Scale:</strong> Led change strategy for 3,000+ associates across six locations through the Denver consolidation (44% footprint reduction, 700+ to hoteling) and the Frisco Corporate Center opening for 500+, while driving a 395% rise in formal recognition on a $500K budget.</li>
             </ul>
         </div>
 
         <div class="job">
             <div class="job-header">
                 <div>
-                    <div class="job-title">Product Leadership & Enterprise Solutions</div>
-                    <div class="job-company">Pearson Performance Solutions / Vangent, Inc.</div>
+                    <div class="job-title">Sales Engineer, Information Architect, Instructional Designer</div>
+                    <div class="job-company">Interactive Media / FT Knowledge / Pearson Performance Solutions / Vangent Human Capital</div>
                 </div>
-                <div class="job-dates">2000 – 2011</div>
+                <div class="job-dates">2000 - 2011</div>
             </div>
+            <div class="job-context">Continuous tenure through a chain of acquisitions, serving Fortune 500 enterprises and federal agencies.</div>
             <ul>
-                <li>Advanced through five roles during mergers/integrations, building pattern recognition across learning systems, HCM platforms, and enterprise adoption</li>
-                <li>Designed "Revolver" LCMS separating content from delivery; implemented at 3 Fortune 500 companies, maximizing content reuse across contexts</li>
-                <li>Directed product enhancements for 3 automated recruiting solutions reducing client hiring costs 50-80% and speed-to-hire 50%+</li>
-                <li>Partnered with Fortune 500 clients (Unilever, Bank of America, Verizon) on global training and technology delivery</li>
+                <li>Designed Revolver, a Learning Content Management System that separated core content from contextual delivery. Single-source publishing two decades before it was common. Deployed across 5 Fortune 500 enterprises including Unilever, Bank of America, and Verizon Wireless.</li>
+                <li>Sales engineer on the team that won enterprise ATS deals with the U.S. Department of Commerce (2010 Census) and Extra Space Storage. Surfaced field-driven enhancements that helped clients reduce hiring costs 50-80% and improve speed-to-hire 50%+.</li>
             </ul>
         </div>
     </section>
 
     <section>
-        <h2>Core Capabilities</h2>
-        <div class="skills">
-            <strong>Leadership:</strong> AI Adoption & Enterprise Enablement (16,000+ trained) | Digital Transformation | Change Management | Workplace Transformation | Human-Centered Design | Workforce & Career Development | Employee Experience & Engagement | Budget Management (~$500K)
+        <h2>Independent AI Builds</h2>
+        <div class="builds-line">
+            <strong>Future Me, Answered (futuremeanswered.com):</strong> Live AI career-discovery platform built with Next.js, Vercel AI SDK, and multi-provider AI. I conceived the product, designed the 5-stage discovery framework, and modeled 922 career paths. Companion build: TheHotSeat, a 4-agent Claude interview simulator.
         </div>
     </section>
 
     <section>
-        <h2>Education & Recognition</h2>
+        <h2>Core Capabilities &amp; Education</h2>
+        <div class="skills" style="margin-bottom: 0.06in;">
+            <strong>AI &amp; Transformation:</strong> AI Adoption Strategy | Responsible AI Governance | AI Use Case Identification | Hands-on AI Builder (ChatGPT, Claude, Gemini, Kiro, GitHub Copilot) | Enterprise Change Management | Operating Frameworks | Workforce Strategy
+        </div>
         <div class="education">
             <div class="education-item">
-                <span class="degree">MS, Instructional Technology</span>, Bloomsburg University | <span class="degree">BA, Art (Commercial Art)</span>, Millersville University
-            </div>
-            <div class="education-item" style="margin-top: 0.08in;">
-                <strong>Certifications:</strong> Google Generative AI for Leaders | Lean for Financial Services (TIAA)
-            </div>
-            <div class="education-item" style="margin-top: 0.08in;">
-                <strong>Awards:</strong> "Face of TIAA" Values VIP (Top 4 of 16,000) | Values Champion (2×) | Change Champion
+                <span class="degree">M.S. Instructional Technology</span>, Bloomsburg University (4.0 GPA) | <span class="degree">B.A. Art</span>, Millersville University | <strong>Certifications:</strong> Google Generative AI for Leaders, Lean for Financial Services (TIAA inaugural class)
             </div>
         </div>
     </section>
