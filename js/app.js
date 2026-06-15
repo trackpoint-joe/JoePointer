@@ -90,7 +90,8 @@ var employerProfiles = {
     'github': { industry: 'tech', company: 'GitHub', welcome: '', resume: 'resources/Joe_Pointer_Resume_GitHub.pdf' },
     'davita': { industry: 'healthcare', company: 'DaVita', welcome: '', resume: 'resources/Joe_Pointer_Resume_DaVita.pdf' },
     'ge-aerospace': { industry: 'tech', company: 'GE Aerospace', welcome: '', resume: 'resources/Joe_Pointer_Resume_GE_Aerospace.pdf' },
-    'amplify': { industry: 'tech', company: 'Amplify', welcome: '', resume: 'resources/Joe_Pointer_Resume_Amplify.pdf' }
+    'amplify': { industry: 'tech', company: 'Amplify', welcome: '', resume: 'resources/Joe_Pointer_Resume_Amplify.pdf' },
+    'spring-health': { industry: 'healthcare', company: 'Spring Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_Spring_Health.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
@@ -128,6 +129,14 @@ function applyIndustryTemplate() {
                 derivedIndustry = matched.industry;
                 derivedCompany = matched.company || derivedCompany;
                 derivedResume = matched.resume || '';
+            } else {
+                // No profile match: prettify the raw value so a slug like
+                // "spring-health" displays as "Spring Health" instead of raw.
+                derivedCompany = companyParam
+                    .replace(/[-_]+/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim()
+                    .replace(/\b\w/g, c => c.toUpperCase());
             }
         }
 

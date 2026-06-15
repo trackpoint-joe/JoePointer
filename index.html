@@ -2234,7 +2234,7 @@
         }
 
     </script>
-    <script src="js/app.js?v=20260610"></script>
+    <script src="js/app.js?v=20260615"></script>
     <script>
         // Auto-apply template from ?company= URL parameter
         (function() {
@@ -2246,7 +2246,8 @@
             // Populate company name elements (use employer profile display name if available)
             const companySlug = company.replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
             const companyProfile = typeof employerProfiles !== 'undefined' && employerProfiles[companySlug];
-            const displayName = (companyProfile && companyProfile.company) || companyRaw;
+            const prettify = s => s.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
+            const displayName = (companyProfile && companyProfile.company) || prettify(companyRaw);
             const stickyName = document.getElementById('stickyCompanyName');
             if (stickyName) stickyName.textContent = displayName;
 
