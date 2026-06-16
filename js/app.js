@@ -92,7 +92,8 @@ var employerProfiles = {
     'ge-aerospace': { industry: 'tech', company: 'GE Aerospace', welcome: '', resume: 'resources/Joe_Pointer_Resume_GE_Aerospace.pdf' },
     'amplify': { industry: 'tech', company: 'Amplify', welcome: '', resume: 'resources/Joe_Pointer_Resume_Amplify.pdf' },
     'spring-health': { industry: 'healthcare', company: 'Spring Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_Spring_Health.pdf' },
-    'fxi': { industry: 'tech', company: 'FXI', welcome: '', resume: 'resources/Joe_Pointer_Resume_FXI.pdf' }
+    'fxi': { industry: 'tech', company: 'FXI', welcome: '', resume: 'resources/Joe_Pointer_Resume_FXI.pdf' },
+    'novartis': { industry: 'healthcare', company: 'Novartis', welcome: '', resume: 'resources/Joe_Pointer_Resume_Novartis.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
