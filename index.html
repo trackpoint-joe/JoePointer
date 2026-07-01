@@ -86,7 +86,7 @@
                 "description": "AI adoption and workforce transformation leader helping organizations bridge the gap between AI investment and real workforce change",
                 "url": "https://joepointer.com",
                 "image": "https://joepointer.com/images/headshot.jpg",
-                "email": "mailto:joepointer@comcast.net",
+                "email": "mailto:joe@joepointer.com",
                 "address": {
                     "@type": "PostalAddress",
                     "addressLocality": "Arvada",
@@ -1544,7 +1544,7 @@
                 <div class="contact-item">
                     <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg></div>
                     <div class="label">Email</div>
-                    <a href="mailto:joepointer@comcast.net">joepointer@comcast.net</a>
+                    <a href="mailto:joe@joepointer.com">joe@joepointer.com</a>
                 </div>
                 <!-- LinkedIn card -->
                 <div class="contact-item">
@@ -1559,7 +1559,7 @@
                 <h3>Ready to Discuss Opportunities?</h3>
                 <p>Everything you need to share with your hiring team.</p>
                 <div class="download-buttons">
-                    <a href="mailto:joepointer@comcast.net?subject=Opportunity%20Discussion%20-%20Joe%20Pointer" class="btn btn-accent">
+                    <a href="mailto:joe@joepointer.com?subject=Opportunity%20Discussion%20-%20Joe%20Pointer" class="btn btn-accent">
                         <span>Email Me</span>
                     </a>
                     <a href="resources/Joe_Pointer_Resume_Full.pdf" class="btn btn-secondary" download="Joe_Pointer_Resume.pdf">
@@ -1572,7 +1572,7 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-        <span>&copy; 2026 Joe Pointer</span><span class="footer-sep">&middot;</span><a href="https://linkedin.com/in/josephpointer" rel="me">LinkedIn</a><span class="footer-sep">&middot;</span><a href="mailto:joepointer@comcast.net">joepointer@comcast.net</a>
+        <span>&copy; 2026 Joe Pointer</span><span class="footer-sep">&middot;</span><a href="https://linkedin.com/in/josephpointer" rel="me">LinkedIn</a><span class="footer-sep">&middot;</span><a href="mailto:joe@joepointer.com">joe@joepointer.com</a>
     </footer>
 
     <!-- Back to Top Button -->
@@ -1688,7 +1688,7 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
         </div>
-        <div class="chat-footer">Powered by Claude AI · Responses may not reflect all details · <a href="mailto:joepointer@comcast.net" style="color:inherit">Contact Joe directly</a></div>
+        <div class="chat-footer">Powered by Claude AI · Responses may not reflect all details · <a href="mailto:joe@joepointer.com" style="color:inherit">Contact Joe directly</a></div>
     </div>
     <div id="chatOverlay" class="chat-overlay"></div>
 
@@ -2432,7 +2432,7 @@
         }
         const remaining = Math.max(0, CHAT_DAILY_LIMIT - getTodayCount());
         if (remaining === 0) {
-            el.textContent = 'Daily limit reached. Email Joe at joepointer@comcast.net';
+            el.textContent = 'Daily limit reached. Email Joe at joe@joepointer.com';
             el.style.display = 'block';
             document.getElementById('chatSend').disabled = true;
             document.getElementById('chatInput').disabled = true;
@@ -2499,7 +2499,7 @@
             }
 
             const data = await res.json();
-            const reply = data.content?.[0]?.text || 'Sorry, I had trouble with that. Email me directly at joepointer@comcast.net.';
+            const reply = data.content?.[0]?.text || 'Sorry, I had trouble with that. Email me directly at joe@joepointer.com.';
             appendMessage('ai', reply);
             chatHistory.push({ role: 'assistant', content: reply });
             // Scroll so the user's question is at the top with the answer below
@@ -2509,7 +2509,7 @@
 
         } catch (err) {
             loadingEl.remove();
-            appendMessage('ai', 'Something went wrong on my end. Try again, or reach out to me directly at joepointer@comcast.net.');
+            appendMessage('ai', 'Something went wrong on my end. Try again, or reach out to me directly at joe@joepointer.com.');
             console.error('Chat error:', err);
         } finally {
             document.getElementById('chatSend').disabled = false;
