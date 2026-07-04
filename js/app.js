@@ -552,7 +552,8 @@ document.querySelectorAll('.btn').forEach(button => {
         const buttonHref = this.getAttribute('href');
 
         // Only track if not a download link (already tracked above) or anchor link
-        if (!buttonHref.includes('.pdf') && !buttonHref.startsWith('#')) {
+        // (null guard: a .btn without href, e.g. a <button>, must not throw)
+        if (buttonHref && !buttonHref.includes('.pdf') && !buttonHref.startsWith('#')) {
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'cta_click', {
                     'event_category': 'CTA',

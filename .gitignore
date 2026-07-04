@@ -1,0 +1,13 @@
+# Private working files that must NEVER be published (public repo)
+AI_Joe_Profile.md
+Fable5-Test/
+.claude/
+
+# Local working artifacts, not site content
+DESIGN_COMPARISON.md
+joepointer_website.pptx
+joepointer_homepage_*.html
+index-ALTERNATIVE.html
+index-BEFORE-ALTERNATIVE.html
+css/alternative-styles.css
+images/Screenshot*.png
