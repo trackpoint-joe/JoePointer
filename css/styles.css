@@ -56,6 +56,10 @@ html {
     scroll-padding-top: 200px; /* Desktop: nav un-sticks near top — natural position 79px + 112px height = 191px bottom; 200px = 9px clearance */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Mobile: during touch-scroll the browser resizes the viewport (URL bar collapse)
+       and can briefly reveal the html element below the footer. Default was white,
+       which flashed against the navy footer. Match the footer so the gap is invisible. */
+    background-color: var(--midnight);
 }
 
 body {
