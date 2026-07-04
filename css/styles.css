@@ -2442,9 +2442,15 @@ body.menu-open .company-banner {
         font-size: 0.85rem;
     }
 
-    /* One floating control is enough on a phone — the nav is always one tap away */
+    /* Back-to-top stays available on phones (long single-page site).
+       env(safe-area-inset-bottom) lifts it clear of the iOS Safari bottom
+       address bar / home indicator zone so it is always tappable. */
     .back-to-top {
-        display: none;
+        bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        left: 16px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.3rem;
     }
 }
 
