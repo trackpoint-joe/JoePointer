@@ -991,6 +991,8 @@ body {
     max-width: 700px;
     margin: 0 auto;
     line-height: 1.7;
+    /* Split multi-line subtitles evenly instead of stranding one word on the last line */
+    text-wrap: balance;
 }
 
 .section-dark .section-header .subtitle {
