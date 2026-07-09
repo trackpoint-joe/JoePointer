@@ -718,13 +718,20 @@ body {
     transform: translateX(-50%) translateY(0);
 }
 
-/* On phones, centering the bubble on the word clips it at the screen edge
-   (seen live: EBITDA near the left margin). Anchor the bubble to the
-   paragraph instead — .value-prop is position:relative so it becomes the
-   containing block — and span the viewport width with safe side margins. */
+/* PHONES: word-anchored bubbles clip at the screen edge, and
+   paragraph-anchored bubbles land a full screen above the tapped word
+   (both observed live). So on phones the definition renders as a sheet
+   FIXED to the bottom of the viewport — anchored to the screen itself,
+   it cannot clip and is always where the thumb just tapped. Dismisses
+   when focus leaves the term (tap anywhere else). */
 @media (max-width: 640px) {
     .value-prop {
-        position: relative;
+        /* fadeUp's fill mode leaves transform: translateY(0) on the
+           paragraph forever, and any transformed ancestor hijacks
+           position: fixed (it becomes the containing block). Drop the
+           entrance animation on phones so the sheet anchors to the
+           real viewport. */
+        animation: none;
     }
 
     .term-tip {
@@ -732,15 +739,21 @@ body {
     }
 
     .term-tip-bubble {
+        position: fixed;
         left: 12px;
         right: 12px;
-        bottom: calc(100% + 10px);
+        top: auto;
+        bottom: max(16px, env(safe-area-inset-bottom, 16px));
         width: auto;
         max-width: none;
-        transform: translateY(4px);
+        transform: translateY(8px);
+        font-size: 0.9rem;
+        padding: 0.8rem 1rem;
+        z-index: 300; /* above nav/chrome; transient, so covering the chat pill briefly is fine */
+        box-shadow: 0 8px 30px rgba(10, 14, 39, 0.35);
     }
 
-    /* Arrow no longer points at the word once the bubble is paragraph-anchored */
+    /* No arrow — the sheet is viewport-anchored, not pointing at the word */
     .term-tip-bubble::after {
         display: none;
     }
