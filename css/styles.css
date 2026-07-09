@@ -718,6 +718,40 @@ body {
     transform: translateX(-50%) translateY(0);
 }
 
+/* On phones, centering the bubble on the word clips it at the screen edge
+   (seen live: EBITDA near the left margin). Anchor the bubble to the
+   paragraph instead — .value-prop is position:relative so it becomes the
+   containing block — and span the viewport width with safe side margins. */
+@media (max-width: 640px) {
+    .value-prop {
+        position: relative;
+    }
+
+    .term-tip {
+        position: static;
+    }
+
+    .term-tip-bubble {
+        left: 12px;
+        right: 12px;
+        bottom: calc(100% + 10px);
+        width: auto;
+        max-width: none;
+        transform: translateY(4px);
+    }
+
+    /* Arrow no longer points at the word once the bubble is paragraph-anchored */
+    .term-tip-bubble::after {
+        display: none;
+    }
+
+    .term-tip:hover .term-tip-bubble,
+    .term-tip:focus .term-tip-bubble,
+    .term-tip:focus-visible .term-tip-bubble {
+        transform: translateY(0);
+    }
+}
+
 /* Metric Cards */
 .impact-metrics {
     display: grid;
