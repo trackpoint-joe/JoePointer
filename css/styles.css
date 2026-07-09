@@ -666,6 +666,58 @@ body {
     position: relative;
 }
 
+/* Term tooltip (e.g. EBITDA in the hero) — hover on desktop, tap/focus on touch and keyboard */
+.term-tip {
+    position: relative;
+    cursor: help;
+    border-bottom: 1px dotted var(--accent-dark, var(--gold-dark));
+    outline-offset: 2px;
+}
+
+.term-tip-bubble {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    width: max-content;
+    max-width: min(300px, 82vw);
+    background: var(--midnight);
+    color: var(--white, #fff);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(10, 14, 39, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Arrow under the bubble */
+.term-tip-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--midnight);
+}
+
+.term-tip:hover .term-tip-bubble,
+.term-tip:focus .term-tip-bubble,
+.term-tip:focus-visible .term-tip-bubble {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
 /* Metric Cards */
 .impact-metrics {
     display: grid;
