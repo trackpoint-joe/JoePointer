@@ -742,14 +742,17 @@ body {
         position: fixed;
         left: 12px;
         right: 12px;
-        top: auto;
-        bottom: max(16px, env(safe-area-inset-bottom, 16px));
+        /* Centered in the viewport — the bottom corners belong to the
+           back-to-top arrow and the Ask Joe pill, which covered the sheet
+           when it was pinned to the bottom edge. */
+        top: 50%;
+        bottom: auto;
         width: auto;
         max-width: none;
-        transform: translateY(8px);
+        transform: translateY(calc(-50% + 8px));
         font-size: 0.9rem;
         padding: 0.8rem 1rem;
-        z-index: 300; /* above nav/chrome; transient, so covering the chat pill briefly is fine */
+        z-index: 300;
         box-shadow: 0 8px 30px rgba(10, 14, 39, 0.35);
     }
 
@@ -761,7 +764,7 @@ body {
     .term-tip:hover .term-tip-bubble,
     .term-tip:focus .term-tip-bubble,
     .term-tip:focus-visible .term-tip-bubble {
-        transform: translateY(0);
+        transform: translateY(-50%);
     }
 }
 
