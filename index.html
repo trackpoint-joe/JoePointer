@@ -1682,6 +1682,9 @@
                 rows="1"
                 aria-label="Your message"
             ></textarea>
+            <button id="chatMic" class="chat-mic-btn" aria-label="Ask by voice" title="Ask by voice" hidden>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
             <button id="chatSend" class="chat-send-btn" aria-label="Send message">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -2144,6 +2147,52 @@
             transform: none;
         }
 
+        /* Mic (voice input) — hidden until JS confirms browser support */
+        .chat-mic-btn {
+            background: #fff;
+            border: 1px solid #d1d5db;
+            color: #64748b;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+        }
+
+        .chat-mic-btn[hidden] {
+            display: none;
+        }
+
+        .chat-mic-btn:hover:not(:disabled) {
+            color: var(--primary, #0a0e27);
+            border-color: var(--primary, #0a0e27);
+            transform: scale(1.05);
+        }
+
+        .chat-mic-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chat-mic-btn--listening,
+        .chat-mic-btn--listening:hover:not(:disabled) {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: #fff;
+            animation: chatMicPulse 1.4s ease-out infinite;
+        }
+
+        @keyframes chatMicPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45); }
+            70%  { box-shadow: 0 0 0 9px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+
         /* Footer */
         .chat-footer {
             font-size: 0.7rem;
@@ -2432,6 +2481,8 @@
             el.style.display = 'block';
             document.getElementById('chatSend').disabled = true;
             document.getElementById('chatInput').disabled = true;
+            const mic = document.getElementById('chatMic');
+            if (mic) mic.disabled = true;
         } else if (remaining <= 5) {
             el.textContent = `${remaining} message${remaining === 1 ? '' : 's'} remaining today`;
             el.style.display = 'block';
@@ -2529,6 +2580,104 @@
             closeChat();
         }
     });
+
+    // ============================================================
+    // Voice input (Web Speech API). The mic button stays hidden unless the
+    // browser supports SpeechRecognition (Chrome/Edge/Safari yes, Firefox no).
+    // Speech fills the input box live; the visitor reviews and hits Send —
+    // nothing is sent automatically.
+    // ============================================================
+    (function initVoiceInput() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const micBtn = document.getElementById('chatMic');
+        const input = document.getElementById('chatInput');
+        if (!SpeechRecognition || !micBtn || !input) return;
+
+        micBtn.hidden = false;
+
+        let recognition = null;
+        let listening = false;
+        let baseText = ''; // text already in the box when dictation starts
+        const defaultPlaceholder = input.placeholder;
+
+        function setListening(on) {
+            listening = on;
+            micBtn.classList.toggle('chat-mic-btn--listening', on);
+            micBtn.setAttribute('aria-label', on ? 'Stop listening' : 'Ask by voice');
+            input.placeholder = on ? 'Listening…' : defaultPlaceholder;
+        }
+
+        function applyTranscript(transcript) {
+            input.value = (baseText ? baseText + ' ' : '') + transcript;
+            // Reuse the textarea's auto-resize
+            input.dispatchEvent(new Event('input'));
+        }
+
+        // abort() discards pending results (unlike stop()) — used when the
+        // transcript is no longer wanted (send fired, chat closed, Escape).
+        function abortListening() {
+            if (listening) recognition?.abort();
+        }
+
+        function startListening() {
+            const rec = new SpeechRecognition();
+            recognition = rec;
+            rec.lang = document.documentElement.lang || 'en-US';
+            rec.interimResults = true;
+            rec.continuous = false;
+
+            // Each handler ignores events from superseded instances
+            rec.onresult = (event) => {
+                if (rec !== recognition) return;
+                let transcript = '';
+                for (const result of event.results) transcript += result[0].transcript;
+                applyTranscript(transcript.trim());
+            };
+            rec.onerror = (event) => {
+                if (rec !== recognition) return;
+                setListening(false);
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    // Mic permission denied — voice input can't work this visit
+                    micBtn.hidden = true;
+                }
+            };
+            rec.onend = () => {
+                if (rec !== recognition) return;
+                setListening(false);
+                const panelOpen = document.getElementById('chatPanel')?.classList.contains('chat-panel--open');
+                if (panelOpen && input.value.trim()) input.focus();
+            };
+
+            baseText = input.value.trim();
+            setListening(true);
+            try {
+                rec.start();
+            } catch (e) {
+                setListening(false);
+            }
+        }
+
+        micBtn.addEventListener('click', () => {
+            if (listening) {
+                recognition?.stop(); // stop (not abort): keep what was said
+            } else if (!isRateLimited()) {
+                startListening();
+            }
+        });
+
+        // Kill the mic when the transcript is no longer wanted:
+        // a send fires mid-dictation (late results would resurrect the sent
+        // text into the input), or the chat closes (button, overlay, Escape).
+        document.getElementById('chatSend')?.addEventListener('click', abortListening);
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) abortListening();
+        });
+        document.getElementById('chatClose')?.addEventListener('click', abortListening);
+        document.getElementById('chatOverlay')?.addEventListener('click', abortListening);
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') abortListening();
+        });
+    })();
     </script>
 
 </body>
