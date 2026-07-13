@@ -93,7 +93,8 @@ var employerProfiles = {
     'amplify': { industry: 'tech', company: 'Amplify', welcome: '', resume: 'resources/Joe_Pointer_Resume_Amplify.pdf' },
     'spring-health': { industry: 'healthcare', company: 'Spring Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_Spring_Health.pdf' },
     'fxi': { industry: 'tech', company: 'FXI', welcome: '', resume: 'resources/Joe_Pointer_Resume_FXI.pdf' },
-    'novartis': { industry: 'healthcare', company: 'Novartis', welcome: '', resume: 'resources/Joe_Pointer_Resume_Novartis.pdf' }
+    'novartis': { industry: 'healthcare', company: 'Novartis', welcome: '', resume: 'resources/Joe_Pointer_Resume_Novartis.pdf' },
+    'ahead': { industry: 'tech', company: 'AHEAD', welcome: '', resume: 'resources/Joe_Pointer_Resume_AHEAD.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
@@ -853,6 +854,7 @@ document.querySelectorAll('details.principle-details').forEach(details => {
     const projectCards = [
         document.getElementById('project-careerspark'),
         document.getElementById('project-futureme'),
+        document.getElementById('project-careerpointers'),
         document.getElementById('project-workplace'),
         document.getElementById('project-revolver'),
         document.getElementById('project-rr'),

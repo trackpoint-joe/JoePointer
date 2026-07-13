@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=20260709b">
+    <link rel="stylesheet" href="css/styles.css?v=20260713a">
     <link rel="preload" as="image" href="images/headshot.jpg">
 
     <!-- Google Analytics 4 -->
@@ -75,7 +75,7 @@
                 "name": "Joe Pointer (Joseph Pointer) | AI Adoption & Workforce Transformation Leader",
                 "isPartOf": { "@id": "https://joepointer.com/#website" },
                 "mainEntity": { "@id": "https://joepointer.com/#joe" },
-                "dateModified": "2026-07-07"
+                "dateModified": "2026-07-13"
             },
             {
                 "@type": "Person",
@@ -239,10 +239,11 @@
             <div class="project-subnav" id="projectSubnav">
                 <div class="project-subnav-pills">
                     <a href="#project-careerspark" class="project-subnav-pill">CareerSpark</a>
-                    <a href="#project-futureme" class="project-subnav-pill">Future Me, Answered</a>
-                    <a href="#project-workplace" class="project-subnav-pill">Workplace Modernization</a>
+                    <a href="#project-futureme" class="project-subnav-pill">Future Me</a>
+                    <a href="#project-careerpointers" class="project-subnav-pill">CareerPointers</a>
+                    <a href="#project-workplace" class="project-subnav-pill">Workplace</a>
                     <a href="#project-revolver" class="project-subnav-pill">Revolver LCMS</a>
-                    <a href="#project-rr" class="project-subnav-pill">R&amp;R Recognition</a>
+                    <a href="#project-rr" class="project-subnav-pill">Recognition</a>
                     <a href="#project-buildingblocks" class="project-subnav-pill">Building Blocks</a>
                 </div>
                 <button class="collapse-all-btn" data-section="projects" title="Collapse all expanded sections">Collapse All</button>
@@ -471,6 +472,96 @@
                                 <p>I conceived and designed the product, the 5-stage framework, and the instructional approach. I orchestrated AI using Claude Code to build the platform. My brother, Michael Pointer, contributed the backend engineering.</p>
                                 <p><strong>Tech stack:</strong> Next.js, React, TypeScript, Vercel AI SDK with multi-provider LLM abstraction (Claude as the primary provider, with Gemini, GPT-4o, and Amazon Bedrock switchable per task from an admin dashboard). AI prompts are stored in the database and editable without deploying code, with per-prompt model and temperature overrides. O*NET and CareerOneStop APIs for real labor market data, Stripe for payments, Zod-validated AI outputs, and FERPA-aligned architecture with role-based access control across four user types.</p>
                                 <p>This is the same pattern as CareerSpark: I use AI to build real products. The difference is that CareerSpark was built for an enterprise. Future Me, Answered was built from a parent's kitchen table because the problem mattered enough to solve on my own time.</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CareerPointers -->
+            <div class="project-card" id="project-careerpointers">
+                <div class="project-header">
+                    <div class="project-badge">Independent Project<span class="badge-sep"> | </span><span class="badge-org">Personal</span></div>
+                    <h3>CareerPointers</h3>
+                    <p class="project-subtitle">AI Career Coaching Across the Whole Job Search</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-metrics">
+                        <div class="project-metric">
+                            <span class="number">11</span>
+                            <span class="label">Module Journey</span>
+                        </div>
+                        <div class="project-metric">
+                            <span class="number">4</span>
+                            <span class="label">AI Agent Panel</span>
+                        </div>
+                        <div class="project-metric">
+                            <span class="number">3</span>
+                            <span class="label">Languages Shipped</span>
+                        </div>
+                    </div>
+
+                    <div class="project-story">
+                        <!-- Quick Summary -->
+                        <p style="font-size: 1.05rem; line-height: 1.7; margin-bottom: var(--space-xl);"><a href="https://www.careerpointers.org" target="_blank" style="color: var(--gold-dark); text-decoration: underline;">CareerPointers</a> is an 11-module career development platform that carries a person from self-assessment through salary negotiation, and then keeps working after the journey ends: a portfolio that adapts per employer, a resume manager, a four-agent AI interview simulator, and an applicant CRM that runs for as long as the search takes. Every tool feeds from one Story Bank, so the story a recruiter reads is the story told in the interview room. If you arrived at this page from a link with your company's name on it, and a resume written for that company loaded, you have already used the product. This portfolio is CareerPointers' delivery layer, running in production.</p>
+
+                        <!-- Expandable Section 1: Why I Built This -->
+                        <details class="principle-details">
+                            <summary>
+                                <div style="flex: 1;">
+                                    <strong style="font-size: 1rem;">Why I Built This</strong>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">A story bank I built for myself, and colleagues who needed it more than I did</div>
+                                </div>
+                            </summary>
+                            <div class="principle-content">
+                                <p>Building the Story Bank for myself is what made the rest click. I kept rewriting the same accomplishment differently for every resume, every cover letter, every interview answer, until I built one place to capture each story once. That is when I understood what should have been obvious. Stories are what people actually remember about you, not job titles or skill lists, and they are what you have to practice telling, over and over, to different people, for different reasons. Every other tool in CareerPointers exists to feed from that one bank or to help someone rehearse what is in it.</p>
+                                <p>I learned the underlying lesson at TIAA. I spent two years there on AI capability work, and the thing that stayed with me is that access is not adoption. Handing people a tool is the easy part. Career guidance only changes anything when it is personal, and personal does not scale through a portal. It scales when the coaching is built into the journey itself. That conviction is what I carried out of the building. The product is my own.</p>
+                                <p>I left TIAA on July 1 after fifteen years, and I was not the only one who left. I had spent years helping colleagues there think about their careers, and I could no longer help them from a role I no longer had. I built CareerPointers to get that help to them in a form that did not depend on me being in the room.</p>
+                            </div>
+                        </details>
+
+                        <!-- Expandable Section 2: How It Works -->
+                        <details class="principle-details" style="margin-top: var(--space-md);">
+                            <summary>
+                                <div style="flex: 1;">
+                                    <strong style="font-size: 1rem;">How It Works: Build, Deliver, Practice</strong>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">An 11-module journey, a portfolio that adapts per employer, an interview room</div>
+                                </div>
+                            </summary>
+                            <div class="principle-content">
+                                <p>The journey is 11 modules, from Know Yourself through Negotiate Your Worth, and it is linear by design. Each module produces something the next one uses, so the values a person names in module one shape the summary their resume module writes five modules later. That is architecture, not coincidence.</p>
+                                <p><strong>Deliver</strong> turns what they have built into an employer-personalized portfolio. One content library, rendered with a different theme, block selection, and resume version per company through a magic link, so a recruiter at a healthcare company and a recruiter at a fintech see two honest presentations of one source of truth.</p>
+                                <p><strong>Practice</strong> is the Hot Seat, a four-agent AI mock interview. A job analyst reads the posting, a question designer writes the questions that posting would actually produce, an interviewer agent reacts and follows up in real time, and a coach returns a scored report. It rehearses the room before the room happens.</p>
+                            </div>
+                        </details>
+
+                        <!-- Expandable Section 3: Design Decisions -->
+                        <details class="principle-details" style="margin-top: var(--space-md);">
+                            <summary>
+                                <div style="flex: 1;">
+                                    <strong style="font-size: 1rem;">Design Decisions That Define It</strong>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">Show the reasoning, keep one source of truth, teach on every screen</div>
+                                </div>
+                            </summary>
+                            <div class="principle-content">
+                                <p><strong>Show the reasoning behind every score.</strong> Every AI-scored moment in the product, interview performance and career path fit alike, shows the factors behind the number and what would move it. A confidence score with no inspectable reasoning is just asking the user to trust me. This product is built to survive a user who argues back.</p>
+                                <p><strong>One story, everywhere.</strong> A user's STAR stories live in a single bank, encrypted at rest. The resume, the portfolio, and the interview prep all draw from it, so the story a recruiter reads matches the story told in the interview room.</p>
+                                <p><strong>Teach something on every screen.</strong> Each module is built to develop the user's own thinking, their values, their positioning, their stories. A screen that only gathers data without teaching anything does not ship.</p>
+                            </div>
+                        </details>
+
+                        <!-- Expandable Section 4: How It Was Built -->
+                        <details class="principle-details" style="margin-top: var(--space-md);">
+                            <summary>
+                                <div style="flex: 1;">
+                                    <strong style="font-size: 1rem;">How It Was Built</strong>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">AI-directed development, a production stack, and an engineer who owns the architecture</div>
+                                </div>
+                            </summary>
+                            <div class="principle-content">
+                                <p>I conceived the product and designed the platform, the 11-module journey, the coaching approach, and the product decisions behind it. I direct AI, primarily Claude Code, to write production code, and I have shipped a real share of this codebase that way. My brother, Mike Pointer, is the co-founder and primary engineer, and he owns the architecture. It is the same partnership that built Future Me, Answered. I am not the engineer and I do not need to be. What I need to do is scope the problem, tell a good technical answer from a bad one, and keep the build moving to the finish.</p>
+                                <p><strong>Tech stack:</strong> Next.js 15, React 19, and TypeScript, deployed on Vercel. Turso and Drizzle for the database, Better-auth for authentication, Stripe for checkout. An in-house AI gateway with a database-driven prompt library, rather than a bolted-on SDK, powers the four-agent interview simulator, the Story Bank with encrypted STAR fields, the applicant CRM, and a resume manager with real PDF and DOCX export. It ships in English, Spanish, and French.</p>
+                                <p>The pattern is the point. I use AI to build real products instead of waiting for someone else to build them for me. This site is the version with no one else's hands on it. joepointer.com, the magic links, the assistant that answers questions about my background, and the per-employer resume delivery are mine end to end, and they are the working demo of the platform.</p>
                             </div>
                         </details>
                     </div>
@@ -2279,7 +2370,7 @@
         // was removed 2026-07-04: a guessable URL should not open internal tooling)
 
     </script>
-    <script src="js/app.js?v=20260615c"></script>
+    <script src="js/app.js?v=20260713a"></script>
     <script>
         // Auto-apply template from ?company= URL parameter
         (function() {
