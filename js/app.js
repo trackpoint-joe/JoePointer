@@ -94,7 +94,8 @@ var employerProfiles = {
     'spring-health': { industry: 'healthcare', company: 'Spring Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_Spring_Health.pdf' },
     'fxi': { industry: 'tech', company: 'FXI', welcome: '', resume: 'resources/Joe_Pointer_Resume_FXI.pdf' },
     'novartis': { industry: 'healthcare', company: 'Novartis', welcome: '', resume: 'resources/Joe_Pointer_Resume_Novartis.pdf' },
-    'ahead': { industry: 'tech', company: 'AHEAD', welcome: '', resume: 'resources/Joe_Pointer_Resume_AHEAD.pdf' }
+    'ahead': { industry: 'tech', company: 'AHEAD', welcome: '', resume: 'resources/Joe_Pointer_Resume_AHEAD.pdf' },
+    'lifestance': { industry: 'healthcare', company: 'LifeStance Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_LifeStance.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
