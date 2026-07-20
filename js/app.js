@@ -95,7 +95,8 @@ var employerProfiles = {
     'fxi': { industry: 'tech', company: 'FXI', welcome: '', resume: 'resources/Joe_Pointer_Resume_FXI.pdf' },
     'novartis': { industry: 'healthcare', company: 'Novartis', welcome: '', resume: 'resources/Joe_Pointer_Resume_Novartis.pdf' },
     'ahead': { industry: 'tech', company: 'AHEAD', welcome: '', resume: 'resources/Joe_Pointer_Resume_AHEAD.pdf' },
-    'lifestance': { industry: 'healthcare', company: 'LifeStance Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_LifeStance.pdf' }
+    'lifestance': { industry: 'healthcare', company: 'LifeStance Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_LifeStance.pdf' },
+    'instructure': { industry: 'tech', company: 'Instructure', welcome: '', resume: 'resources/Joe_Pointer_Resume_Instructure.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
