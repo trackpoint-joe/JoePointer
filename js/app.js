@@ -98,7 +98,8 @@ var employerProfiles = {
     'lifestance': { industry: 'healthcare', company: 'LifeStance Health', welcome: '', resume: 'resources/Joe_Pointer_Resume_LifeStance.pdf' },
     'instructure': { industry: 'tech', company: 'Instructure', welcome: '', resume: 'resources/Joe_Pointer_Resume_Instructure.pdf' },
     'intradiem': { industry: 'tech', company: 'Intradiem', welcome: '', resume: 'resources/Joe_Pointer_Resume_Intradiem.pdf' },
-    'autodesk': { industry: 'tech', company: 'Autodesk', welcome: '', resume: 'resources/Joe_Pointer_Resume_Autodesk.pdf' }
+    'autodesk': { industry: 'tech', company: 'Autodesk', welcome: '', resume: 'resources/Joe_Pointer_Resume_Autodesk.pdf' },
+    'patriot-growth': { industry: 'tech', company: 'Patriot Growth', welcome: '', resume: 'resources/Joe_Pointer_Resume_Patriot.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
