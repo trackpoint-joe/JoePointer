@@ -2537,6 +2537,13 @@
     function chatMarkdown(text) {
         // Escape HTML
         let s = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        // Linkify. Runs AFTER escaping so no unescaped input is reintroduced; the only
+        // raw tags in the string from here on are the anchors we add ourselves.
+        // URLs first (they contain no '@', so the email pass below cannot match inside one).
+        s = s.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)'"])/g,
+            '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+        s = s.replace(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/g,
+            '<a href="mailto:$1">$1</a>');
         // Bold and italic
         s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
         s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
