@@ -857,15 +857,16 @@ document.querySelectorAll('details.principle-details').forEach(details => {
     const pills = document.querySelectorAll('.project-subnav-pill');
     if (!pills.length) return;
 
-    const projectCards = [
-        document.getElementById('project-careerspark'),
-        document.getElementById('project-futureme'),
-        document.getElementById('project-careerpointers'),
-        document.getElementById('project-workplace'),
-        document.getElementById('project-revolver'),
-        document.getElementById('project-rr'),
-        document.getElementById('project-buildingblocks')
-    ].filter(Boolean);
+    // Built in DOCUMENT order, not hardcoded. updateActivePill() below picks the
+    // LAST card whose top has crossed the threshold, which only identifies the
+    // current card if this list matches the order the cards appear in the page.
+    // A hardcoded array silently desyncs the moment a card is added or moved:
+    // any card listed too early gets overwritten by one listed after it that
+    // scrolled past long ago. querySelectorAll always returns document order, so
+    // deriving the list here means reordering the HTML can never break it again.
+    const pillTargets = new Set(Array.from(pills).map(p => p.getAttribute('href')));
+    const projectCards = Array.from(document.querySelectorAll('.project-card'))
+        .filter(card => card.id && pillTargets.has('#' + card.id));
 
     function updateActivePill() {
         // Use getBoundingClientRect() for viewport-relative coords.
