@@ -101,7 +101,8 @@ var employerProfiles = {
     'autodesk': { industry: 'tech', company: 'Autodesk', welcome: '', resume: 'resources/Joe_Pointer_Resume_Autodesk.pdf' },
     'patriot-growth': { industry: 'tech', company: 'Patriot Growth', welcome: '', resume: 'resources/Joe_Pointer_Resume_Patriot.pdf' },
     'nimble-gravity': { industry: 'tech', company: 'Nimble Gravity', welcome: '', resume: 'resources/Joe_Pointer_Resume_Nimble_Gravity.pdf' },
-    'apptegy': { industry: 'tech', company: 'Apptegy', welcome: '', resume: 'resources/Joe_Pointer_Resume_Apptegy.pdf' }
+    'apptegy': { industry: 'tech', company: 'Apptegy', welcome: '', resume: 'resources/Joe_Pointer_Resume_Apptegy.pdf' },
+    'bdo': { industry: 'finance', company: 'BDO', welcome: '', resume: 'resources/Joe_Pointer_Resume_BDO.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
