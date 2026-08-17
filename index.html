@@ -2758,9 +2758,17 @@
         micBtn.hidden = false;
 
         let recognition = null;
-        let listening = false;
-        let baseText = ''; // text already in the box when dictation starts
+        let listening = false;      // a recognition session is actually running
+        let wantListening = false;  // the visitor still wants to dictate
+        let committed = '';         // text in the box plus speech finalized so far
+        let sessionFinal = '';      // speech finalized by the current session only
+        let silentRestarts = 0;     // consecutive relaunches that heard nothing
         const defaultPlaceholder = input.placeholder;
+
+        // Chrome ends a session after roughly eight seconds of silence. Three
+        // empty relaunches is about half a minute of nothing, which is a fair
+        // point to release the mic rather than leave it hot indefinitely.
+        const MAX_SILENT_RESTARTS = 3;
 
         function setListening(on) {
             listening = on;
@@ -2769,58 +2777,109 @@
             input.placeholder = on ? 'Listening…' : defaultPlaceholder;
         }
 
-        function applyTranscript(transcript) {
-            input.value = (baseText ? baseText + ' ' : '') + transcript;
+        function applyTranscript(text) {
+            input.value = text;
             // Reuse the textarea's auto-resize
             input.dispatchEvent(new Event('input'));
         }
 
         // abort() discards pending results (unlike stop()) — used when the
         // transcript is no longer wanted (send fired, chat closed, Escape).
+        // Clearing wantListening first stops onend from relaunching.
         function abortListening() {
+            wantListening = false;
             if (listening) recognition?.abort();
         }
 
-        function startListening() {
+        // One recognition session. The browser will end this on its own after a
+        // silence window, which is what made the mic look like it switched off
+        // mid-thought. onend relaunches while the visitor still wants to talk.
+        function launchSession() {
             const rec = new SpeechRecognition();
             recognition = rec;
             rec.lang = document.documentElement.lang || 'en-US';
             rec.interimResults = true;
-            rec.continuous = false;
+            rec.continuous = true;
+            sessionFinal = '';
 
             // Each handler ignores events from superseded instances
             rec.onresult = (event) => {
                 if (rec !== recognition) return;
-                let transcript = '';
-                for (const result of event.results) transcript += result[0].transcript;
-                applyTranscript(transcript.trim());
+                let finalText = '';
+                let interim = '';
+                for (const result of event.results) {
+                    if (result.isFinal) finalText += result[0].transcript;
+                    else interim += result[0].transcript;
+                }
+                sessionFinal = finalText;
+                if (finalText.trim() || interim.trim()) silentRestarts = 0;
+                applyTranscript(
+                    [committed, finalText, interim].map(s => s.trim()).filter(Boolean).join(' ')
+                );
             };
+
             rec.onerror = (event) => {
                 if (rec !== recognition) return;
-                setListening(false);
+                // 'no-speech' is the ordinary silence timeout and 'aborted' is
+                // us. Neither is a failure, so let onend decide what happens.
+                if (event.error === 'no-speech' || event.error === 'aborted') return;
+                // Everything else used to fail silently, which made a mic that
+                // died on click indistinguishable from one that never started.
+                console.warn('[Ask Joe voice] recognition error:', event.error, event.message || '');
                 if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
                     // Mic permission denied — voice input can't work this visit
                     micBtn.hidden = true;
                 }
+                wantListening = false;
+                setListening(false);
             };
+
             rec.onend = () => {
                 if (rec !== recognition) return;
+                // Fold anything finalized into the running transcript, because
+                // a new session starts with an empty results list and would
+                // otherwise wipe what was already said.
+                if (sessionFinal.trim()) {
+                    committed = [committed, sessionFinal].map(s => s.trim()).filter(Boolean).join(' ');
+                    silentRestarts = 0;
+                } else {
+                    silentRestarts++;
+                }
+                sessionFinal = '';
+
+                if (wantListening && silentRestarts < MAX_SILENT_RESTARTS) {
+                    // A fresh instance, not a restart: start() on a spent
+                    // recognition object throws InvalidStateError.
+                    launchSession();
+                    return;
+                }
+
+                wantListening = false;
                 setListening(false);
                 const panelOpen = document.getElementById('chatPanel')?.classList.contains('chat-panel--open');
                 if (panelOpen && input.value.trim()) input.focus();
             };
 
-            baseText = input.value.trim();
-            setListening(true);
             try {
                 rec.start();
             } catch (e) {
+                wantListening = false;
                 setListening(false);
             }
         }
 
+        function startListening() {
+            committed = input.value.trim();
+            sessionFinal = '';
+            silentRestarts = 0;
+            wantListening = true;
+            setListening(true);
+            launchSession();
+        }
+
         micBtn.addEventListener('click', () => {
-            if (listening) {
+            if (wantListening) {
+                wantListening = false;
                 recognition?.stop(); // stop (not abort): keep what was said
             } else if (!isRateLimited()) {
                 startListening();
