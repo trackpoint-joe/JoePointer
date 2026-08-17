@@ -21,9 +21,22 @@
             background: white;
         }
 
+        /* Without @page the browser adds its own default print margin on top of
+           the body padding, which silently costs most of an inch per page and
+           is what pushed this brief to three pages.
+           The vertical margins live here rather than on body padding because
+           body padding only applies at the start of the document: put 0.3in on
+           the body and page two begins at the paper edge. @page applies to
+           every page, so both pages get the same top and bottom. Horizontal
+           margin stays on the body so the header rule spans the full width. */
+        @page {
+            size: letter;
+            margin: 0.35in 0;
+        }
+
         @media print {
             body {
-                padding: 0.3in 0.6in 0.4in;
+                padding: 0 0.6in;
             }
             .page-break {
                 page-break-before: always;
@@ -226,10 +239,29 @@
         </div>
     </header>
 
+    <div class="stat-strip">
+        <div class="stat">
+            <div class="stat-num">1,500+</div>
+            <div class="stat-label">Reached Directly in Sessions I Led</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">9</div>
+            <div class="stat-label">Module AI Platform, Idea to Company-Wide</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">7</div>
+            <div class="stat-label">Business Areas on One Operating Model</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">3,000+</div>
+            <div class="stat-label">Associates Through Workplace Modernization</div>
+        </div>
+    </div>
+
     <section>
         <h2>Executive Profile</h2>
         <div class="summary">
-            I close the gap between AI investment and real workforce change. At TIAA (Fortune 100, $1.5T AUM), I conceived and launched CareerSpark, a 9-module AI capability platform available to 16,000+ associates enterprise-wide. I built and ran an operating framework that connected seven Client Services business areas and led workplace modernization for 3,000+ associates across six locations. Earlier, ten years at Pearson and Vangent serving Fortune 500 enterprises and federal agencies as sales engineer, information architect, knowledge engineer, and training specialist. My M.S. in Instructional Technology grounds adoption work in design, not opinion.
+            I close the gap between AI investment and real workforce change. At TIAA (Fortune 100, $1.5T AUM), I conceived and launched CareerSpark, a 9-module AI capability platform available to 16,000+ associates enterprise-wide. I built and ran the operating framework connecting Client Services business areas and led workplace modernization across six locations. Earlier, ten years at Pearson and Vangent serving Fortune 500 enterprises and federal agencies as sales engineer, information architect, and instructional designer. My M.S. in Instructional Technology grounds adoption work in design, not opinion.
         </div>
     </section>
 
@@ -240,37 +272,37 @@
             <div class="job-header">
                 <div>
                     <div class="job-title">Director, Business Management</div>
-                    <div class="job-company">TIAA (Fortune 100 Financial Services, $1.5T AUM | 16,000 Associates)</div>
+                    <div class="job-company">TIAA (Fortune 100 Financial Services, $1.5T AUM)</div>
                 </div>
                 <div class="job-dates">February 2022 - July 2026</div>
             </div>
             <div class="job-context">Business Manager (2016-2022) | Sr. Management Specialist (2013-2016) | Business Consultant (2011-2013)</div>
             <div class="job-context" style="margin-top: 0.06in; font-style: normal; font-weight: 600; color: #2c5282;">
-                Led enterprise initiatives across the Client Services organization (~3,000 associates). Currently lead the associate-transformation workstream of TIAA's Recordkeeping Transformation program. Partner across HR, Workplace Services, Facilities, Risk and Compliance, and IT.
+                Led enterprise initiatives across the Client Services organization (~3,000 associates). Led the associate-transformation workstream of TIAA's Recordkeeping Transformation program. Partnered across HR, Workplace Services, Facilities, Risk and Compliance, and IT.
             </div>
 
             <h3>AI Adoption, Governance, and Capability Design</h3>
             <ul>
-                <li><strong>CareerSpark, Enterprise AI Capability Platform (2024-2025):</strong> Conceived, designed, and launched a 9-module AI-powered capability platform available to 16,000+ associates enterprise-wide. Full lifecycle ownership from discovery through governance, deployment, adoption strategy, and impact measurement. 30+ townhalls and events reaching 1,500+ associates directly.</li>
+                <li><strong>CareerSpark, Enterprise AI Capability Platform (2024-2025):</strong> Conceived, designed, and launched a 9-module AI-powered capability platform, rolled out enterprise-wide. Full lifecycle ownership from discovery through governance, deployment, adoption strategy, and impact measurement. 30+ townhalls and events I ran myself.</li>
                 <li><strong>Responsible AI Governance:</strong> Scoped the platform with business stakeholders, then partnered with Risk, Compliance, and Legal to define what it could and could not do. No client data or PII entered into the platform. No AI-initiated actions. Guided prompts that keep associates in control of decisions.</li>
-                <li><strong>Skills of the Future Curriculum (2024):</strong> Led team of 7 to design 5 curriculum tracks (12-17 modules each) covering critical future and digital-first skills. 890 unique users, 1,156 engagement interactions.</li>
-                <li><strong>AI-Assisted Solution Development:</strong> Built the CareerSpark Manager Guide on Amazon Q in one week, versus months traditionally, to prove out a new model for AI-accelerated development inside the enterprise.</li>
+                <li><strong>Skills of the Future Curriculum (2024):</strong> Led team of 7 to design 5 curriculum tracks (12-17 modules each) on future and digital-first skills. 890 unique users, 1,156 post views.</li>
+                <li><strong>AI-Assisted Solution Development:</strong> Built the CareerSpark Manager Guide on Amazon Q Developer in one week, versus months traditionally, proving out a new model for AI-accelerated development inside the enterprise.</li>
             </ul>
 
             <h3>Operating Frameworks and Enterprise Modernization</h3>
             <ul>
-                <li><strong>Multi-Unit Operating Framework:</strong> Built and ran an operating framework connecting seven Client Services business areas through liaisons, peer learning, and shared strategy across Workplace, Associate Engagement, and Rewards and Recognition.</li>
-                <li><strong>Workplace Modernization at Scale (2022-2024):</strong> Led change strategy for 3,000+ associates across six locations through return-to-office, the Denver consolidation (44% real estate footprint reduction, 700+ associates to hoteling), and the Frisco Corporate Center opening for 500+ associates. Recognized as Change Champion.</li>
-                <li><strong>Recognition Program Modernization (2019-2025):</strong> Grew Client Services from minimal participation to 34-44% of all TIAA enterprise recognitions, a 395% increase on a $500K budget. Earned a seat on the corporate platform selection team.</li>
+                <li><strong>Multi-Unit Operating Framework:</strong> Connected seven Client Services business areas through liaisons, peer learning, and shared strategy across Workplace, Associate Engagement, and Rewards and Recognition.</li>
+                <li><strong>Workplace Modernization at Scale (2022-2024):</strong> Led change strategy across six locations through return-to-office, the Denver consolidation (44% footprint reduction, 700+ to hoteling), and the Frisco Corporate Center opening for 500+. Recognized as Change Champion.</li>
+                <li><strong>Recognition Program (2014-2025):</strong> Grew Client Services to 34% of all recognitions company-wide in 2021 on a $300K budget built with Finance. Earned a seat on the corporate platform selection team.</li>
             </ul>
 
             <div class="page-break"></div>
 
             <h3 style="padding-top: 0.05in;">Cross-Functional Delivery</h3>
             <ul>
-                <li><strong>Virtual Product Expo (2020):</strong> Adapted the in-person Career Fair model into a Virtual Product Expo when COVID eliminated regional events, expanding reach from regional to company-wide. 800+ associates reached. Model replicated by 3+ teams.</li>
-                <li><strong>Enterprise Systems Foundation (2011-2016):</strong> Designed the Management Systems suite, the operational dashboards Client Services leaders used to run their areas. Scaled SharePoint governance to 200+ sites.</li>
-                <li><strong>Executive Read-Outs &amp; Decision Forums:</strong> Built and delivered executive-level read-outs for senior leaders, including townhalls, people-leader updates, and quarterly business reviews with clear narrative and decision-ready materials.</li>
+                <li><strong>Virtual Career Fair (2020):</strong> Custom-coded a virtual event platform when COVID ended in-person gatherings, rather than sourcing a vendor tool. Open to the full Client Services population, with 800+ attending live. Three other teams reused the code to build their own; I later enhanced it substantially for the company-wide TIAA Product Expo.</li>
+                <li><strong>Enterprise Systems and Data Governance (2011-2021):</strong> Designed the Management Systems suite, the operational dashboards leaders used to run their areas. Owned SharePoint governance across a 125-site estate and remediated 1,763 PII-flagged files with IT.</li>
+                <li><strong>Executive Read-Outs &amp; Decision Forums:</strong> Built and delivered executive-level read-outs, townhalls, people-leader updates, and quarterly business reviews with clear narrative and decision-ready materials.</li>
             </ul>
         </div>
 
@@ -294,8 +326,8 @@
     <section>
         <h2>Independent AI Builds</h2>
         <ul>
-            <li><strong>Future Me, Answered (futuremeanswered.com):</strong> Live AI career-discovery platform built on Next.js, the Vercel AI SDK, and multi-provider AI. I conceived the product, designed the 5-stage discovery framework, and modeled the career data across 922 paths. Primary engineering by my brother.</li>
-            <li><strong>TheHotSeat, AI Interview Simulator:</strong> Agentic 4-agent Claude pipeline that generates role-specific questions from a job description, simulates panel dynamics across 8 presets, and returns scored coaching reports.</li>
+            <li><strong>Future Me, Answered (futuremeanswered.com):</strong> Live AI career-discovery platform on Next.js, the Vercel AI SDK, and multi-provider AI. I conceived it, designed the 5-stage framework, and modeled 922 career paths; my brother Mike engineered the production backend.</li>
+            <li><strong>CareerPointers (careerpointers.org):</strong> Live 11-module career platform on Next.js, TypeScript, and Stripe with employer-personalized delivery and an applicant CRM. I conceived it and directed the build; my brother Mike engineered the production backend. Its agentic 4-agent Claude interview simulator, TheHotSeat, generates role-specific questions and returns scored coaching reports.</li>
         </ul>
     </section>
 
@@ -304,7 +336,7 @@
         <div class="skills">
             <strong>AI &amp; Transformation:</strong> AI Adoption Strategy | Responsible AI Governance | AI Literacy &amp; Enablement | Agentic AI &amp; Multi-Agent Workflows | Hands-on Builder across ChatGPT, Claude, Gemini, Kiro, GitHub Copilot, M365&nbsp;Copilot<br>
             <strong>Strategy &amp; Modernization:</strong> Operating Framework Design | Modernization Strategy | Process Optimization | Organizational Readiness | Business Case Development | Risk &amp; Compliance Partnership<br>
-            <strong>Enterprise Delivery:</strong> Cross-Functional Influence (HR, Tech, Business, Risk, Legal) | Executive Read-Outs &amp; Decision Forums | Stakeholder Management | Budget Management (~$500K) | Change Management<br>
+            <strong>Enterprise Delivery:</strong> Cross-Functional Influence (HR, Tech, Business, Risk, Legal) | Executive Read-Outs &amp; Decision Forums | Stakeholder Management | Budget Management | Change Management<br>
             <strong>Learning &amp; Capability Design:</strong> Instructional Design (M.S.) | Curriculum &amp; Capability Strategy | Adoption Measurement | Lean for Financial Services
         </div>
     </section>

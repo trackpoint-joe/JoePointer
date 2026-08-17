@@ -2566,8 +2566,23 @@
         // Linkify. Runs AFTER escaping so no unescaped input is reintroduced; the only
         // raw tags in the string from here on are the anchors we add ourselves.
         // URLs first (they contain no '@', so the email pass below cannot match inside one).
-        s = s.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)'"])/g,
-            '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+        // Two shapes: full http(s) URLs, and the bare domains Joe owns, which the
+        // assistant routinely writes without a protocol ("futuremeanswered.com").
+        // Bare domains are allow-listed rather than pattern-matched so that
+        // "Next.js", "index.html" and version numbers are never linkified.
+        // One combined pass, not two: a second pass would match the domain inside
+        // the href of an anchor the first pass had just created.
+        // The lookbehind keeps the bare-domain branch out of email addresses:
+        // without it, joe@joepointer.com has its domain half turned into a link
+        // before the mailto pass below ever runs.
+        const OWNED_DOMAINS = 'joepointer\\.com|futuremeanswered\\.com|futureanswered\\.com|careerpointers\\.org|careerpointers\\.net|thepointers\\.com';
+        s = s.replace(
+            new RegExp('(https?:\\/\\/[^\\s<]+[^\\s<.,;:!?)\'"]|(?<![@\\w.-])(?:www\\.)?(?:' + OWNED_DOMAINS + ')(?:\\/[^\\s<]*[^\\s<.,;:!?)\'"])?)', 'gi'),
+            (m) => {
+                const href = /^https?:\/\//i.test(m) ? m : 'https://' + m;
+                return '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + m + '</a>';
+            }
+        );
         s = s.replace(/\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})\b/g,
             '<a href="mailto:$1">$1</a>');
         // Bold and italic
