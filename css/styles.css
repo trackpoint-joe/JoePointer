@@ -2496,8 +2496,10 @@ body {
     z-index: 1100;
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0 1.25rem;
+    gap: 0.6rem;
+    /* Tight on the right so the avatar sits near the pill edge, which is where
+       the eye lands in a bottom-right corner placement. */
+    padding: 0 6px 0 1.25rem;
     height: 48px;
     border-radius: 50px;
     background: var(--accent, var(--gold));
@@ -2517,9 +2519,14 @@ body {
     box-shadow: 0 8px 28px rgba(0,0,0,0.28);
 }
 
-.ask-joe-float-icon {
-    font-size: 1rem;
-    line-height: 1;
+.ask-joe-float-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.85);
 }
 
 /* Hide floating buttons while the mobile menu or chat is open —
@@ -2542,8 +2549,13 @@ body.menu-open .company-banner {
         bottom: 20px;
         right: 16px;
         height: 44px;
-        padding: 0 1rem;
+        padding: 0 5px 0 1rem;
         font-size: 0.85rem;
+    }
+
+    .ask-joe-float-avatar {
+        width: 32px;
+        height: 32px;
     }
 
     /* Back-to-top stays available on phones (long single-page site).
