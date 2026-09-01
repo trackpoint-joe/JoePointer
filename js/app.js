@@ -105,7 +105,8 @@ var employerProfiles = {
     'bdo': { industry: 'finance', company: 'BDO', welcome: '', resume: 'resources/Joe_Pointer_Resume_BDO.pdf' },
     'digital-realty': { industry: 'tech', company: 'Digital Realty', welcome: '', resume: 'resources/Joe_Pointer_Resume_Digital_Realty.pdf' },
     'one-call': { industry: 'healthcare', company: 'One Call', welcome: '', resume: 'resources/Joe_Pointer_Resume_One_Call.pdf' },
-    'janus-henderson': { industry: 'finance', company: 'Janus Henderson', welcome: '', resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' }
+    'janus-henderson': { industry: 'finance', company: 'Janus Henderson', welcome: '', resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
+    'tifin': { industry: 'finance', company: 'TIFIN', welcome: '', resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
