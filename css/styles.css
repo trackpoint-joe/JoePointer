@@ -654,9 +654,9 @@ body {
     /* --ink-rgb, not a literal. Operations overrides --ink to a warm graphite,
        and a hardcoded cool scrim over it would read as a colour cast. */
     background: linear-gradient(90deg,
-        rgba(var(--ink-rgb), 0.38) 0%,
-        rgba(var(--ink-rgb), 0.38) 78%,
-        rgba(var(--ink-rgb), 0.20) 91%,
+        rgba(var(--ink-rgb), 0.20) 0%,
+        rgba(var(--ink-rgb), 0.20) 78%,
+        rgba(var(--ink-rgb), 0.10) 91%,
         rgba(var(--ink-rgb), 0) 100%);
 }
 
@@ -713,7 +713,11 @@ body {
 /* On the dark hero the eyebrow uses the LIGHT accent. --accent-dark is a
    light-surface value: 4.9:1 on white but only 4.0:1 on ink. */
 .hero .category {
-    color: var(--accent-light, var(--gold-light));
+    /* Fallback is a brightened gold rather than --gold-light. At 13px bold over
+       the photograph, --gold-light measured 4.36 against a 4.5 requirement.
+       Only the default template sees this: every industry template forces the
+       hero eyebrow to white with !important further down. */
+    color: var(--accent-light, #f0e4c4);
 }
 
 .hero .category::before {
