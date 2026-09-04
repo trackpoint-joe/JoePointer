@@ -633,6 +633,42 @@ body {
     z-index: 1;
 }
 
+/* Readability scrim, anchored to the CONTENT rather than the viewport.
+   The wash on .hero-sky::after runs 90deg from the window edge, which works
+   at 1470px but not on an ultrawide: the container is centred, so the text
+   ends up in the middle of the screen where that wash has faded out. Measured
+   at 3440px the tagline was 2.57:1 against a 3.0 requirement and the eyebrow
+   was 4.36 against 4.5.
+
+   This bleeds left to the window edge, covers the text column solidly, and
+   feathers out before the portrait so the mountains still read on the right. */
+.hero .container::before {
+    content: '';
+    position: absolute;
+    top: -3rem;
+    bottom: -3rem;
+    left: -50vw;
+    right: 12%;
+    z-index: -1;
+    pointer-events: none;
+    /* --ink-rgb, not a literal. Operations overrides --ink to a warm graphite,
+       and a hardcoded cool scrim over it would read as a colour cast. */
+    background: linear-gradient(90deg,
+        rgba(var(--ink-rgb), 0.82) 0%,
+        rgba(var(--ink-rgb), 0.82) 80%,
+        rgba(var(--ink-rgb), 0.45) 92%,
+        rgba(var(--ink-rgb), 0) 100%);
+}
+
+/* Phones do not need it. The band sits above the text there, so the copy is
+   already on flat ink and measures clean without help. Switching it off keeps
+   this from putting a lopsided wash over a layout that is centred. */
+@media (max-width: 768px) {
+    .hero .container::before {
+        display: none;
+    }
+}
+
 .hero-header {
     display: flex;
     justify-content: space-between;
