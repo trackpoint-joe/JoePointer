@@ -645,8 +645,12 @@ body {
 .hero .container::before {
     content: '';
     position: absolute;
-    top: -3rem;
-    bottom: -3rem;
+    /* Overshoot deliberately. This is anchored to .container, which starts
+       below the hero's top padding (--space-2xl, up to 5rem), so a small
+       negative left a visible unscrimmed strip under the nav. .hero has
+       overflow:hidden, so the excess is clipped at the section edge. */
+    top: -25rem;
+    bottom: -25rem;
     left: -50vw;
     right: 12%;
     z-index: -1;
