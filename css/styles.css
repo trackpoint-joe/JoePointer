@@ -564,10 +564,14 @@ body {
        3440px. 30vw holds the same 75% of the frame at every width, which is the
        composition Joe tuned.
 
-       max() rather than clamp(): the floor stops the band collapsing on tablets
-       between 769px and about 1200px, and there is deliberately NO ceiling,
-       because a ceiling is what reintroduces the ultrawide problem. */
-    height: max(360px, 30vw);
+       max() rather than clamp(): the 300px floor only engages below about
+       1090px, so it catches tablets and small laptops without overriding the
+       tuned proportion across the normal desktop range. There is deliberately
+       NO ceiling, because a ceiling is what reintroduces the ultrawide problem.
+
+       27.5vw / 71% were tuned by Joe against a full-bleed preview on his own
+       ultrawide, which is the only place these can be judged. */
+    height: max(300px, 27.5vw);
     z-index: 0;
     pointer-events: none;
 }
@@ -576,7 +580,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 75%;
+    object-position: center 71%;
     display: block;
 }
 
