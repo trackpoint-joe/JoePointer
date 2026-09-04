@@ -558,11 +558,16 @@ body {
 .hero-sky {
     position: absolute;
     inset: 0 0 auto 0;
-    /* Fixed rather than fluid, and phones get a taller band than desktop, which
-       looks backwards but is not. With object-fit: cover a 2.5:1 image covers a
-       wide box by width and a narrow box by height, so the two widths need
-       different framing. Values chosen by Joe against a live tuner, not derived. */
-    height: 400px;
+    /* PROPORTIONAL, not fixed. object-fit: cover scales the image by width, so
+       a fixed band height shows a smaller and smaller slice as the monitor gets
+       wider: a 400px band shows 76% of the photo at 1313px but only 29% at
+       3440px. 30vw holds the same 75% of the frame at every width, which is the
+       composition Joe tuned.
+
+       max() rather than clamp(): the floor stops the band collapsing on tablets
+       between 769px and about 1200px, and there is deliberately NO ceiling,
+       because a ceiling is what reintroduces the ultrawide problem. */
+    height: max(360px, 30vw);
     z-index: 0;
     pointer-events: none;
 }
