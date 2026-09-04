@@ -558,7 +558,10 @@ body {
 .hero-sky {
     position: absolute;
     inset: 0 0 auto 0;
-    height: clamp(300px, 42vw, 520px);
+    /* The floor matters more than the ceiling. Below about 380px the 2.5:1
+       image has to cover a nearly square box, so it crops to the middle half
+       and the peaks jam against the nav with no sky above them. */
+    height: clamp(380px, 46vw, 520px);
     z-index: 0;
     pointer-events: none;
 }
@@ -567,7 +570,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 42%;
+    object-position: center 20%; /* keeps sky above the peaks; 42% cropped it off */
     display: block;
 }
 
