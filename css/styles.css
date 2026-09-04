@@ -7,6 +7,17 @@
     --gold: #c9a961;
     --gold-light: #e4d4a8;
     --gold-dark: #8a6d2f; /* 4.9:1 on white — readable as text on light surfaces */
+
+    /* Dark hero surface. Named for role, not colour, so a theme can swap them.
+       --ink is deliberately deeper than --midnight: it matches the ground of
+       the portrait, so the photo dissolves into the section instead of sitting
+       on it as a visible square. */
+    --ink: #070a18;
+    --ink-rgb: 7, 10, 24;   /* same colour, usable inside rgba() gradients */
+    --ink-raised: #111629;
+    --ink-line: rgba(201, 169, 97, 0.22);
+    --on-dark: #eef1f7;
+    --on-dark-mid: #a8b2c4;
     --crimson: #b83a4b;
     --white: #ffffff;
     --off-white: #f8f9fa;
@@ -527,10 +538,54 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
+    background: var(--ink);
     padding: var(--space-2xl) var(--space-lg) var(--space-sm);
     position: relative;
     overflow: hidden;
+    isolation: isolate; /* keeps .hero-sky's stacking context out of the page's */
+}
+
+/* Mountain band. A single <img> layer rather than a background-image, so it
+   can be preloaded and carry real dimensions. The gradient does two jobs: the
+   horizontal pass keeps the left side dark enough for the portrait and the
+   headline to sit on, and the vertical pass dissolves the photograph into
+   --ink so there is no visible edge where the image stops.
+
+   The image is removable. Delete the .hero-sky element and the gradient still
+   paints a complete dark hero on its own. That matters because the same
+   pattern has to work in CareerPointer, where most people will never upload a
+   photograph. */
+.hero-sky {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: clamp(300px, 42vw, 520px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-sky img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+    display: block;
+}
+
+.hero-sky::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg,
+            rgba(var(--ink-rgb), 0.55) 0%,
+            rgba(var(--ink-rgb), 0.15) 55%,
+            rgba(var(--ink-rgb), 0) 100%),
+        linear-gradient(180deg,
+            rgba(var(--ink-rgb), 0.28) 0%,
+            rgba(var(--ink-rgb), 0.42) 32%,
+            rgba(var(--ink-rgb), 0.78) 62%,
+            rgba(var(--ink-rgb), 0.96) 86%,
+            var(--ink) 100%);
 }
 
 /* Decorative hero glow removed in the restraint pass — the gradient
@@ -571,7 +626,9 @@ body {
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
-    box-shadow: 0 20px 60px rgba(10, 14, 39, 0.2), 0 0 0 6px var(--white), 0 0 0 8px var(--accent, var(--gold));
+    /* Inner ring is --ink, not white. A white ring on a dark ground reads as a
+       halo cut around the head rather than a frame. */
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 0 5px var(--ink), 0 0 0 6px var(--accent, var(--gold));
     transition: all var(--transition-base);
     animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
 }
@@ -585,18 +642,20 @@ body {
     display: block;
 }
 
-.hero-headshot::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 60%, rgba(201, 169, 97, 0.1));
-    pointer-events: none;
-    z-index: 1;
-}
 
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+/* On the dark hero the eyebrow uses the LIGHT accent. --accent-dark is a
+   light-surface value: 4.9:1 on white but only 4.0:1 on ink. */
+.hero .category {
+    color: var(--accent-light, var(--gold-light));
+}
+
+.hero .category::before {
+    background: linear-gradient(90deg, var(--accent-light, var(--gold-light)), var(--accent, var(--gold)));
 }
 
 .category {
@@ -635,7 +694,8 @@ body {
     font-size: clamp(2.5rem, 5vw, 3.75rem);
     font-weight: 700;
     line-height: 1.1;
-    color: var(--primary, var(--midnight));
+    color: var(--white);
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55); /* headline crosses the bright snow */
     margin-bottom: var(--space-lg);
     letter-spacing: -0.03em;
     animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
@@ -643,17 +703,21 @@ body {
 
 .hero .tagline {
     font-size: clamp(1.25rem, 3vw, 1.75rem);
-    color: var(--text-mid);
+    color: var(--on-dark-mid);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
     margin-bottom: var(--space-md); /* Reduced from var(--space-xl) for tighter narrative flow */
     font-weight: 400;
     line-height: 1.5;
     animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
 }
 
+/* Hero-only: the single .value-prop lives inside .hero (index.html:181). */
 .value-prop {
     font-size: 1.125rem;
     line-height: 1.8;
-    color: var(--charcoal);
+    color: var(--on-dark);
+    border-left: 3px solid var(--accent, var(--gold));
+    padding-left: var(--space-md);
     margin-bottom: var(--space-xl);
     font-weight: 400;
     max-width: 70ch; /* keep the measure readable on wide screens */
@@ -831,6 +895,32 @@ body {
     letter-spacing: 0.02em;
 }
 
+/* Metric cards on the dark hero. Scoped to .hero so the light card survives if
+   .metric is ever reused on a light section. The number used a background-clip
+   gradient built from --primary and --prussian, both near-black, which is
+   invisible on ink; it becomes the light accent here. */
+.hero .metric {
+    background: var(--ink-raised);
+    border: 1px solid var(--ink-line);
+}
+
+.hero .metric:hover {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    border-color: var(--accent, var(--gold));
+}
+
+.hero .metric .number {
+    background: linear-gradient(135deg, var(--accent-light, var(--gold-light)), var(--accent, var(--gold)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero .metric .label {
+    color: var(--on-dark-mid);
+}
+
+
 /* CTA Buttons */
 .cta-group {
     display: flex;
@@ -907,6 +997,33 @@ body {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
+
+/* Secondary CTA on the dark hero. A solid white pill outshouts the gold
+   primary and inverts the intended hierarchy, so on ink it becomes a ghost
+   button. Scoped to .hero: the contact section still uses the white version.
+
+   Written as .btn.btn-secondary on purpose. Each vertical sets a flat
+   [data-industry="x"] .btn colour further down the file at the same
+   specificity, and source order would hand them the win, which painted both
+   hero CTAs the same solid accent. The doubled class outranks that. */
+.hero .btn.btn-secondary {
+    /* !important is required here, not preferred. Tech declares
+       [data-industry="tech"] .btn { background: ... !important } further down
+       the file, and !important outranks this rule's specificity no matter how
+       it is written. Removing that duplicate would let this rule win cleanly;
+       that cleanup was left out of scope for the hero pass. */
+    background: transparent !important;
+    color: var(--on-dark);
+    border-color: rgba(255, 255, 255, 0.28) !important;
+    box-shadow: none;
+}
+
+.hero .btn.btn-secondary:hover {
+    background: transparent !important;
+    color: var(--accent-light, var(--gold-light));
+    border-color: var(--accent-light, var(--gold-light)) !important;
+}
+
 
 .btn-accent {
     background: var(--accent, var(--gold));
@@ -2901,10 +3018,6 @@ body.menu-open .company-banner {
     color: #1a365d;
 }
 
-[data-industry="finance"] .hero {
-    background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
-}
-
 [data-industry="finance"] .availability-banner {
     background: linear-gradient(135deg, #1a365d, #2c5282);
 }
@@ -3022,10 +3135,6 @@ body.menu-open .company-banner {
     color: #0F172A;
 }
 
-[data-industry="tech"] .hero {
-    background: linear-gradient(135deg, #0A1E3D 0%, #1E40AF 100%);
-}
-
 [data-industry="tech"] .availability-banner {
     background: linear-gradient(135deg, #0A1E3D, #1E40AF);
 }
@@ -3138,11 +3247,6 @@ body.menu-open .company-banner {
     font-family: var(--font-heading);
     font-weight: 600;
     color: #1e293b;
-}
-
-[data-industry="consulting"] .hero {
-    background: linear-gradient(135deg, #334155 0%, #475569 100%);
-    color: #ffffff;
 }
 
 [data-industry="consulting"] .hero h1,
@@ -3266,10 +3370,6 @@ body.menu-open .company-banner {
     font-family: var(--font-heading);
     font-weight: 600;
     color: #003057;
-}
-
-[data-industry="healthcare"] .hero {
-    background: linear-gradient(135deg, #002677 0%, #0072CE 100%);
 }
 
 [data-industry="healthcare"] .availability-banner {
@@ -3539,15 +3639,6 @@ body:not([data-industry]) {
 
 /* CONSULTING TEMPLATE - Fix dark text on dark backgrounds */
 
-/* Hero section: Force white text on dark background */
-[data-industry="consulting"] .hero h1,
-[data-industry="consulting"] .hero h2,
-[data-industry="consulting"] .hero h3,
-[data-industry="consulting"] .hero .category,
-[data-industry="consulting"] .hero .tagline,
-[data-industry="consulting"] .hero .value-prop {
-    color: #ffffff !important;
-}
 
 /* Target Role section: Force white text on dark background */
 [data-industry="consulting"] .target-role h2,
@@ -3568,10 +3659,6 @@ body:not([data-industry]) {
     color: #ffffff !important;
 }
 
-/* Consulting: Hero is dark slate — body text must be white */
-[data-industry="consulting"] .hero {
-    color: #ffffff;
-}
 
 /* Consulting: Core Competencies h3 uses amber accent on dark hero */
 [data-industry="consulting"] .hero .expertise-keywords h3 {
@@ -3602,15 +3689,6 @@ body:not([data-industry]) {
 
 /* FINANCE TEMPLATE - Ensure white text on dark backgrounds */
 
-/* Hero section: Force white text */
-[data-industry="finance"] .hero h1,
-[data-industry="finance"] .hero h2,
-[data-industry="finance"] .hero h3,
-[data-industry="finance"] .hero .category,
-[data-industry="finance"] .hero .tagline,
-[data-industry="finance"] .hero .value-prop {
-    color: #ffffff !important;
-}
 
 /* Target Role section: Force white text */
 [data-industry="finance"] .target-role h2,
@@ -3639,10 +3717,6 @@ body:not([data-industry]) {
     border-color: rgba(218, 165, 32, 0.4);
 }
 
-/* Finance: Hero is dark navy — body text must be white */
-[data-industry="finance"] .hero {
-    color: #ffffff;
-}
 
 /* Finance: Core Competencies h3 should be gold on dark hero, not overridden to white */
 [data-industry="finance"] .hero .expertise-keywords h3 {
@@ -3668,15 +3742,6 @@ body:not([data-industry]) {
 
 /* TECH TEMPLATE - Ensure white text on dark backgrounds */
 
-/* Hero section: Force white text on purple/blue gradient */
-[data-industry="tech"] .hero h1,
-[data-industry="tech"] .hero h2,
-[data-industry="tech"] .hero h3,
-[data-industry="tech"] .hero .category,
-[data-industry="tech"] .hero .tagline,
-[data-industry="tech"] .hero .value-prop {
-    color: #ffffff !important;
-}
 
 /* Target Role section: Force white text */
 [data-industry="tech"] .target-role h2,
@@ -3692,10 +3757,6 @@ body:not([data-industry]) {
     color: #ffffff !important;
 }
 
-/* Tech: Hero is dark navy — body text must be white */
-[data-industry="tech"] .hero {
-    color: #ffffff;
-}
 
 /* Tech: Core Competencies h3 uses light accent blue on dark hero */
 [data-industry="tech"] .hero .expertise-keywords h3 {
@@ -3733,15 +3794,6 @@ body:not([data-industry]) {
 
 /* HEALTHCARE TEMPLATE - Ensure readable text on dark backgrounds */
 
-/* Hero section: Force white text on teal gradient */
-[data-industry="healthcare"] .hero h1,
-[data-industry="healthcare"] .hero h2,
-[data-industry="healthcare"] .hero h3,
-[data-industry="healthcare"] .hero .category,
-[data-industry="healthcare"] .hero .tagline,
-[data-industry="healthcare"] .hero .value-prop {
-    color: #ffffff !important;
-}
 
 /* Target Role section: Force white text */
 [data-industry="healthcare"] .target-role h2,
@@ -3757,10 +3809,6 @@ body:not([data-industry]) {
     color: #ffffff !important;
 }
 
-/* Healthcare: Hero is dark navy/blue — body text must be white */
-[data-industry="healthcare"] .hero {
-    color: #ffffff;
-}
 
 /* Healthcare: Core Competencies h3 uses light teal on dark hero */
 [data-industry="healthcare"] .hero .expertise-keywords h3 {
@@ -3810,6 +3858,13 @@ body:not([data-industry]) {
     color: #00A3AD !important;
 }
 
+/* The per-vertical .hero-headshot rings were removed 2026-09-03. Each one
+   hardcoded 0 0 0 6px #ffffff with !important, which kept the white ring on
+   healthcare, consulting and tech after the base rule moved to an ink ring.
+   Finance never had an override, which is why it was the only vertical that
+   looked right. The base rule already reads var(--accent), so every vertical
+   now gets its own colour from one place. */
+
 [data-industry="healthcare"] .section-header::after,
 [data-industry="healthcare"] .metric::before,
 [data-industry="healthcare"] .card::before,
@@ -3817,28 +3872,46 @@ body:not([data-industry]) {
     background: linear-gradient(90deg, #002677, #0072CE, #00A3AD) !important;
 }
 
-/* ========================================
-   PREMIUM GRADIENT POLISH: Smoother Transitions
-   ======================================== */
+/* ==========================================================================
+   INDUSTRY HERO SURFACES  (collapsed 2026-09-03)
+   --------------------------------------------------------------------------
+   Was three generations of overrides fighting each other, two of them using
+   !important. Consolidated here with no !important so the surface can be
+   themed by a token. Values below are the ones that were WINNING the cascade
+   before the collapse, so this is behaviour-preserving.
 
-/* Finance: Luxurious three-stop gradient */
-[data-industry="finance"] .hero {
-    background: linear-gradient(135deg, #1a365d 0%, #234272 35%, #2c5282 100%) !important;
-}
+   Note on tech: the three-stop gradient in the old "premium gradient polish"
+   pass never rendered. A later rule re-declared the two-stop version, also
+   !important, and won on source order. The two-stop value is kept because
+   that is what the site has actually been showing.
 
-/* Tech: Modern blue monochrome gradient */
-[data-industry="tech"] .hero {
-    background: linear-gradient(135deg, #0A1E3D 0%, #1E40AF 50%, #3B82F6 100%) !important;
-}
+   The text rule below keeps !important, and it is load-bearing. A site-wide
+   rule ([data-industry="healthcare"] .category, further up) paints .category
+   teal with !important, and the hero's white used to beat it only by being a
+   later !important. Drop it and the healthcare eyebrow turns teal on the dark
+   hero. Verified by pixel diff, not assumed.
+   ========================================================================== */
 
-/* Consulting: Subtle grey gradient */
-[data-industry="consulting"] .hero {
-    background: linear-gradient(135deg, #334155 0%, #3d4f65 50%, #475569 100%) !important;
-}
+/* No per-vertical hero background. Every vertical uses --ink, set on .hero.
+   Decision, 2026-09-03: one magic link is seen by roughly one named person, so
+   four bespoke hero surfaces buy almost nothing and cost four times the
+   maintenance. Tinting the overlay toward teal or blue also fights the amber
+   in the photograph and reads as a colour cast rather than a theme. The
+   vertical still shows through the accent on the ring, the eyebrow, and the
+   value-prop border. */
 
-/* Healthcare: Professional blue gradient */
+[data-industry="finance"] .hero,
+[data-industry="tech"] .hero,
+[data-industry="consulting"] .hero,
 [data-industry="healthcare"] .hero {
-    background: linear-gradient(135deg, #002677 0%, #004BA8 50%, #0072CE 100%) !important;
+    color: #ffffff;
+}
+
+[data-industry="finance"] .hero :is(h1, h2, h3, .category, .tagline, .value-prop),
+[data-industry="tech"] .hero :is(h1, h2, h3, .category, .tagline, .value-prop),
+[data-industry="consulting"] .hero :is(h1, h2, h3, .category, .tagline, .value-prop),
+[data-industry="healthcare"] .hero :is(h1, h2, h3, .category, .tagline, .value-prop) {
+    color: #ffffff !important;
 }
 
 /* ========================================
@@ -3951,14 +4024,6 @@ body:not([data-industry]) {
 }
 
 /* 12. HERO ELEMENTS */
-[data-industry="healthcare"] .hero-headshot {
-    box-shadow: 0 20px 60px rgba(0, 114, 206, 0.2), 0 0 0 6px #ffffff, 0 0 0 8px #00A3AD !important;
-}
-
-[data-industry="healthcare"] .hero-headshot:hover {
-    box-shadow: 0 24px 80px rgba(0, 114, 206, 0.25), 0 0 0 6px #ffffff, 0 0 0 8px #00A3AD !important;
-}
-
 /* 13. TARGET ROLE LIST ITEMS */
 [data-industry="healthcare"] .target-role li::before {
     background: linear-gradient(90deg, #008B94, #00A3AD) !important;
@@ -4135,25 +4200,22 @@ body:not([data-industry]) {
     color: #f59e0b !important;
 }
 
-[data-industry="consulting"] .hero-headshot {
-    box-shadow: 0 20px 60px rgba(51, 65, 85, 0.2), 0 0 0 6px #ffffff, 0 0 0 8px #d97706 !important;
-}
-
-[data-industry="consulting"] .hero-headshot:hover {
-    box-shadow: 0 24px 80px rgba(51, 65, 85, 0.25), 0 0 0 6px #ffffff, 0 0 0 8px #d97706 !important;
-}
-
 /* ========================================
    TECH TEMPLATE - MODERN BLUE MONOCHROME
    Professional, Executive, Unified
    ======================================== */
 
-/* Modern blue gradient - sophisticated and cohesive */
-[data-industry="tech"] .hero {
-    background: linear-gradient(135deg, #0A1E3D 0%, #1E40AF 100%) !important;
-}
 
 /* Solid modern blue buttons */
+/* Duplicate of the plain tech button block further up, differing only by
+   !important. It is redundant and a candidate for removal, but removal was NOT
+   attempted here: this pass was scoped to the hero, and the hero rule outranks
+   it explicitly instead.
+
+   If you do remove it, verify with REPEATED renders. The project-subnav active
+   pill is set by JS scroll tracking and races screenshot capture, so a single
+   before/after comparison of this page produces false positives. Measured
+   2026-09-03: six identical runs produced two different pill states. */
 [data-industry="tech"] .btn-primary,
 [data-industry="tech"] .btn {
     background: #3B82F6 !important;
@@ -4165,6 +4227,7 @@ body:not([data-industry]) {
     background: #2563EB !important;
     transform: translateY(-1px) !important;
 }
+
 
 /* Modern blue inline styles */
 [data-industry="tech"] strong[style*="color: var(--gold)"],
@@ -4205,14 +4268,6 @@ body:not([data-industry]) {
 }
 
 /* Hero headshot - blue accent */
-[data-industry="tech"] .hero-headshot {
-    box-shadow: 0 20px 60px rgba(30, 64, 175, 0.2), 0 0 0 6px #ffffff, 0 0 0 8px #3B82F6 !important;
-}
-
-[data-industry="tech"] .hero-headshot:hover {
-    box-shadow: 0 24px 80px rgba(30, 64, 175, 0.25), 0 0 0 6px #ffffff, 0 0 0 8px #3B82F6 !important;
-}
-
 /* Target role list - blue gradient */
 [data-industry="tech"] .target-role li::before {
     background: linear-gradient(90deg, #2563EB, #3B82F6) !important;
@@ -4456,6 +4511,16 @@ input:focus-visible {
     color: var(--accent-dark, var(--gold-dark));
 }
 
+/* --text-mid is a light-surface grey and falls under 4.5:1 on ink. */
+.hero .ask-joe-inline {
+    color: var(--on-dark-mid);
+}
+
+.hero .ask-joe-inline:hover {
+    color: var(--accent-light, var(--gold-light));
+}
+
+
 .ask-joe-inline svg {
     width: 15px;
     height: 15px;
@@ -4524,3 +4589,485 @@ input:focus-visible {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================================
+   OPERATIONS & FIELD SERVICES TEMPLATE
+   Added 2026-09-03. Covers home services, energy/utilities,
+   manufacturing, logistics and distribution.
+   Warm graphite primary (deliberately not blue, since finance,
+   tech and healthcare all run blue) with safety orange accent
+   (deliberately not amber, which consulting owns).
+   Contrast: #c2410c on white 5.18:1 (AA). #ea580c is a BACKGROUND
+   colour only; white on it is 3.56:1 and fails, dark text is 4.92:1.
+   ============================================================ */
+
+
+[data-industry="operations"] .nav .quick-links a.active {
+    color: #292524;
+}
+
+
+[data-industry="operations"] .nav .quick-links a.active::after {
+    background: linear-gradient(90deg, #ea580c, #fb923c);
+}
+
+
+    [data-industry="operations"] .nav .quick-links a.active {
+        background: rgba(234, 88, 12, 0.15);
+        color: #c2410c;
+        border-left-color: #ea580c;
+    }
+
+
+/* Template: Operations & Field Services - Warm Graphite + Safety Orange*/
+[data-industry="operations"] {
+    --primary: #292524;
+    --secondary: #57534e;
+    --accent: #ea580c;
+    --accent-dark: #c2410c;
+    --accent-light: #fb923c;
+    --bg-primary: #fafaf9;
+    --bg-secondary: #f5f5f4;
+    --text-primary: #1c1917;
+    --text-secondary: #57534e;
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+
+/* Operations runs a WARM dark hero, not the default cool ink. The whole
+   identity of this template is warm graphite, and the amber in the mountain
+   photograph sits better on it than on the blue-black default. These are the
+   template's own graphite values pulled down to hero depth. */
+[data-industry="operations"] {
+    --ink: #14110f;
+    --ink-rgb: 20, 17, 15;
+    --ink-raised: #221d1a;
+    --ink-line: rgba(234, 88, 12, 0.22);
+}
+
+/* Operations: Apply to entire page */
+[data-industry="operations"] {
+    background: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 100%);
+}
+
+
+[data-industry="operations"] h1,
+[data-industry="operations"] h2,
+[data-industry="operations"] h3 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #1c1917;
+}
+
+
+/* Operations uses --ink like every other vertical. The three hero-background
+   generations this template was cloned with (plain, then two !important
+   copies) were removed 2026-09-03. The vertical shows through --accent on the
+   ring, eyebrow, value-prop border, metric numbers and primary button. */
+
+
+[data-industry="operations"] .availability-banner {
+    background: linear-gradient(135deg, #292524, #57534e);
+}
+
+
+[data-industry="operations"] .project-badge,
+[data-industry="operations"] .seeking-label {
+    background: rgba(234, 88, 12, 0.1);
+    border-color: rgba(234, 88, 12, 0.3);
+    color: #c2410c;
+}
+
+
+    [data-industry="operations"] .project-subnav-pill:hover { color: #ffffff !important; }
+
+
+[data-industry="operations"] .project-subnav-pill.active {
+    color: #ffffff !important;
+}
+
+
+[data-industry="operations"] .btn-primary,
+[data-industry="operations"] .btn {
+    background: #ea580c;
+    border-color: #ea580c;
+}
+
+
+[data-industry="operations"] .btn-primary:hover,
+[data-industry="operations"] .btn:hover {
+    background: #c2410c;
+    transform: translateY(-1px);
+}
+
+
+[data-industry="operations"] .project-card,
+[data-industry="operations"] .trust-card,
+[data-industry="operations"] .principle-card {
+    background: #ffffff;
+    border-color: rgba(41, 37, 36, 0.1);
+    border-radius: 16px;
+}
+
+
+[data-industry="operations"] .project-card:hover,
+[data-industry="operations"] .trust-card:hover,
+[data-industry="operations"] .principle-card:hover {
+    border-color: rgba(234, 88, 12, 0.3);
+    box-shadow: 0 8px 24px rgba(234, 88, 12, 0.15);
+    transform: translateY(-2px);
+}
+
+
+[data-industry="operations"] .metric-number,
+[data-industry="operations"] .impact-number {
+    color: #c2410c;
+}
+
+
+[data-industry="operations"] .section-header h2 {
+    color: #292524;
+}
+
+
+[data-industry="operations"] a:not(.btn) {
+    color: #c2410c;
+}
+
+
+[data-industry="operations"] a:not(.btn):hover {
+    color: #c2410c;
+}
+
+
+[data-industry="operations"] .project-metrics {
+    background: rgba(234, 88, 12, 0.08);
+    border: 1px solid rgba(234, 88, 12, 0.15);
+}
+
+
+[data-industry="operations"] .scroll-progress-bar {
+    background: linear-gradient(90deg, #292524, #ea580c);
+}
+
+
+/* Expandable details chevrons */
+[data-industry="operations"] .principle-details summary::before {
+    color: #c2410c !important;
+    background: rgba(234, 88, 12, 0.1) !important;
+}
+
+
+[data-industry="operations"] .principle-details summary:hover::before {
+    background: rgba(234, 88, 12, 0.2) !important;
+}
+
+
+[data-industry="operations"] .principle-details:hover {
+    border-color: #ea580c !important;
+}
+
+
+[data-industry="operations"] .company-banner {
+    background: linear-gradient(135deg, rgba(41, 37, 36, 0.98), rgba(87, 83, 78, 0.98));
+    border-bottom-color: #ea580c;
+}
+
+
+[data-industry="operations"] .hero-personalization {
+    background: linear-gradient(135deg, rgba(234, 88, 12, 0.12), rgba(234, 88, 12, 0.06));
+    border-color: #ea580c;
+}
+
+
+/* TECH TEMPLATE - Ensure white text on dark backgrounds */
+
+/* Hero section: force white text on the graphite gradient */
+[data-industry="operations"] .hero h1,
+[data-industry="operations"] .hero h2,
+[data-industry="operations"] .hero h3,
+[data-industry="operations"] .hero .category,
+[data-industry="operations"] .hero .tagline,
+[data-industry="operations"] .hero .value-prop {
+    color: #ffffff !important;
+}
+
+
+/* Target Role section: Force white text */
+[data-industry="operations"] .target-role h2,
+[data-industry="operations"] .target-role h3 {
+    color: #ffffff !important;
+}
+
+
+/* Section-dark: Ensure all headings are white */
+[data-industry="operations"] .section-dark h1,
+[data-industry="operations"] .section-dark h2,
+[data-industry="operations"] .section-dark h3,
+[data-industry="operations"] .section-dark .section-header h2 {
+    color: #ffffff !important;
+}
+
+
+/* Operations: Hero is dark navy — body text must be white */
+[data-industry="operations"] .hero {
+    color: #ffffff;
+}
+
+
+/* Operations: Core Competencies h3 uses light accent orange on dark hero */
+[data-industry="operations"] .hero .expertise-keywords h3 {
+    color: #fb923c !important;
+}
+
+
+[data-industry="operations"] .hero .expertise-keywords div {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+
+[data-industry="operations"] .hero .expertise-keywords {
+    border-color: rgba(234, 88, 12, 0.3) !important;
+}
+
+
+/* Operations: Seeking label in target-role needs light color, not dark orange (#c2410c) */
+[data-industry="operations"] .target-role .seeking-label {
+    color: #fdba74;
+    background: rgba(234, 88, 12, 0.2);
+    border-color: rgba(234, 88, 12, 0.5);
+}
+
+
+/* Operations: Project card headers have dark gradient — force white text */
+[data-industry="operations"] .project-header h1,
+[data-industry="operations"] .project-header h2,
+[data-industry="operations"] .project-header h3 {
+    color: #ffffff !important;
+}
+
+
+[data-industry="operations"] .project-header .project-badge {
+    color: #fdba74;
+    background: rgba(253, 186, 116, 0.15);
+    border-color: rgba(253, 186, 116, 0.35);
+}
+
+
+/* Operations: warm graphite gradient */
+
+/* ========================================
+   COMPREHENSIVE OPERATIONS TEMPLATE OVERRIDES
+   Graphite + Safety Orange + Cyan Throughout
+   ======================================== */
+
+/* All inline styles forced to Tech colors */
+[data-industry="operations"] strong[style*="color: var(--gold)"],
+[data-industry="operations"] span[style*="color: var(--gold)"] {
+    color: #c2410c !important;
+}
+
+
+[data-industry="operations"] strong[style*="color: var(--gold-dark)"],
+[data-industry="operations"] span[style*="color: var(--gold-dark)"] {
+    color: #c2410c !important;
+}
+
+
+[data-industry="operations"] .timeline-marker {
+    background: linear-gradient(135deg, #292524, #57534e) !important;
+    color: #c2410c !important;
+    box-shadow: 0 8px 24px rgba(87, 83, 78, 0.3), 0 0 0 4px #ffffff, 0 0 0 6px #ea580c !important;
+}
+
+
+[data-industry="operations"] .manifesto-section h3,
+[data-industry="operations"] .manifesto-list li.right::before,
+[data-industry="operations"] .manifesto-truth .highlight,
+[data-industry="operations"] .outcome-card .month,
+[data-industry="operations"] .final-outcome h3 {
+    color: #c2410c !important;
+}
+
+
+[data-industry="operations"] .contact-item a {
+    color: #ffffff !important;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+
+[data-industry="operations"] .contact-item a:hover {
+    color: #fb923c !important;
+}
+
+
+/* ========================================
+   OPERATIONS TEMPLATE - WARM GRAPHITE + SAFETY ORANGE
+   Professional, Executive, Unified
+   ======================================== */
+
+/* Graphite gradient - sophisticated and cohesive */
+
+/* Solid safety orange buttons */
+[data-industry="operations"] .btn-primary,
+[data-industry="operations"] .btn {
+    background: #ea580c !important;
+    border-color: #ea580c !important;
+}
+
+
+[data-industry="operations"] .btn-primary:hover,
+[data-industry="operations"] .btn:hover {
+    background: #c2410c !important;
+    transform: translateY(-1px) !important;
+}
+
+
+/* Orange inline styles */
+[data-industry="operations"] strong[style*="color: var(--gold)"],
+[data-industry="operations"] span[style*="color: var(--gold)"] {
+    color: #c2410c !important;
+}
+
+
+[data-industry="operations"] strong[style*="color: var(--gold-dark)"],
+[data-industry="operations"] span[style*="color: var(--gold-dark)"] {
+    color: #c2410c !important;
+}
+
+
+/* Timeline markers - safety orange */
+[data-industry="operations"] .timeline-marker {
+    background: #292524 !important;
+    color: #c2410c !important;
+    box-shadow: 0 4px 12px rgba(41, 37, 36, 0.2), 0 0 0 4px #ffffff, 0 0 0 6px #ea580c !important;
+}
+
+
+/* Manifesto section - safety orange accent */
+[data-industry="operations"] .manifesto-section h3,
+[data-industry="operations"] .manifesto-list li.right::before,
+[data-industry="operations"] .manifesto-truth .highlight,
+[data-industry="operations"] .outcome-card .month,
+[data-industry="operations"] .final-outcome h3 {
+    color: #c2410c !important;
+}
+
+
+/* Contact readability */
+[data-industry="operations"] .contact-item a {
+    color: #ffffff !important;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+
+[data-industry="operations"] .contact-item a:hover {
+    color: #fb923c !important;
+}
+
+
+/* Hero headshot - orange accent */
+/* The white .hero-headshot ring was removed here for the same reason it was
+   removed from healthcare, consulting and tech: the base rule paints an ink
+   ring with var(--accent) and serves every vertical from one place. */
+
+
+/* Target role list - orange gradient */
+[data-industry="operations"] .target-role li::before {
+    background: linear-gradient(90deg, #c2410c, #ea580c) !important;
+}
+
+
+[data-industry="operations"] .target-role li:hover {
+    color: #fb923c !important;
+}
+
+
+/* Availability banner - safety orange */
+[data-industry="operations"] .availability-banner .status-badge {
+    background: #c2410c !important;
+    color: #FFFFFF !important;
+}
+
+
+[data-industry="operations"] .availability-banner .headline {
+    color: #ffffff !important;
+}
+
+
+/* Metrics - solid safety orange */
+[data-industry="operations"] .metric-number,
+[data-industry="operations"] .impact-number {
+    color: #c2410c !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    background-clip: unset !important;
+}
+
+
+/* Professional card effects - graphite monochrome */
+[data-industry="operations"] .card::before,
+[data-industry="operations"] .principle-card::before {
+    background: #ea580c !important;
+}
+
+
+[data-industry="operations"] .metric::before,
+[data-industry="operations"] .trust-card::before {
+    background: linear-gradient(90deg, #c2410c, #ea580c) !important;
+}
+
+
+/* Principle elements - orange accent */
+[data-industry="operations"] .principle-layer-label {
+    color: #c2410c !important;
+}
+
+
+[data-industry="operations"] .principle-details summary {
+    color: #c2410c !important;
+}
+
+
+[data-industry="operations"] .principle-details summary::before {
+    color: #c2410c !important;
+    background: rgba(234, 88, 12, 0.1) !important;
+}
+
+
+[data-industry="operations"] .principle-details summary:hover {
+    color: #c2410c !important;
+}
+
+
+[data-industry="operations"] .principle-details summary:hover::before {
+    background: rgba(234, 88, 12, 0.2) !important;
+}
+
+
+[data-industry="operations"] .principle-details:hover {
+    border-color: #ea580c !important;
+}
+
+
+/* Company banner - deep graphite */
+[data-industry="operations"] .company-banner {
+    background: #292524 !important;
+    border-bottom-color: #ea580c !important;
+}
+
+
+[data-industry="operations"] .company-banner-label {
+    color: #fb923c !important;
+}
+
+
+    [data-industry="operations"] .nav .quick-links a:hover {
+        background: rgba(234, 88, 12, 0.15) !important;
+        color: #c2410c !important;
+    }

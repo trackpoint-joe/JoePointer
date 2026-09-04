@@ -15,8 +15,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=20260720a">
-    <link rel="preload" as="image" href="images/headshot.jpg">
+    <link rel="stylesheet" href="css/styles.css?v=20260903">
+    <link rel="preload" as="image" href="images/headshot-dark.jpg?v=20260903">
+    <link rel="preload" as="image" href="images/hero-mountains.jpg?v=20260903" fetchpriority="high">
 
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-S4KF5KL8C5"></script>
@@ -42,7 +43,7 @@
     <meta property="og:url" content="https://joepointer.com/">
     <meta property="og:title" content="Joe Pointer | AI Adoption & Workforce Transformation Leader">
     <meta property="og:description" content="AI adoption and workforce transformation leader. Led AI career platform rolled out to 16,000+ associates. Bridging AI capability and real workforce change.">
-    <meta property="og:image" content="https://joepointer.com/images/social-share-wide.jpg?v=2">
+    <meta property="og:image" content="https://joepointer.com/images/social-share-wide.jpg?v=3">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/jpeg">
@@ -53,7 +54,7 @@
     <meta name="twitter:url" content="https://joepointer.com/">
     <meta name="twitter:title" content="Joe Pointer | AI Adoption & Workforce Transformation Leader">
     <meta name="twitter:description" content="AI adoption and workforce transformation leader. Led AI career platform rolled out to 16,000+ associates.">
-    <meta name="twitter:image" content="https://joepointer.com/images/social-share-wide.jpg?v=2">
+    <meta name="twitter:image" content="https://joepointer.com/images/social-share-wide.jpg?v=3">
     <meta name="twitter:image:alt" content="Joe Pointer, AI Adoption and Workforce Transformation, available now, joepointer.com">
 
     <!-- Schema.org Structured Data -->
@@ -89,7 +90,7 @@
                 },
                 "description": "AI adoption and workforce transformation leader helping organizations bridge the gap between AI investment and real workforce change",
                 "url": "https://joepointer.com",
-                "image": "https://joepointer.com/images/headshot.jpg",
+                "image": "https://joepointer.com/images/headshot-dark.jpg?v=20260903",
                 "email": "mailto:joe@joepointer.com",
                 "address": {
                     "@type": "PostalAddress",
@@ -164,6 +165,12 @@
 
     <!-- Hero Section -->
     <section class="hero" id="top">
+        <!-- Mountain band. Decorative, so aria-hidden and an empty alt: it carries
+             no information a screen reader needs. Removing this element leaves a
+             complete dark hero behind it. -->
+        <div class="hero-sky" aria-hidden="true">
+            <img src="images/hero-mountains.jpg?v=20260903" alt="" width="1920" height="768" fetchpriority="high" decoding="async">
+        </div>
         <div class="container">
             <div class="hero-header">
                 <div class="hero-text">
@@ -174,7 +181,7 @@
 
                 <!-- Professional Headshot -->
                 <div class="hero-headshot">
-                    <img src="images/headshot.jpg" alt="Joe Pointer - AI Adoption and Workforce Transformation Leader" width="800" height="800" fetchpriority="high">
+                    <img src="images/headshot-dark.jpg?v=20260903" alt="Joe Pointer - AI Adoption and Workforce Transformation Leader" width="800" height="800" fetchpriority="high">
                 </div>
             </div>
 
@@ -481,7 +488,7 @@
                                 <h4 style="margin: var(--space-xl) 0 var(--space-md) 0; color: var(--text-primary);">Impact</h4>
                                 <ul style="margin: var(--space-md) 0; padding-left: var(--space-lg); line-height: 1.8;">
                                     <li><strong>3,000+ associates</strong> transitioned through multiple office/seating changes without major disruption</li>
-                                    <li><strong>44% real estate efficiency</strong> achieved through hoteling adoption and space optimization across locations</li>
+                                    <li><strong>44% real estate efficiency</strong> in Denver, achieved through hoteling adoption and space optimization</li>
                                     <li><strong>Multi-million dollar modernization investments</strong> delivered on time and on strategy</li>
                                     <li><strong>6 locations</strong> successfully modernized or consolidated</li>
                                     <li><strong>Maintained morale</strong> through unprecedented change, no retention crisis despite high-stakes transitions</li>
@@ -1106,7 +1113,7 @@
                             <strong style="color: var(--gold-dark);">Manager Guide:</strong> Built with Amazon Q Developer in one week compared to what would have taken months using traditional development methodologies.
                         </li>
                         <li style="padding: var(--space-xs) 0; line-height: 1.8;">
-                            <strong style="color: var(--gold-dark);">Workplace Transformation:</strong> 44% real estate efficiency across 6 locations without retention crisis
+                            <strong style="color: var(--gold-dark);">Workplace Transformation:</strong> modernization across 6 locations, and 44% real estate efficiency in Denver, without retention crisis
                         </li>
                         <li style="padding: var(--space-xs) 0; line-height: 1.8;">
                             <strong style="color: var(--gold-dark);">Recognition:</strong> 5 enterprise awards for transformation leadership
@@ -1712,7 +1719,7 @@
         <span class="ask-joe-float-label">Ask Joe</span>
         <!-- alt is empty on purpose: the button's aria-label already names this
              control, so alt text here would make screen readers announce it twice. -->
-        <img class="ask-joe-float-avatar" src="images/headshot.jpg" alt="" width="36" height="36" decoding="async">
+        <img class="ask-joe-float-avatar" src="images/headshot-dark-avatar.jpg?v=20260903" alt="" width="36" height="36" decoding="async">
     </button>
 
     <!-- ========================================
@@ -1755,6 +1762,15 @@
                     <span class="template-note">Blue Monochrome</span>
                 </button>
 
+                <button class="template-btn" data-template="operations">
+                    <span class="template-name">Operations &amp; Field Services</span>
+                    <span class="template-colors">
+                        <span style="background: #292524;"></span>
+                        <span style="background: #ea580c;"></span>
+                    </span>
+                    <span class="template-note">Graphite &amp; Safety Orange</span>
+                </button>
+
                 <button class="template-btn" data-template="consulting">
                     <span class="template-name">Consulting ✓</span>
                     <span class="template-colors">
@@ -1790,7 +1806,7 @@
     <div id="chatPanel" class="chat-panel" aria-hidden="true" role="dialog" aria-label="Ask Joe">
         <div class="chat-header">
             <div class="chat-header-id">
-                <img class="chat-header-avatar" src="images/headshot.jpg" alt="" width="40" height="40" loading="lazy" decoding="async">
+                <img class="chat-header-avatar" src="images/headshot-dark-avatar.jpg?v=20260903" alt="" width="40" height="40" loading="lazy" decoding="async">
                 <div class="chat-header-text">
                     <span class="chat-title">Ask Joe</span>
                     <span class="chat-subtitle">Powered by Claude AI</span>
@@ -2109,7 +2125,7 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            object-position: center top; /* headshots crop better from the top */
+            object-position: center center; /* tight crop is already centred on the face */
             flex-shrink: 0;
             border: 2px solid rgba(201,169,97,0.55); /* fallback for pre-color-mix browsers */
             border: 2px solid color-mix(in srgb, var(--accent, #c9a961) 55%, transparent);
@@ -2463,7 +2479,7 @@
             const companyResume = companyProfile && companyProfile.resume;
 
             const industryParam = params.get('industry');
-            const validIndustries = ['finance', 'tech', 'energy', 'consulting', 'healthcare'];
+            const validIndustries = ['finance', 'tech', 'energy', 'operations', 'consulting', 'healthcare'];
 
             let matched = null;
             // Employer profile industry takes top priority
@@ -2479,7 +2495,7 @@
             if (!matched) return;
 
             // Map industry to visual CSS template (energy uses tech styling)
-            const visualTemplate = { energy: 'tech' };
+            const visualTemplate = { energy: 'operations' };
             document.body.setAttribute('data-industry', visualTemplate[matched] || matched);
 
             const resumeMap = {

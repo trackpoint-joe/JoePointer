@@ -106,7 +106,8 @@ var employerProfiles = {
     'digital-realty': { industry: 'tech', company: 'Digital Realty', welcome: '', resume: 'resources/Joe_Pointer_Resume_Digital_Realty.pdf' },
     'one-call': { industry: 'healthcare', company: 'One Call', welcome: '', resume: 'resources/Joe_Pointer_Resume_One_Call.pdf' },
     'janus-henderson': { industry: 'finance', company: 'Janus Henderson', welcome: '', resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
-    'tifin': { industry: 'finance', company: 'TIFIN', welcome: '', resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' }
+    'tifin': { industry: 'finance', company: 'TIFIN', welcome: '', resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' },
+    'express-flooring': { industry: 'operations', company: 'Express Flooring', welcome: '', resume: 'resources/Joe_Pointer_Resume_Express_Flooring.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
@@ -163,10 +164,16 @@ function applyIndustryTemplate() {
         };
     }
 
+    // Industries with no palette of their own that borrow another's.
+    // Added 2026-09-03: 'energy' had an alias in index.html that never reached
+    // this code path, so ?industry=energy rendered with no template at all.
+    const VISUAL_TEMPLATE = { energy: 'operations' };
+
     if (profile) {
         // Apply industry template
         if (profile.industry) {
-            document.body.setAttribute('data-industry', profile.industry);
+            const visual = VISUAL_TEMPLATE[profile.industry] || profile.industry;
+            document.body.setAttribute('data-industry', visual);
         }
 
         // Serve company-specific resume when available, else industry default
