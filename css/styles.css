@@ -558,10 +558,11 @@ body {
 .hero-sky {
     position: absolute;
     inset: 0 0 auto 0;
-    /* The floor matters more than the ceiling. Below about 380px the 2.5:1
-       image has to cover a nearly square box, so it crops to the middle half
-       and the peaks jam against the nav with no sky above them. */
-    height: clamp(380px, 46vw, 520px);
+    /* Fixed rather than fluid, and phones get a taller band than desktop, which
+       looks backwards but is not. With object-fit: cover a 2.5:1 image covers a
+       wide box by width and a narrow box by height, so the two widths need
+       different framing. Values chosen by Joe against a live tuner, not derived. */
+    height: 400px;
     z-index: 0;
     pointer-events: none;
 }
@@ -570,10 +571,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Desktop, Joe's call after seeing 15 / 20 / 30 side by side. Lower values
-       sit the range lower in the frame and show more sky. Phones take a
-       different value, see the query below. */
-    object-position: center 15%;
+    object-position: center 75%;
     display: block;
 }
 
@@ -581,8 +579,12 @@ body {
    2.5:1 image covers a much squarer box and the framing behaves differently
    from desktop at the same percentage. */
 @media (max-width: 768px) {
+    .hero-sky {
+        height: 520px;
+    }
+
     .hero-sky img {
-        object-position: center 20%;
+        object-position: center -50%;
     }
 }
 
