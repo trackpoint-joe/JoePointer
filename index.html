@@ -2549,6 +2549,15 @@
     }
 
     // Open / close
+    // Pulling focus into the input summons the on-screen keyboard on touch
+    // devices, which covers the welcome message on open and covers the reply
+    // after a send. Only take focus where a keyboard is already present.
+    // Dictation is exempt: the visitor asked for the input, so the keyboard
+    // appearing there is the expected result of their own action.
+    function shouldAutofocusInput() {
+        return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    }
+
     function openChat() {
         const panel = document.getElementById('chatPanel');
         const overlay = document.getElementById('chatOverlay');
@@ -2561,7 +2570,7 @@
         setTimeout(() => {
             const area = document.getElementById('chatMessages');
             if (area) area.scrollTop = area.scrollHeight;
-            document.getElementById('chatInput')?.focus();
+            if (shouldAutofocusInput()) document.getElementById('chatInput')?.focus();
         }, 350);
     }
 
@@ -2753,7 +2762,7 @@
             console.error('Chat error:', err);
         } finally {
             document.getElementById('chatSend').disabled = false;
-            document.getElementById('chatInput').focus();
+            if (shouldAutofocusInput()) document.getElementById('chatInput').focus();
         }
     }
 
