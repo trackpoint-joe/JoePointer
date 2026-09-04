@@ -683,8 +683,12 @@ body {
 
 .hero-headshot {
     position: relative;
-    width: 200px;
-    height: 200px;
+    /* Scales on wide screens only. The container is capped at 1400px while the
+       photo band is 27.5vw, so a fixed 200px portrait went from 55% of the band
+       at 1313px to 21% at 3440px and started reading as incidental. The 200px
+       floor means every width from ~1310px down, phones included, is unchanged. */
+    width: clamp(200px, 7.5vw, 280px);
+    height: clamp(200px, 7.5vw, 280px);
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
