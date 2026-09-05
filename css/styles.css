@@ -1391,7 +1391,13 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: var(--accent, var(--gold));
+    /* White, not the accent. At 12px/700 this is small text, so it needs 4.5:1.
+       The accent failed on five of six templates against the marker's own
+       gradient: tech 2.98, operations 3.08, consulting 3.25, finance 3.37,
+       healthcare 3.57. Only default cleared it, at 4.87. White scores 10.35 or
+       better everywhere, and the template identity is already carried by the
+       gradient behind it. */
+    color: #ffffff;
     font-weight: 700;
     font-size: 0.75rem;
     text-align: center;
@@ -4066,12 +4072,6 @@ body:not([data-industry]) {
 }
 
 /* 8. TIMELINE MARKERS */
-[data-industry="healthcare"] .timeline-marker {
-    background: linear-gradient(135deg, #002677, #0072CE) !important;
-    color: #00A3AD !important;
-    box-shadow: 0 8px 24px rgba(0, 114, 206, 0.3), 0 0 0 4px #ffffff, 0 0 0 6px #00A3AD !important;
-}
-
 /* 9. MANIFESTO ELEMENTS */
 [data-industry="healthcare"] .manifesto-section h3 {
     color: #00A3AD !important;
@@ -4213,12 +4213,6 @@ body:not([data-industry]) {
     color: #2563EB !important;
 }
 
-[data-industry="tech"] .timeline-marker {
-    background: linear-gradient(135deg, #0A1E3D, #1E40AF) !important;
-    color: #3B82F6 !important;
-    box-shadow: 0 8px 24px rgba(30, 64, 175, 0.3), 0 0 0 4px #ffffff, 0 0 0 6px #3B82F6 !important;
-}
-
 [data-industry="tech"] .manifesto-section h3,
 [data-industry="tech"] .manifesto-list li.right::before,
 [data-industry="tech"] .manifesto-truth .highlight,
@@ -4251,12 +4245,6 @@ body:not([data-industry]) {
 [data-industry="consulting"] strong[style*="color: var(--gold-dark)"],
 [data-industry="consulting"] span[style*="color: var(--gold-dark)"] {
     color: #c2410c !important;
-}
-
-[data-industry="consulting"] .timeline-marker {
-    background: linear-gradient(135deg, #334155, #475569) !important;
-    color: #d97706 !important;
-    box-shadow: 0 8px 24px rgba(51, 65, 85, 0.3), 0 0 0 4px #ffffff, 0 0 0 6px #d97706 !important;
 }
 
 [data-industry="consulting"] .manifesto-section h3,
@@ -4318,12 +4306,6 @@ body:not([data-industry]) {
 }
 
 /* Timeline markers - modern blue */
-[data-industry="tech"] .timeline-marker {
-    background: #0A1E3D !important;
-    color: #3B82F6 !important;
-    box-shadow: 0 4px 12px rgba(10, 30, 61, 0.2), 0 0 0 4px #ffffff, 0 0 0 6px #3B82F6 !important;
-}
-
 /* Manifesto section - vibrant blue accent */
 [data-industry="tech"] .manifesto-section h3,
 [data-industry="tech"] .manifesto-list li.right::before,
@@ -4953,12 +4935,6 @@ input:focus-visible {
 }
 
 
-[data-industry="operations"] .timeline-marker {
-    background: linear-gradient(135deg, #292524, #57534e) !important;
-    color: #c2410c !important;
-    box-shadow: 0 8px 24px rgba(87, 83, 78, 0.3), 0 0 0 4px #ffffff, 0 0 0 6px #ea580c !important;
-}
-
 
 [data-industry="operations"] .manifesto-section h3,
 [data-industry="operations"] .manifesto-list li.right::before,
@@ -5017,12 +4993,6 @@ input:focus-visible {
 
 
 /* Timeline markers - safety orange */
-[data-industry="operations"] .timeline-marker {
-    background: #292524 !important;
-    color: #c2410c !important;
-    box-shadow: 0 4px 12px rgba(41, 37, 36, 0.2), 0 0 0 4px #ffffff, 0 0 0 6px #ea580c !important;
-}
-
 
 /* Manifesto section - safety orange accent */
 [data-industry="operations"] .manifesto-section h3,
@@ -5165,3 +5135,10 @@ input:focus-visible {
     color: var(--accent-dark, var(--gold-dark));
     font-weight: 600;
 }
+
+/* The per-template .timeline-marker colour overrides were removed 2026-09-04.
+   Each forced the accent back with !important over the base rule, and at
+   12px/700 the accent failed AA on every one of them: tech 2.98,
+   operations 2.44, consulting 3.25, healthcare 3.57. The base rule paints
+   white, which clears 10:1 everywhere. Template identity is carried by the
+   marker gradient, not its text. */
