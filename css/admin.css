@@ -587,6 +587,7 @@
         .tech-dot { background: linear-gradient(90deg, #0A1E3D, #3B82F6); }
         .consulting-dot { background: linear-gradient(90deg, #334155, #d97706); }
         .healthcare-dot { background: linear-gradient(90deg, #002677, #00A3AD); }
+        .operations-dot { background: linear-gradient(90deg, #292524, #EA580C); }
 
         /* ATS section */
         .ats-panel {

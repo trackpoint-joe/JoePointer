@@ -195,7 +195,10 @@
                             <div class="template-dot tech-dot"></div>Energy
                         </div>
                         <div class="template-mini" data-ind="healthcare" role="button" tabindex="0" aria-label="Select Healthcare template" onclick="selectIndustry(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectIndustry(this);}">
-                            <div class="template-dot healthcare-dot"></div>Healthcare
+                            <div class="template-dot healthcare-dot"></div>
+                        <div class="template-mini" data-ind="operations" role="button" tabindex="0" aria-label="Select Operations template" onclick="selectIndustry(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectIndustry(this);}">
+                            <div class="template-dot operations-dot"></div>Operations
+                        </div>Healthcare
                         </div>
                     </div>
                 </div>
@@ -428,6 +431,11 @@
                         <div class="color-preview healthcare-preview"></div>
                         <strong>Healthcare/Pharma ✨</strong>
                         <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Professional Blue/Teal</div>
+                    <div class="template-card" data-industry="operations">
+                        <div class="color-preview operations-preview" style="background:linear-gradient(135deg,#292524,#ea580c);"></div>
+                        <strong>Operations &amp; Field Services</strong>
+                        <div style="font-size:0.75rem;color:#64748b;margin-top:0.25rem;">Graphite &amp; Safety Orange</div>
+                    </div>
                     </div>
                 </div>
                 <input type="hidden" id="genIndustry" required>
