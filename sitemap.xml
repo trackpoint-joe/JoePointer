@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- lastmod is a recrawl hint, not decoration. It sat at 2026-07-13 through 28
+     commits to index.html, so crawlers were told nothing had changed while the
+     availability date, the hero statistic, the recognition metrics and the whole
+     hero design were all replaced. BUMP THIS ON ANY DEPLOY THAT CHANGES CONTENT,
+     the same way css/styles.css?v= gets bumped. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://joepointer.com/</loc>
-    <lastmod>2026-07-13</lastmod>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
