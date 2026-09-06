@@ -5217,12 +5217,17 @@ input:focus-visible {
 }
 
 .welcome-band-eyebrow {
-    font-size: 0.72rem;
+    /* 0.95rem, not the 0.72rem this shipped at on 2026-09-06. This line carries the whole
+       personalization payload, the company and the posted role, and at 0.72rem it measured
+       11.5px: smaller than the hero eyebrow (13px), the testimonial attribution (14px) and
+       the band's own links (15.2px), and 55% of the body it introduces. It was the smallest
+       text in its own block while doing the most important job in it. */
+    font-size: 0.95rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     font-weight: 700;
     color: var(--midnight, #0d1b2a);
-    margin: 0 0 var(--space-md);
+    margin: 0 0 var(--space-lg);
 }
 
 .welcome-band-body {
