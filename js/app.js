@@ -112,7 +112,13 @@ var employerProfiles = {
             links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
-    'tifin': { industry: 'finance', company: 'TIFIN', welcome: '', resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' },
+    'tifin': { industry: 'finance', company: 'TIFIN',
+        welcome: {
+            eyebrow: 'For Chief of Staff to the Founder and Executive Chairman at TIFIN',
+            body: 'I connected seven Client Services business areas on one operating framework and set the rhythm, the priorities, and the resource decisions that kept it running. None of the seven leaders reported to me.',
+            links: [["How I'd Run Your First 90 Days", '#day-90-plan'], ['Workplace Modernization', '#project-workplace']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' },
     'express-flooring': { industry: 'operations', company: 'Express Flooring',
         welcome: {
             role: 'VP of AI Transformation',
@@ -281,9 +287,14 @@ function renderWelcomeBand(welcome, companyName) {
     const body = document.getElementById('welcomeBody');
     if (!band || !eyebrow || !body) return;
 
-    eyebrow.textContent = welcome.role
-        ? `For the ${welcome.role} role at ${companyName}`
-        : `Prepared for ${companyName}`;
+    // welcome.eyebrow overrides the template when a posted title does not fit it.
+    // TIFIN's is "Chief of Staff to the Founder and Executive Chairman", which reads as a
+    // stutter inside "For the X role at Y". The title itself must stay verbatim either
+    // way: it is what the cover letter RE: line says, and per-company context repeats the
+    // submitted materials' wording.
+    eyebrow.textContent = welcome.eyebrow
+        ? welcome.eyebrow
+        : (welcome.role ? `For the ${welcome.role} role at ${companyName}` : `Prepared for ${companyName}`);
     body.textContent = welcome.body;
 
     const anchors = [
