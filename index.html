@@ -25,7 +25,21 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-S4KF5KL8C5');
+        // Attach the magic-link company to EVERY event, not just the page view, so scroll
+        // depth, resume downloads and chat opens can all be segmented by employer. Read
+        // here in the head rather than in app.js, because page_view fires on this config
+        // call and app.js has not run yet. Requires company_context to be registered as an
+        // event-scoped custom dimension in GA4 before it becomes reportable.
+        (function () {
+            var config = {};
+            try {
+                var company = new URLSearchParams(window.location.search).get('company');
+                if (company) config.company_context = company.toLowerCase();
+            } catch (e) {
+                /* analytics is best effort, never block the page */
+            }
+            gtag('config', 'G-S4KF5KL8C5', config);
+        })();
     </script>
 
     <!-- Favicon -->
@@ -58,6 +72,15 @@
     <meta name="twitter:image:alt" content="Joe Pointer, AI Adoption and Workforce Transformation, available now, joepointer.com">
 
     <!-- Schema.org Structured Data -->
+    <!-- dateModified below is the second recrawl hint, and JSON allows no comment of its
+         own to say so. It sat at 2026-07-13 while sitemap.xml was bumped, which left the
+         two machine-readable dates contradicting each other. BUMP BOTH TOGETHER on any
+         deploy that changes content.
+         FORMAT MATTERS: this node is a ProfilePage, and Google requires a full ISO 8601
+         datetime WITH a timezone offset here. A bare "2026-09-06" is what triggered the
+         Search Console warning "Invalid datetime value for dateModified" on 2026-09-06.
+         sitemap.xml lastmod is the opposite case and accepts a bare date, so the two
+         files legitimately carry different formats. -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -76,7 +99,7 @@
                 "name": "Joe Pointer (Joseph Pointer) | AI Adoption & Workforce Transformation Leader",
                 "isPartOf": { "@id": "https://joepointer.com/#website" },
                 "mainEntity": { "@id": "https://joepointer.com/#joe" },
-                "dateModified": "2026-07-13"
+                "dateModified": "2026-09-06T10:30:00-06:00"
             },
             {
                 "@type": "Person",
@@ -218,7 +241,7 @@
                     <span>Let's Connect</span>
                 </a>
             </div>
-            <button type="button" class="ask-joe-inline" onclick="openChat()">
+            <button type="button" class="ask-joe-inline" onclick="openChat('hero')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
                 Have a question? Ask the AI version of me.
             </button>
@@ -600,7 +623,7 @@
                                 </div>
                             </summary>
                             <div class="principle-content">
-                                <p>I conceived and designed the product, the 5-stage framework, and the instructional approach. I orchestrated AI using Claude Code to build the platform. My brother, Michael Pointer, contributed the backend engineering.</p>
+                                <p>I conceived and designed the product, the 5-stage framework, and the instructional approach. I orchestrated AI using Claude Code to build the platform. My brother, Mike Pointer, is co-founder and engineered the production backend, the databases and security that made it real.</p>
                                 <p><strong>Tech stack:</strong> Next.js, React, TypeScript, Vercel AI SDK with multi-provider LLM abstraction (Claude as the primary provider, with Gemini, GPT-4o, and Amazon Bedrock switchable per task from an admin dashboard). AI prompts are stored in the database and editable without deploying code, with per-prompt model and temperature overrides. O*NET and CareerOneStop APIs for real labor market data, Stripe for payments, Zod-validated AI outputs, and FERPA-aligned architecture with role-based access control across four user types.</p>
                                 <p>This is the same pattern as CareerSpark: I use AI to build real products. The difference is that CareerSpark was built for an enterprise. Future Me, Answered was built from a parent's kitchen table because the problem mattered enough to solve on my own time.</p>
                             </div>
@@ -686,11 +709,11 @@
                             <summary>
                                 <div style="flex: 1;">
                                     <strong style="font-size: 1rem;">How It Was Built</strong>
-                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">AI-directed development, a production stack, and an engineer who owns the architecture</div>
+                                    <div style="font-size: 0.9rem; margin-top: 8px; color: var(--text-mid); line-height: 1.5;">AI-directed development, a production stack, and a co-founder who engineered the backend</div>
                                 </div>
                             </summary>
                             <div class="principle-content">
-                                <p>I conceived the product and designed the platform, the 11-module journey, the coaching approach, and the product decisions behind it. I direct AI, primarily Claude Code, to write production code, and I have shipped a real share of this codebase that way. My brother, Mike Pointer, is the co-founder and primary engineer, and he owns the architecture. It is the same partnership that built Future Me, Answered. I am not the engineer and I do not need to be. What I need to do is scope the problem, tell a good technical answer from a bad one, and keep the build moving to the finish.</p>
+                                <p>I conceived the product and designed the platform, the 11-module journey, the coaching approach, and the product decisions behind it. I direct AI, primarily Claude Code, to write production code, and I have shipped a real share of this codebase that way. My brother, Mike Pointer, is co-founder and engineered the production backend, the databases and security that made it real. It is the same partnership that built Future Me, Answered. What I do is scope the problem, tell a good technical answer from a bad one, and keep the build moving to the finish.</p>
                                 <p><strong>Tech stack:</strong> Next.js 15, React 19, and TypeScript, deployed on Vercel. Turso and Drizzle for the database, Better-auth for authentication, Stripe for checkout. An in-house AI gateway with a database-driven prompt library, rather than a bolted-on SDK, powers the four-agent interview simulator, the Story Bank with encrypted STAR fields, the applicant CRM, and a resume manager with real PDF and DOCX export. It ships in English, Spanish, and French.</p>
                                 <p>The pattern is the point. I use AI to build real products instead of waiting for someone else to build them for me. This site is the version with no one else's hands on it. joepointer.com, the magic links, the assistant that answers questions about my background, and the per-employer resume delivery are mine end to end, and they are the working demo of the platform.</p>
                             </div>
@@ -1250,7 +1273,7 @@
                         <div class="principle-layer-label">How I Design Systems</div>
                         <h3>Systems First, Humans Always</h3>
                         <p class="principle-summary">
-                            I think systematically about how organizations work: workflows, incentives, infrastructure, governance. But I never optimize the system at the expense of the people in it. Human in the lead, not just in the loop.
+                            I think systematically about how organizations work: workflows, incentives, infrastructure, governance. But I never optimize the system at the expense of the people in it. David Chestnut at Accenture calls that "human in the lead, not just human in the loop," and the distinction is the whole job.
                         </p>
                         <details class="principle-details">
                             <summary class="principle-toggle">+ See How I Apply This</summary>
@@ -1665,7 +1688,7 @@
                     <li>Organizational Development</li>
                 </ul>
                 <p style="margin-top: var(--space-lg); opacity: 0.9; line-height: 1.7;">
-                    <strong style="color: var(--gold);">Available:</strong> Now (TIAA exit, July 2026)<br>
+                    <strong style="color: var(--gold);">Available:</strong> Immediately<br>
                     <strong style="color: var(--gold);">Location:</strong> Committed to Colorado | Open to remote
                 </p>
             </div>
@@ -1687,7 +1710,7 @@
                 <div class="contact-item">
                     <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
                     <div class="label">Ask Joe</div>
-                    <a href="#" onclick="event.preventDefault(); openChat()">Start a conversation →</a>
+                    <a href="#" onclick="event.preventDefault(); openChat('contact')">Start a conversation →</a>
                 </div>
                 <!-- Email card -->
                 <div class="contact-item">
@@ -1730,7 +1753,7 @@
     </button>
 
     <!-- Ask Joe Floating Button -->
-    <button class="ask-joe-float" onclick="openChat()" aria-label="Ask Joe - AI chat assistant">
+    <button class="ask-joe-float" onclick="openChat('float')" aria-label="Ask Joe - AI chat assistant">
         <span class="ask-joe-float-label">Ask Joe</span>
         <!-- alt is empty on purpose: the button's aria-label already names this
              control, so alt text here would make screen readers announce it twice. -->
@@ -2465,7 +2488,12 @@
         // was removed 2026-07-04: a guessable URL should not open internal tooling)
 
     </script>
-    <script src="js/app.js?v=20260802a"></script>
+    <!-- Bump this on EVERY deploy that touches js/app.js. It was last changed 2026-08-10 and
+         app.js changed six times after that, including the BDO, Digital Realty, One Call,
+         Janus Henderson and TIFIN magic-link profiles. A returning visitor holding a cached
+         copy would have been served the generic page on links that looked fine when tested
+         in a fresh browser. Found 2026-09-06. -->
+    <script src="js/app.js?v=20260906a"></script>
     <script>
         // Auto-apply template from ?company= URL parameter
         (function() {
@@ -2573,7 +2601,31 @@
         return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     }
 
-    function openChat() {
+    // Track chat opens. Deliberately separate from ask_joe_question: the gap between
+    // opening the panel and actually asking something is the whole signal for whether
+    // the assistant reads as inviting or intimidating, and one event cannot show both.
+    // employer_context reads ?company= rather than the path, because that is how the
+    // magic links are actually built.
+    // Wrapped in try/catch on purpose: this runs before the panel opens, so a throw in
+    // analytics would stop the chat from opening at all. Measurement never blocks the feature.
+    function trackChatOpen(source) {
+        try {
+            if (typeof gtag !== 'function') return;
+            const company = new URLSearchParams(window.location.search).get('company');
+            gtag('event', 'chat_open', {
+                event_category: 'chatbot',
+                event_label: source || 'unknown',
+                open_source: source || 'unknown',
+                employer_context: (company || 'direct').toLowerCase(),
+                questions_asked_before: chatHistory.filter(m => m.role === 'user').length
+            });
+        } catch (e) {
+            /* analytics is best effort */
+        }
+    }
+
+    function openChat(source) {
+        trackChatOpen(source);
         const panel = document.getElementById('chatPanel');
         const overlay = document.getElementById('chatOverlay');
         panel.classList.add('chat-panel--open');
@@ -2726,7 +2778,12 @@
 
         // Track chatbot question in GA4
         if (typeof gtag === 'function') {
-            const employer = window.location.pathname.replace(/^\/|\/$/g, '').toLowerCase() || 'direct';
+            // ?company= first: that is how the magic links are actually built. Reading only
+            // the path, as this did until 2026-09-05, logged 'direct' for every visitor who
+            // ever arrived on a tailored link, which was all of them.
+            const employer = (new URLSearchParams(window.location.search).get('company')
+                || window.location.pathname.replace(/^\/|\/$/g, '')
+                || 'direct').toLowerCase();
             gtag('event', 'ask_joe_question', {
                 event_category: 'chatbot',
                 question_text: text.substring(0, 100),

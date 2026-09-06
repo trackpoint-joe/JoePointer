@@ -230,10 +230,17 @@ function updateCompanyName(companyName) {
         heroCompanyName.textContent = `Prepared for ${companyName}`;
     }
 
-    // Update target role section (legacy location)
+    // Update target role section (legacy location). Built from DOM nodes rather than an
+    // innerHTML template: an unmatched ?company= value is prettified and reaches this line
+    // as-is, so a template literal here renders whatever markup the URL carried.
     const targetElement = document.querySelector('.target-role h2');
     if (targetElement) {
-        targetElement.innerHTML = `Director/VP Opportunities<br><span style="font-size: 0.8em; color: var(--accent, var(--gold)); font-weight: 600;">Prepared for ${companyName}</span>`;
+        targetElement.textContent = 'Director/VP Opportunities';
+        targetElement.appendChild(document.createElement('br'));
+        const preparedFor = document.createElement('span');
+        preparedFor.style.cssText = 'font-size: 0.8em; color: var(--accent, var(--gold)); font-weight: 600;';
+        preparedFor.textContent = `Prepared for ${companyName}`;
+        targetElement.appendChild(preparedFor);
     }
 }
 
@@ -241,10 +248,12 @@ function updateCompanyName(companyName) {
 function displayWelcomeMessage(message) {
     if (!message) return;
 
-    // Update hero personalization
+    // Update hero personalization. textContent, not innerHTML: this string comes straight
+    // from ?welcome= in the URL, so anyone who edits a magic link could otherwise render
+    // their own markup above the fold on joepointer.com. No magic link uses formatting here.
     const heroWelcomeMessage = document.getElementById('heroWelcomeMessage');
     if (heroWelcomeMessage) {
-        heroWelcomeMessage.innerHTML = message;
+        heroWelcomeMessage.textContent = message;
     }
 
     // Show the hero personalization section
