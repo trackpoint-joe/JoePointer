@@ -5231,6 +5231,12 @@ input:focus-visible {
 }
 
 .welcome-band-body {
+    /* pretty, NOT balance, same call as .value-prop above: this is running prose and
+       balance leaves real paragraphs ragged. The Baker Tilly anchor wrapped with "me."
+       alone on line four, which reads as a mistake on the one line written for that
+       reader. pretty pulls a word down instead. Anchors are authored per company and
+       their length is not predictable, so this belongs on the class, not in the copy. */
+    text-wrap: pretty;
     font-family: var(--font-display, Georgia, serif);
     font-size: 1.3rem;
     line-height: 1.65;
