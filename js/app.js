@@ -105,9 +105,21 @@ var employerProfiles = {
     'bdo': { industry: 'finance', company: 'BDO', welcome: '', resume: 'resources/Joe_Pointer_Resume_BDO.pdf' },
     'digital-realty': { industry: 'tech', company: 'Digital Realty', welcome: '', resume: 'resources/Joe_Pointer_Resume_Digital_Realty.pdf' },
     'one-call': { industry: 'healthcare', company: 'One Call', welcome: '', resume: 'resources/Joe_Pointer_Resume_One_Call.pdf' },
-    'janus-henderson': { industry: 'finance', company: 'Janus Henderson', welcome: '', resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
+    'janus-henderson': { industry: 'finance', company: 'Janus Henderson',
+        welcome: {
+            role: 'Head of AI Business Partners',
+            body: 'I led the team that built an internal AI career platform at TIAA, then ran 30+ town halls and team sessions to reach the people who were not looking for it.',
+            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
     'tifin': { industry: 'finance', company: 'TIFIN', welcome: '', resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' },
-    'express-flooring': { industry: 'operations', company: 'Express Flooring', welcome: '', resume: 'resources/Joe_Pointer_Resume_Express_Flooring.pdf' }
+    'express-flooring': { industry: 'operations', company: 'Express Flooring',
+        welcome: {
+            role: 'VP of AI Transformation',
+            body: 'I led the team that built an internal AI career platform at TIAA, then ran 30+ town halls and team sessions to reach the people who were not looking for it.',
+            links: [["How I'd Run Your First 90 Days", '#day-90-plan'], ['The CareerSpark Case Study', '#project-careerspark']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Express_Flooring.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
@@ -119,7 +131,8 @@ function applyIndustryTemplate() {
     const urlParams = new URLSearchParams(window.location.search);
     const industryParam = urlParams.get('industry');
     const companyParam = urlParams.get('company');
-    const welcomeParam = urlParams.get('welcome');
+    // ?welcome= was removed 2026-09-06. Welcome copy lives in the employer profile below,
+    // which keeps the magic link short and means only Joe can author what the page says.
 
     let profile = null;
 
@@ -134,6 +147,10 @@ function applyIndustryTemplate() {
         // Employer profile industry always wins over URL parameter
         let derivedCompany = companyParam || '';
         let derivedResume = '';
+        // Carried from the matched profile, never from the URL. This is the field the
+        // welcome band renders, so forgetting to copy it here silently disables the
+        // whole feature on every query-string link, which is every link Joe sends.
+        let derivedWelcome = '';
         if (companyParam) {
             const slug = companyParam.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/g, '');
             const bySlug = employerProfiles[slug];
@@ -145,6 +162,7 @@ function applyIndustryTemplate() {
                 derivedIndustry = matched.industry;
                 derivedCompany = matched.company || derivedCompany;
                 derivedResume = matched.resume || '';
+                derivedWelcome = matched.welcome || '';
             } else {
                 // No profile match: prettify the raw value so a slug like
                 // "spring-health" displays as "Spring Health" instead of raw.
@@ -159,7 +177,7 @@ function applyIndustryTemplate() {
         profile = {
             industry: derivedIndustry,
             company: derivedCompany,
-            welcome: welcomeParam ? decodeURIComponent(welcomeParam) : '',
+            welcome: derivedWelcome,
             resume: derivedResume
         };
     }
@@ -186,7 +204,7 @@ function applyIndustryTemplate() {
 
         // Display welcome message if provided
         if (profile.welcome) {
-            displayWelcomeMessage(profile.welcome);
+            renderWelcomeBand(profile.welcome, profile.company);
         }
 
         // Store in localStorage for admin panel
@@ -245,21 +263,51 @@ function updateCompanyName(companyName) {
 }
 
 // Display welcome message in hero personalization (above the fold)
-function displayWelcomeMessage(message) {
-    if (!message) return;
+// Render the welcome band for a magic-link visitor. `welcome` is an object on the
+// employer profile: { role, body, links: [[label, href], [label, href]] }.
+//
+// textContent throughout, never innerHTML. The copy is authored by Joe in this file
+// rather than passed through the URL, but the rule stands anyway: nothing that reaches
+// the page from a variable gets parsed as markup.
+//
+// The band's links are already in the HTML so app.js's smooth-scroll handler has bound
+// them at parse time. Only their text and href change here; the handler reads href at
+// click time, so a swapped href still scrolls and still triggers the section reveal.
+function renderWelcomeBand(welcome, companyName) {
+    if (!welcome || !welcome.body) return;
 
-    // Update hero personalization. textContent, not innerHTML: this string comes straight
-    // from ?welcome= in the URL, so anyone who edits a magic link could otherwise render
-    // their own markup above the fold on joepointer.com. No magic link uses formatting here.
-    const heroWelcomeMessage = document.getElementById('heroWelcomeMessage');
-    if (heroWelcomeMessage) {
-        heroWelcomeMessage.textContent = message;
-    }
+    const band = document.getElementById('welcomeBand');
+    const eyebrow = document.getElementById('welcomeEyebrow');
+    const body = document.getElementById('welcomeBody');
+    if (!band || !eyebrow || !body) return;
 
-    // Show the hero personalization section
-    const heroPersonalization = document.getElementById('heroPersonalization');
-    if (heroPersonalization) {
-        heroPersonalization.style.display = 'block';
+    eyebrow.textContent = welcome.role
+        ? `For the ${welcome.role} role at ${companyName}`
+        : `Prepared for ${companyName}`;
+    body.textContent = welcome.body;
+
+    const anchors = [
+        document.getElementById('welcomeLinkOne'),
+        document.getElementById('welcomeLinkTwo')
+    ];
+    anchors.forEach((a, i) => {
+        const pair = (welcome.links || [])[i];
+        if (!a) return;
+        if (!pair) { a.hidden = true; return; }
+        a.textContent = pair[0];
+        a.setAttribute('href', pair[1]);
+        a.hidden = false;
+    });
+
+    band.hidden = false;
+
+    // The hero label is separate from the band on purpose. The band sits roughly three
+    // screens down on a phone; this is the only personalization a phone reader sees
+    // before scrolling, because the sticky company banner is off-screen until 100px.
+    const heroPrepared = document.getElementById('heroPrepared');
+    if (heroPrepared && companyName) {
+        heroPrepared.textContent = `Prepared for ${companyName}`;
+        heroPrepared.hidden = false;
     }
 }
 
