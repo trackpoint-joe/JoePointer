@@ -125,7 +125,14 @@ var employerProfiles = {
             body: 'I led the team that built an internal AI career platform at TIAA, then ran 30+ town halls and team sessions to reach the people who were not looking for it.',
             links: [["How I'd Run Your First 90 Days", '#day-90-plan'], ['The CareerSpark Case Study', '#project-careerspark']]
         },
-        resume: 'resources/Joe_Pointer_Resume_Express_Flooring.pdf' }
+        resume: 'resources/Joe_Pointer_Resume_Express_Flooring.pdf' },
+    'baker-tilly': { industry: 'consulting', company: 'Baker Tilly',
+        welcome: {
+            role: 'AI Program Enablement Senior Manager',
+            body: 'I do not write code. I design agent systems, decide what each one is allowed to do, and direct the build, and at TIAA I ran one adoption operating model across seven Client Services business areas whose leaders did not report to me.',
+            links: [['The Agent System I Built', '#project-careerpointers'], ['The CareerSpark Case Study', '#project-careerspark']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Baker_Tilly.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
