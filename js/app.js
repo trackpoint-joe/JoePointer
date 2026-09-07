@@ -132,7 +132,14 @@ var employerProfiles = {
             body: 'I do not write code. I design agent systems, decide what each one is allowed to do, and direct the build, and at TIAA I ran one adoption operating model across seven Client Services business areas whose leaders did not report to me.',
             links: [['The Agent System I Built', '#project-careerpointers'], ['The CareerSpark Case Study', '#project-careerspark']]
         },
-        resume: 'resources/Joe_Pointer_Resume_Baker_Tilly.pdf' }
+        resume: 'resources/Joe_Pointer_Resume_Baker_Tilly.pdf' },
+    'avalara': { industry: 'tech', company: 'Avalara',
+        welcome: {
+            role: 'Principal, AI Capability & Reskilling',
+            body: 'I ran one adoption operating model across seven Client Services business areas whose leaders did not report to me, and named a liaison in each. Those liaisons found the use cases I never would have.',
+            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Avalara.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
