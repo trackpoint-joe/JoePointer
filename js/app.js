@@ -151,7 +151,14 @@ var employerProfiles = {
             body: 'I ran one adoption operating model across seven Client Services business areas whose leaders did not report to me, and named a liaison in each. Those liaisons found the use cases I never would have.',
             links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
-        resume: 'resources/Joe_Pointer_Resume_Avalara.pdf' }
+        resume: 'resources/Joe_Pointer_Resume_Avalara.pdf' },
+    'sun-chemical': { industry: 'operations', company: 'Sun Chemical',
+        welcome: {
+            role: 'Director, AI Transformation & Intelligent Business Enablement',
+            body: 'Three things ran from the center of my operating model: enablement, acceptable-use standards, and measurement. Use-case ownership stayed in the business area, carried by a named liaison.',
+            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Sun_Chemical.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
