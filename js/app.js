@@ -119,11 +119,11 @@ var employerProfiles = {
     'one-call': { industry: 'healthcare', company: 'One Call', welcome: '', resume: 'resources/Joe_Pointer_Resume_One_Call.pdf' },
     'janus-henderson': { industry: 'finance', company: 'Janus Henderson',
         welcome: {
-            role: 'Head of AI Business Partners',
-            body: 'I led the team that built an internal AI career platform at TIAA, then ran 30+ town halls and team sessions to reach the people who were not looking for it.',
+            role: 'AI Enablement Partner',
+            body: 'I carried one adoption operating model across seven business areas at TIAA through named liaisons, and none of those seven leaders reported to me.',
             links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
-        resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
+        resume: 'resources/Joseph_Pointer_Resume_Janus_Henderson.pdf' },
     'tifin': { industry: 'finance', company: 'TIFIN',
         welcome: {
             eyebrow: 'For Chief of Staff to the Founder and Executive Chairman at TIFIN',
