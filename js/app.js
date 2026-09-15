@@ -203,13 +203,13 @@ function applyIndustryTemplate() {
                 derivedResume = matched.resume || '';
                 derivedWelcome = matched.welcome || '';
             } else {
-                // No profile match: prettify the raw value so a slug like
-                // "spring-health" displays as "Spring Health" instead of raw.
-                derivedCompany = companyParam
-                    .replace(/[-_]+/g, ' ')
-                    .replace(/\s+/g, ' ')
-                    .trim()
-                    .replace(/\b\w/g, c => c.toUpperCase());
+                // NO PROFILE MATCH: write nothing. This used to prettify the raw URL
+                // value, so ?company=fdujbc greeted a visitor with "Prepared for Fdujbc"
+                // in the hero and the sticky banner. Analytics showed real traffic hitting
+                // it (found 2026-09-15). Anyone could put any string in front of Joe's
+                // name. Leaving this empty lets the `if (profile.company)` guard below
+                // suppress the write.
+                derivedCompany = '';
             }
         }
 
