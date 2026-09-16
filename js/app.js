@@ -123,7 +123,7 @@ var employerProfiles = {
             body: 'I carried one adoption operating model across seven business areas at TIAA through named liaisons, and none of those seven leaders reported to me.',
             links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
-        resume: 'resources/Joseph_Pointer_Resume_Janus_Henderson.pdf' },
+        resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
     'tifin': { industry: 'finance', company: 'TIFIN',
         welcome: {
             eyebrow: 'For Chief of Staff to the Founder and Executive Chairman at TIFIN',
