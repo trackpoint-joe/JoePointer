@@ -11,6 +11,11 @@
             box-sizing: border-box;
         }
 
+        /* ATS: keep fi/fl/ff as separate characters in the PDF text layer */
+        body, body * { font-variant-ligatures: none; -webkit-font-variant-ligatures: none; }
+        /* Headings stay with the block they introduce; bullets are never cut in half */
+        h2, h3 { break-after: avoid; page-break-after: avoid; }
+
         body {
             font-family: 'Calibri', 'Arial', sans-serif;
             line-height: 1.35;
@@ -150,7 +155,8 @@
         }
 
         ul {
-            margin-left: 0.22in;
+            list-style: none;
+            margin-left: 0.06in;
             margin-top: 0.03in;
         }
 
@@ -158,6 +164,10 @@
             font-size: 10pt;
             line-height: 1.35;
             margin-bottom: 0.04in;
+            padding-left: 0.19in;
+            text-indent: -0.19in;
+            break-inside: avoid;
+            page-break-inside: avoid;
         }
 
         .skills {
@@ -225,9 +235,9 @@
             </div>
             <div class="job-context">Business Manager (2016-2022) | Sr. Management Specialist (2013-2016) | Business Consultant (2011-2013)</div>
             <ul>
-                <li><strong>CareerSpark, AI Capability Platform:</strong> Conceived, designed, and launched a 9-module AI-powered capability platform, rolled out enterprise-wide. Full lifecycle ownership from discovery through governance, deployment, and adoption, plus the 30+ townhalls and events I ran myself.</li>
-                <li><strong>Operating Framework, Seven Business Areas:</strong> Connected seven Client Services business areas through liaisons, peer learning, and shared strategy across Workplace, Engagement, and Recognition, while keeping each business moving at its own pace.</li>
-                <li><strong>Workplace Modernization at Scale:</strong> Led change strategy across six locations through the Denver consolidation (44% footprint reduction, 700+ to hoteling) and the Frisco Corporate Center opening for 500+.</li>
+                <li>•&nbsp;<strong>CareerSpark, AI Capability Platform:</strong> Conceived, designed, and launched a 9-module AI-powered capability platform, rolled out enterprise-wide. Full lifecycle ownership from discovery through governance, deployment, and adoption, plus the 30+ townhalls and events I ran myself.</li>
+                <li>•&nbsp;<strong>Operating Framework, Seven Business Areas:</strong> Connected seven Client Services business areas through liaisons, peer learning, and shared strategy across Workplace, Engagement, and Recognition, while keeping each business moving at its own pace.</li>
+                <li>•&nbsp;<strong>Workplace Modernization at Scale:</strong> Led change strategy across six locations through the Denver consolidation (44% footprint reduction, 700+ to hoteling) and the Frisco Corporate Center opening for 500+.</li>
             </ul>
         </div>
 
@@ -241,8 +251,8 @@
             </div>
             <div class="job-context">Continuous tenure through a chain of acquisitions, serving Fortune 500 enterprises and federal agencies.</div>
             <ul>
-                <li>Designed Revolver, a Learning Content Management System that separated core content from contextual delivery. Single-source publishing two decades before it was common. Deployed across 5 Fortune 500 enterprises including Unilever, Bank of America, and Verizon Wireless.</li>
-                <li>Sales engineer on the team that won enterprise ATS deals with the U.S. Department of Commerce (2010 Census) and Extra Space Storage. Surfaced field-driven enhancements that helped clients reduce hiring costs 50-80% and improve speed-to-hire 50%+.</li>
+                <li>•&nbsp;Designed Revolver, a Learning Content Management System that separated core content from contextual delivery. Single-source publishing two decades before it was common. Deployed across 5 Fortune 500 enterprises including Unilever, Bank of America, and Verizon Wireless.</li>
+                <li>•&nbsp;Sales engineer on the team that won enterprise ATS deals with the U.S. Department of Commerce (2010 Census) and Extra Space Storage. Surfaced field-driven enhancements that helped clients reduce hiring costs 50-80% and improve speed-to-hire 50%+.</li>
             </ul>
         </div>
     </section>

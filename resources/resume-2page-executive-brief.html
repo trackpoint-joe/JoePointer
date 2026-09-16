@@ -11,6 +11,11 @@
             box-sizing: border-box;
         }
 
+        /* ATS: keep fi/fl/ff as separate characters in the PDF text layer */
+        body, body * { font-variant-ligatures: none; -webkit-font-variant-ligatures: none; }
+        /* Headings stay with the block they introduce; bullets are never cut in half */
+        h2, h3 { break-after: avoid; page-break-after: avoid; }
+
         body {
             font-family: 'Calibri', 'Arial', sans-serif;
             line-height: 1.45;
@@ -184,7 +189,8 @@
         }
 
         ul {
-            margin-left: 0.25in;
+            list-style: none;
+            margin-left: 0.06in;
             margin-top: 0.02in;
         }
 
@@ -192,6 +198,10 @@
             font-size: 10pt;
             line-height: 1.35;
             margin-bottom: 0.03in;
+            padding-left: 0.19in;
+            text-indent: -0.19in;
+            break-inside: avoid;
+            page-break-inside: avoid;
         }
 
         .skills {
@@ -283,26 +293,24 @@
 
             <h3>AI Adoption, Governance, and Capability Design</h3>
             <ul>
-                <li><strong>CareerSpark, Enterprise AI Capability Platform (2024-2025):</strong> Conceived, designed, and launched a 9-module AI-powered capability platform, rolled out enterprise-wide. Full lifecycle ownership from discovery through governance, deployment, adoption strategy, and impact measurement. 30+ townhalls and events I ran myself.</li>
-                <li><strong>Responsible AI Governance:</strong> Scoped the platform with business stakeholders, then partnered with Risk, Compliance, and Legal to define what it could and could not do. No client data or PII entered into the platform. No AI-initiated actions. Guided prompts that keep associates in control of decisions.</li>
-                <li><strong>Skills of the Future Curriculum (2024):</strong> Led team of 7 to design 5 curriculum tracks (12-17 modules each) on future and digital-first skills. 890 unique users, 1,156 post views.</li>
-                <li><strong>AI-Assisted Solution Development:</strong> Built the CareerSpark Manager Guide on Amazon Q Developer in one week, versus months traditionally, proving out a new model for AI-accelerated development inside the enterprise.</li>
+                <li>•&nbsp;<strong>CareerSpark, Enterprise AI Capability Platform (2024-2025):</strong> Conceived, designed, and launched a 9-module AI-powered capability platform, rolled out enterprise-wide. Full lifecycle ownership from discovery through governance, deployment, adoption strategy, and impact measurement. 30+ townhalls and events I ran myself.</li>
+                <li>•&nbsp;<strong>Responsible AI Governance:</strong> Scoped the platform with business stakeholders, then partnered with Risk, Compliance, and Legal to define what it could and could not do. No client data or PII entered into the platform. No AI-initiated actions. Guided prompts that keep associates in control of decisions.</li>
+                <li>•&nbsp;<strong>Skills of the Future Curriculum (2024):</strong> Led team of 7 to design 5 curriculum tracks (12-17 modules each) on future and digital-first skills. 890 unique users, 1,156 post views.</li>
+                <li>•&nbsp;<strong>AI-Assisted Solution Development:</strong> Built the CareerSpark Manager Guide on Amazon Q Developer in one week, versus months traditionally, proving out a new model for AI-accelerated development inside the enterprise.</li>
             </ul>
 
             <h3>Operating Frameworks and Enterprise Modernization</h3>
             <ul>
-                <li><strong>Multi-Unit Operating Framework:</strong> Connected seven Client Services business areas through liaisons, peer learning, and shared strategy across Workplace, Associate Engagement, and Rewards and Recognition.</li>
-                <li><strong>Workplace Modernization at Scale (2022-2024):</strong> Led change strategy across six locations through return-to-office, the Denver consolidation (44% footprint reduction, 700+ to hoteling), and the Frisco Corporate Center opening for 500+. Recognized as Change Champion.</li>
-                <li><strong>Recognition Program (2014-2025):</strong> Grew Client Services to 34% of all recognitions company-wide in 2021 on a $300K budget built with Finance. Earned a seat on the corporate platform selection team.</li>
+                <li>•&nbsp;<strong>Multi-Unit Operating Framework:</strong> Connected seven Client Services business areas through liaisons, peer learning, and shared strategy across Workplace, Associate Engagement, and Rewards and Recognition.</li>
+                <li>•&nbsp;<strong>Workplace Modernization at Scale (2022-2024):</strong> Led change strategy across six locations through return-to-office, the Denver consolidation (44% footprint reduction, 700+ to hoteling), and the Frisco Corporate Center opening for 500+. Recognized as Change Champion.</li>
+                <li>•&nbsp;<strong>Recognition Program (2014-2025):</strong> Grew Client Services to 34% of all recognitions company-wide in 2021 on a $300K budget built with Finance. Earned a seat on the corporate platform selection team.</li>
             </ul>
-
-            <div class="page-break"></div>
 
             <h3 style="padding-top: 0.05in;">Cross-Functional Delivery</h3>
             <ul>
-                <li><strong>Virtual Career Fair (2020):</strong> Custom-coded a virtual event platform when COVID ended in-person gatherings, rather than sourcing a vendor tool. Open to the full Client Services population, with 800+ attending live. Three other teams reused the code to build their own; I later enhanced it substantially for the company-wide TIAA Product Expo.</li>
-                <li><strong>Enterprise Systems and Data Governance (2011-2021):</strong> Designed the Management Systems suite, the operational dashboards leaders used to run their areas. Owned SharePoint governance across a 125-site estate and remediated 1,763 PII-flagged files with IT.</li>
-                <li><strong>Executive Read-Outs &amp; Decision Forums:</strong> Built and delivered executive-level read-outs, townhalls, people-leader updates, and quarterly business reviews with clear narrative and decision-ready materials.</li>
+                <li>•&nbsp;<strong>Virtual Career Fair (2020):</strong> Custom-coded a virtual event platform when COVID ended in-person gatherings, rather than sourcing a vendor tool. Open to the full Client Services population, with 800+ attending live. Three other teams reused the code to build their own; I later enhanced it substantially for the company-wide TIAA Product Expo.</li>
+                <li>•&nbsp;<strong>Enterprise Systems and Data Governance (2011-2021):</strong> Designed the Management Systems suite, the operational dashboards leaders used to run their areas. Owned SharePoint governance across a 125-site estate and remediated 1,763 PII-flagged files with IT.</li>
+                <li>•&nbsp;<strong>Executive Read-Outs &amp; Decision Forums:</strong> Built and delivered executive-level read-outs, townhalls, people-leader updates, and quarterly business reviews with clear narrative and decision-ready materials.</li>
             </ul>
         </div>
 
@@ -316,9 +324,9 @@
             </div>
             <div class="job-context">Continuous tenure through a chain of acquisitions, serving Fortune 500 enterprises and federal agencies.</div>
             <ul>
-                <li><strong>Enterprise Client Consulting:</strong> Worked directly with Fortune 500 clients (Unilever, Bank of America, Verizon Wireless, GE Capital, Regions Bank) to scope capability needs, design adoption approaches, and shape multi-year implementation plans across business, technology, and end-user audiences.</li>
-                <li><strong>Technical Solutions &amp; Field Enablement:</strong> Served as knowledge engineer, information architect, sales engineer, and instructional designer across enterprise LCMS and ATS platforms. ATS field-driven enhancements helped clients cut hiring costs 50-80% and improve speed-to-hire by half.</li>
-                <li><strong>Federal &amp; Enterprise Delivery:</strong> Sales engineer on the team that won enterprise ATS deals with the U.S. Department of Commerce (2010 Census) and Extra Space Storage. Deployed Revolver LCMS across 5 Fortune 500 enterprises, designing knowledge architecture that separated core content from contextual delivery (single-source publishing two decades before it was common).</li>
+                <li>•&nbsp;<strong>Enterprise Client Consulting:</strong> Worked directly with Fortune 500 clients (Unilever, Bank of America, Verizon Wireless, GE Capital, Regions Bank) to scope capability needs, design adoption approaches, and shape multi-year implementation plans across business, technology, and end-user audiences.</li>
+                <li>•&nbsp;<strong>Technical Solutions &amp; Field Enablement:</strong> Served as knowledge engineer, information architect, sales engineer, and instructional designer across enterprise LCMS and ATS platforms. ATS field-driven enhancements helped clients cut hiring costs 50-80% and improve speed-to-hire by half.</li>
+                <li>•&nbsp;<strong>Federal &amp; Enterprise Delivery:</strong> Sales engineer on the team that won enterprise ATS deals with the U.S. Department of Commerce (2010 Census) and Extra Space Storage. Deployed Revolver LCMS across 5 Fortune 500 enterprises, designing knowledge architecture that separated core content from contextual delivery (single-source publishing two decades before it was common).</li>
             </ul>
         </div>
     </section>
@@ -326,8 +334,8 @@
     <section>
         <h2>Independent AI Builds</h2>
         <ul>
-            <li><strong>Future Me, Answered (futuremeanswered.com):</strong> Live AI career-discovery platform on Next.js, the Vercel AI SDK, and multi-provider AI. I conceived it, designed the 5-stage framework, and modeled 922 career paths; my brother Mike engineered the production backend.</li>
-            <li><strong>CareerPointers (careerpointers.org):</strong> Live 11-module career platform on Next.js, TypeScript, and Stripe with employer-personalized delivery and an applicant CRM. I conceived it and directed the build; my brother Mike engineered the production backend. Its agentic 4-agent Claude interview simulator, TheHotSeat, generates role-specific questions and returns scored coaching reports.</li>
+            <li>•&nbsp;<strong>Future Me, Answered (futuremeanswered.com):</strong> Live AI career-discovery platform on Next.js, the Vercel AI SDK, and multi-provider AI. I conceived it, designed the 5-stage framework, and modeled 922 career paths; my brother Mike engineered the production backend.</li>
+            <li>•&nbsp;<strong>CareerPointers (careerpointers.org):</strong> Live 11-module career platform on Next.js, TypeScript, and Stripe with employer-personalized delivery and an applicant CRM. I conceived it and directed the build; my brother Mike engineered the production backend. Its agentic 4-agent Claude interview simulator, TheHotSeat, generates role-specific questions and returns scored coaching reports.</li>
         </ul>
     </section>
 
