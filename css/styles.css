@@ -687,22 +687,33 @@ body {
 
 .hero-headshot {
     position: relative;
-    /* Portrait size, settled by Joe on 2026-09-06 after comparing five rendered
-       variants on his own monitor rather than from description.
+    /* Portrait size, settled 2026-09-16 against rendered variants at Joe's real
+       viewport rather than from arithmetic.
 
-       History worth keeping, because the previous comment here was wrong. It claimed
-       the portrait "scales on wide screens" from around 1310px. It did not: 7.5vw only
-       overtakes a 200px floor above a 2667px viewport, so the portrait was effectively
-       a fixed 200px circle on every ordinary desktop and laptop. The rule written to
-       stop it "reading as incidental" never engaged where anyone actually looks. This
-       only became visible when text-wrap:balance shortened the headline beside it.
+       History worth keeping, because both previous comments here described a rule that
+       did not engage where anyone looks.
 
-       14vw makes it genuinely grow across the range people use:
-         <=1571px  220px (floor)      1920px  269px
-          1600px   224px              >=2286px  320px (ceiling)
-       Below 1200px this is overridden by the 160px rule further down. */
-    width: clamp(220px, 14vw, 320px);
-    height: clamp(220px, 14vw, 320px);
+       Version 1 claimed the portrait "scales on wide screens" from around 1310px. It
+       did not: 7.5vw only overtakes a 200px floor above a 2667px viewport, so it was a
+       fixed 200px circle on every ordinary screen.
+
+       Version 2 used clamp(220px, 14vw, 320px) and printed an accurate table, but 14vw
+       only beats a 220px floor above 1571px. It was tuned by scaling a browser window
+       on a widescreen monitor, which is above that threshold. Joe's actual machine is a
+       Surface at 2304x1536 running 150% scaling, so his CSS viewport is 1536px, thirty
+       five pixels UNDER the threshold. He had been looking at the floor the whole time.
+
+       THE LESSON: check the rule at the viewport the person actually uses, not the one
+       that is convenient to resize to. A vw term is inert below floor/coefficient.
+
+       17vw with a 240px floor engages at 1412px, under every common laptop:
+         <=1412px  240px (floor)      1536px  261px  <- Joe's Surface
+          1440px   245px              1600px  272px
+                                      >=1764px  300px (ceiling)
+       Ceiling lowered 320 to 300 because 17vw reaches it sooner. Below 1200px this is
+       overridden by the 160px rule further down, and that band is unchanged. */
+    width: clamp(240px, 17vw, 300px);
+    height: clamp(240px, 17vw, 300px);
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
