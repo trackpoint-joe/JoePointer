@@ -124,12 +124,9 @@ var employerProfiles = {
             links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
-    'tifin': { industry: 'finance', company: 'TIFIN',
-        welcome: {
-            eyebrow: 'For Chief of Staff to the Founder and Executive Chairman at TIFIN',
-            body: 'I connected seven Client Services business areas on one operating framework and set the rhythm, the priorities, and the resource decisions that kept it running. None of the seven leaders reported to me.',
-            links: [["How I'd Run Your First 90 Days", '#day-90-plan'], ['Workplace Modernization', '#project-workplace']]
-        },
+    // Band blanked 2026-09-19: TIFIN closed the requisition. A band naming a role that no
+    // longer exists is worse than no band. Profile and resume stay so the link still works.
+    'tifin': { industry: 'finance', company: 'TIFIN', welcome: '',
         resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' },
     'express-flooring': { industry: 'operations', company: 'Express Flooring',
         welcome: {
