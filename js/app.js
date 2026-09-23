@@ -73,6 +73,13 @@ var employerProfiles = {
     'pfizer': { industry: 'healthcare', company: 'Pfizer', welcome: '' },
     'johnson-johnson': { industry: 'healthcare', company: 'Johnson & Johnson', welcome: '' },
     'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' },
+    'florida-blue': { industry: 'healthcare', company: 'Florida Blue',
+        welcome: {
+            role: 'Principal AI Enablement',
+            body: 'At TIAA I was a founding member of an internal AI use case intake function, a stage gate that controlled which use cases advanced to the enterprise gate above it.',
+            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Florida_Blue.pdf' },
 
     // Active Applications
     // NOTE: Per-company chatContext (Joe's private positioning strategy) has been
