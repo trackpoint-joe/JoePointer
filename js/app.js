@@ -73,6 +73,13 @@ var employerProfiles = {
     'pfizer': { industry: 'healthcare', company: 'Pfizer', welcome: '' },
     'johnson-johnson': { industry: 'healthcare', company: 'Johnson & Johnson', welcome: '' },
     'kaiser': { industry: 'healthcare', company: 'Kaiser Permanente', welcome: '' },
+    'labcorp': { industry: 'healthcare', company: 'LabCorp',
+        welcome: {
+            role: 'Principal AI Enablement Engineer',
+            body: 'I build what I enable. I direct multi-agent systems every day and decide what each agent is allowed to do, which is why I can tell a good technical answer from a bad one.',
+            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Labcorp.pdf' },
     'florida-blue': { industry: 'healthcare', company: 'Florida Blue',
         welcome: {
             role: 'Principal AI Enablement',
