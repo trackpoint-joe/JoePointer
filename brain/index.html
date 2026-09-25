@@ -11,7 +11,7 @@
 <!-- Filled in by the server, per launch, only when it was started with
      --allow-edit. Empty here and empty in the exported file. -->
 <meta name="brain-edit" content="">
-<meta name="robots" content="noindex, nofollow"><!-- noindex while Joe decides whether to link this from the main site. Remove this tag and the robots.txt Disallow together, or the page stays invisible. -->
+<meta name="robots" content="noindex, nofollow"><!-- noindex while Joe decides whether to link this from the main site. Remove this tag and the robots.txt Disallow together, or the page stays invisible. RE-APPLY THIS after every copy from Expert-Team-Brain/dist/brain-demo-web/. -->
 <title>Expert Team Brain</title>
 <style>
 /* Overlay chrome only. Everything in the scene is drawn on the canvas.
@@ -447,7 +447,7 @@ body.panel-open #panelTab { display: none; }
 }
 .entry {
   display: grid;
-  grid-template-columns: 62px 10px 1fr;
+  grid-template-columns: 84px 10px 1fr;
   column-gap: 10px;
   align-items: baseline;
   padding: 7px 18px;
@@ -847,7 +847,7 @@ const BRAIN_LABELS = {
   demoHeader: {
     title: 'The Expert Project Team',
     subhead: 'One real working session, replayed',
-    body: 'I run my AI work through a standing team of AI experts, each with a defined role and its own rules. Two gates sit on what goes out in my name. Marcus attacks the claims. AI-Joe checks that it sounds like me. Leaving either one off is a decision I have to state. Then I make the call. This is a real session from September 2026. I directed Claude and eight of those experts to build the view you are watching. A seat pulses only when it actually read or wrote a file, went to the web, or used a connector.',
+    body: 'I run my work through a standing team of AI agents, each one an expert seat with a defined role and its own rules. Two gates sit on what goes out in my name. Marcus attacks the claims. AI-Joe checks that it sounds like me. Leaving either one off is a decision I have to state. Then I make the call. This is a real session from September 2026. I directed Claude and eight of those agents to build the view you are watching. A seat pulses only when it actually read or wrote a file, went to the web, or used a connector.',
     linkText: 'joepointer.com',
     linkHref: 'https://joepointer.com',
   },
@@ -1404,8 +1404,13 @@ const Brain = {
 
   clock(ts) {
     const d = new Date(ts);
+    // 12-hour with AM or PM by default, the way Joe's taskbar clock reads
+    // (Joe, 2026-09-25). The drawer can switch it to 24-hour.
     const pad = (n) => String(n).padStart(2, '0');
-    return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    const h = d.getHours();
+    if (this.clock24) return pad(h) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    return (h % 12 || 12) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds())
+      + (h < 12 ? ' AM' : ' PM');
   },
 };
 
@@ -1474,6 +1479,7 @@ const Settings = {
       labelScale: 1,
       maxGap: CONFIG.demoMaxGapMs,
       panelOpen: CONFIG.panelOpenDefault,
+      clock24: false,
       playMode: 'one',
       quietHours: false,
       quietFrom: '22:00',
@@ -1528,6 +1534,8 @@ const Settings = {
     C.labelScale = v.labelScale;
     C.demoMaxGapMs = v.maxGap;
     C.panelOpenDefault = v.panelOpen;
+    C.clock24 = v.clock24;
+    Brain.clock24 = v.clock24;
   },
 
   // ------------------------------------------------------------- the drawer
@@ -1599,6 +1607,8 @@ const Settings = {
       this.choice(labels, 'Label size', 'labelScale',
         [['Small', 0.85], ['Medium', 1], ['Large', 1.25]]);
       this.toggle(labels, 'Show work timers', 'timers');
+      this.choice(labels, 'Clock', 'clock24',
+        [['12-hour', false], ['24-hour', true]]);
       body.appendChild(labels);
 
       const pace = this.group('Replay pace');
@@ -3810,7 +3820,12 @@ function paintOverlays(now) {
   }
   if (now - lastNowPaint > CONFIG.nowTickMs) {
     lastNowPaint = now;
-    dom('markerNow').textContent = 'NOW ' + Brain.clock(new Date().toISOString());
+    // Live shows today's date under the clock, where NOW would only repeat it.
+    // Replay and the demo never show a date: the demo's dates are moved to a
+    // neutral day, and Joe kept replay to times only (2026-09-25).
+    dom('markerNow').textContent = state.mode === 'LIVE'
+      ? new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+      : 'NOW ' + Brain.clock(new Date().toISOString());
   }
   paintPanel();
   if (state.mode !== 'LIVE') {
@@ -3911,9 +3926,16 @@ function entryFor(item) {
   return li;
 }
 
+let panelClock24 = null;
+
 function paintPanel() {
   if (!document.body.classList.contains('panel-open')) return;
   const list = dom('panelList');
+  // A clock format change redraws every row, not just the new ones.
+  if (panelClock24 !== CONFIG.clock24) {
+    panelClock24 = CONFIG.clock24;
+    state.logReset = true;
+  }
   if (state.logReset) {
     state.logReset = false;
     list.textContent = '';
