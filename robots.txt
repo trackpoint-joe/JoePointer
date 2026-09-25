@@ -6,6 +6,17 @@ Disallow: /resources/
 Allow: /resources/Joe_Pointer_Resume_Full.pdf
 Allow: /resources/Joe_Pointer_Resume.pdf
 
+# Magic-link URLs carry a company name and a tailored resume. The canonical in
+# index.html points them all back to the bare domain, but a canonical is a hint
+# Google may override once the visible content diverges, which is exactly what a
+# company name in the sticky banner does. Block the crawl outright instead.
+# Nina's rules, written 2026-09-11 on the site-inversion branch and never merged.
+# Verified 2026-09-25: nothing param-based is indexed yet, so this is prevention.
+# ?hiring= is deliberately NOT listed. It is a no-op on this branch, which has no
+# audience gate and no /hire page. Add it if that layer ever ships.
+Disallow: /*?company=
+Disallow: /*?industry=
+
 # The Expert Team Brain replay. Published so Joe can share the URL deliberately,
 # not so a name search surfaces it. Lift this together with the noindex meta in
 # brain/index.html when the decision to link it from the site is made.
