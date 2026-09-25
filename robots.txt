@@ -6,4 +6,9 @@ Disallow: /resources/
 Allow: /resources/Joe_Pointer_Resume_Full.pdf
 Allow: /resources/Joe_Pointer_Resume.pdf
 
+# The Expert Team Brain replay. Published so Joe can share the URL deliberately,
+# not so a name search surfaces it. Lift this together with the noindex meta in
+# brain/index.html when the decision to link it from the site is made.
+Disallow: /brain
+
 Sitemap: https://joepointer.com/sitemap.xml
