@@ -91,10 +91,13 @@ body.banner-up #gear, body.banner-up #drawer { top: 62px; }
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border);
-  background: var(--panel);
+  /* The panel tint over solid page colour, so nothing shows through. */
+  background: linear-gradient(var(--panel), var(--panel)), var(--bg);
   transform: translateX(-102%);
   transition: transform .25s ease;
-  z-index: 4;
+  /* Above everything but the intro. On a phone the header, marker and bottom
+     bar sit at 5 to 7 and covered the drawer's Close and Reset buttons. */
+  z-index: 9;
 }
 body.drawer-open #drawer { transform: none; }
 #drawer[hidden] { display: flex; }
@@ -195,6 +198,8 @@ body.drawer-open #drawer { transform: none; }
 #caption.header .hLink { font-size: 14px; font-weight: 600; color: #ffd27a; text-decoration: none; }
 #caption.header .hLink:hover { text-decoration: underline; }
 #caption.header .hTitle, #caption.header .hSub { transition: font-size .5s ease, opacity .5s ease; }
+#caption.header .hRule { width: 140px; height: 3px; margin-top: 8px; border-radius: 2px; opacity: .85; transition: width .5s ease, height .5s ease; }
+#caption.header.compact .hRule { width: 100%; height: 2px; margin-top: 4px; }
 #caption.header.compact { display: flex; align-items: baseline; gap: 12px; }
 #caption.header.compact .hTitle { font-size: 18px; font-weight: 600; color: #8d99ad; }
 #caption.header.compact .hSub { display: none; }
@@ -230,6 +235,9 @@ body:not(.demo) #caption { display: none; }
   top: 20px;
   right: 24px;
   min-width: 232px;
+  /* The demo's provenance line is long. Without a cap it stretched the box
+     across the top and over the header on any screen under about 1300px. */
+  max-width: 340px;
   padding: 12px 16px 14px;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -693,6 +701,83 @@ body.panel-open #panelTab { display: none; }
   #caption.header:not(.compact) { max-height: 46vh; overflow-y: auto; }
 }
 
+/* Demo intro, David 2026-09-25. Title and a tap, a flight to the brain, the
+   paragraph centred over it, then the paragraph shrinks into the header. The
+   rest of the page stays out of sight until the header has landed. */
+#intro { position: fixed; inset: 0; z-index: 20; cursor: pointer; }
+#intro .iTitleCard, #intro .iCard {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+#intro .iTitleCard { width: min(90vw, 900px); transition: opacity .4s ease-in, transform .4s ease-in; }
+#intro .iTitle {
+  font-size: 64px; font-weight: 700; line-height: 1.1; color: #e8edf5;
+  animation: introLift .6s ease-out both;
+}
+#intro .iSub {
+  margin-top: 12px; font-size: 20px; font-weight: 500; color: #8d99ad;
+  animation: introLift .6s ease-out .15s both;
+}
+#intro .iGo {
+  margin-top: 28px; padding: 10px 26px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--panel);
+  color: var(--muted); font: inherit; font-size: 15px; cursor: pointer;
+  animation: introLift .6s ease-out .4s both;
+}
+#intro .iGo:hover, #intro .iGo:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
+@keyframes introLift { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+#intro .iCard {
+  width: min(88vw, 60ch); padding: 28px 32px; border-radius: 14px;
+  background: rgba(5, 7, 13, .7);
+  border: 1px solid rgba(143, 166, 204, .14);
+  opacity: 0; pointer-events: none;
+  transition: opacity .6s ease-out;
+}
+#intro .iBody { margin: 0; font-size: 22px; line-height: 1.6; color: #c9d2e0; text-align: left; }
+#intro .iMark { font-weight: 600; }
+#intro .iCardTitle { font-size: 30px; font-weight: 700; line-height: 1.15; color: #e8edf5; text-align: left; }
+#intro .iRule.iCardRule { margin: 12px 0 18px; width: 140px; animation: none; }
+#intro .iRule {
+  width: 180px; height: 3px; margin: 16px auto 0; border-radius: 2px; opacity: .85;
+  animation: introLift .6s ease-out .08s both;
+}
+#intro .iHint { margin-top: 18px; font-size: 13px; color: var(--faint); letter-spacing: .04em; }
+
+#intro.flight .iTitleCard, #intro.read .iTitleCard, #intro.settle .iTitleCard {
+  opacity: 0; transform: translate(-50%, calc(-50% - 30px)); pointer-events: none;
+}
+#intro.read .iCard, #intro.settle .iCard { opacity: 1; }
+/* The settle transition is written inline, so the shrink and the fade share one clock. */
+#intro.settle { pointer-events: none; }
+
+body.intro #gear, body.intro #drawer, body.intro #caption, body.intro #marker,
+body.intro #music, body.intro #tray, body.intro #panel, body.intro #panelTab,
+body.intro #mobileBar, body.intro #provenance, body.intro #scrub {
+  opacity: 0 !important; pointer-events: none !important;
+}
+body.intro-out #gear, body.intro-out #caption, body.intro-out #marker,
+body.intro-out #music, body.intro-out #tray, body.intro-out #panel, body.intro-out #panelTab,
+body.intro-out #mobileBar, body.intro-out #provenance, body.intro-out #scrub {
+  transition: opacity .8s ease;
+}
+
+@media (max-width: 600px), (max-height: 480px) and (orientation: landscape) {
+  #intro .iTitle { font-size: 36px; }
+  #intro .iSub { font-size: 16px; }
+  #intro .iCard { width: 88vw; padding: 18px 18px; }
+  #intro .iBody { font-size: 17px; }
+  #intro .iCardTitle { font-size: 22px; }
+  #intro .iRule.iCardRule { margin: 10px 0 14px; width: 110px; }
+}
+@media (max-height: 480px) and (orientation: landscape) {
+  #intro .iBody { font-size: 14px; line-height: 1.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #intro .iTitle, #intro .iSub, #intro .iGo { animation: none; }
+}
+
 </style>
 </head>
 <body>
@@ -789,7 +874,7 @@ body.panel-open #panelTab { display: none; }
   </div>
 </div>
 
-<script type="application/json" id="brain-music">{"tracks": [{"file": "seven-at-once.mp3", "title": "Seven at Once", "url": "music/seven-at-once.mp3"}]}</script>
+<script type="application/json" id="brain-music">{"tracks": [{"file": "quiet-then-arriving.mp3", "title": "Quiet, Then Arriving", "url": "music/quiet-then-arriving.mp3"}, {"file": "seven-at-once.mp3", "title": "Seven at Once", "url": "music/seven-at-once.mp3"}]}</script>
 <script type="application/json" id="brain-pack">{"meta":{"recorded":"2026-09","recorded_month":"September 2026","timeline":"shifted to 2026-01-15 10:00:00 local, every gap unchanged","origin":"log","scrub_policy_version":1,"note":"A real session, recorded in September 2026. No company names, no full paths, no prompts, no tool output. Clock times moved to a neutral date, every gap unchanged.","events":315,"dropped_by_policy":0,"projects":1},"bench":[{"slug":"margaret","name":"Margaret Chen","title":"Resume & career brand","section":"Career","gate":false},{"slug":"sandra","name":"Sandra Williams","title":"Strategy","section":"Career","gate":false},{"slug":"james","name":"James Okafor","title":"Interview & presence","section":"Career","gate":false},{"slug":"patricia","name":"Patricia Moore","title":"Instructional design","section":"Career","gate":false},{"slug":"rachel","name":"Rachel Torres","title":"Narrative & presentation","section":"Content, story, and visibility","gate":false},{"slug":"iris","name":"Iris Bellamy","title":"Long-form editor","section":"Content, story, and visibility","gate":false},{"slug":"nina","name":"Nina Patel","title":"SEO & discoverability","section":"Content, story, and visibility","gate":false},{"slug":"omar","name":"Omar Haddad","title":"Go-to-market & launch","section":"Content, story, and visibility","gate":false},{"slug":"tessa","name":"Tessa Lindqvist","title":"Songwriting & music production","section":"Content, story, and visibility","gate":false},{"slug":"david","name":"David Park","title":"Portfolio & UX design","section":"Build","gate":false},{"slug":"alex","name":"Alex Rivera","title":"Simple web engineering","section":"Build","gate":false},{"slug":"vikram","name":"Vikram Shah","title":"Application architecture","section":"Build","gate":false},{"slug":"theo","name":"Theo Nakamura","title":"Product strategy & scope","section":"Build","gate":false},{"slug":"bea","name":"Bea Ortiz","title":"Data & measurement","section":"Build","gate":false},{"slug":"yusuf","name":"Yusuf Adeyemi","title":"Knowledge architecture","section":"Build","gate":false},{"slug":"priya","name":"Priya Raghavan","title":"Program management","section":"Build","gate":false},{"slug":"lena","name":"Lena Fischer","title":"Pricing & business model","section":"Business and practice","gate":false},{"slug":"fiona","name":"Fiona Grant","title":"Finance, legal & ops","section":"Business and practice","gate":false},{"slug":"kevin","name":"Kevin Walsh","title":"AI market strategy","section":"Business and practice","gate":false},{"slug":"helen","name":"Helen Vance","title":"AI governance & risk","section":"Business and practice","gate":false},{"slug":"cass","name":"Cass Whitfield","title":"Methodology & IP steward","section":"Business and practice","gate":false},{"slug":"marcus","name":"Marcus Webb","title":"Devil's advocate","section":"Gates","gate":true},{"slug":"ai-joe","name":"AI-Joe","title":"Voice gate","section":"Gates","gate":true}],"events":[{"v":1,"ts":"2026-01-15T10:00:00.000-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768496400000,"seq":0,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:00:10.083-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"BRIEF.md","kind":"method","ts_ms":1768496410083,"seq":2,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:00:43.132-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"serve.mjs","kind":"code","ts_ms":1768496443132,"seq":4,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:00:44.206-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"brain3d.js","kind":"code","ts_ms":1768496444206,"seq":5,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:01:11.689-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"CLAUDE.md","kind":"method","ts_ms":1768496471689,"seq":6,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:02:06.756-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"BRIEF.md","kind":"method","ts_ms":1768496526756,"seq":8,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:02:30.007-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768496550007,"seq":10,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:14:21.002-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497261002,"seq":16,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:15:44.595-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497344595,"seq":18,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:16:05.685-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"yusuf","agent_id":"a1","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497365685,"seq":19,"seat":true,"seat_slug":"yusuf"},{"v":1,"ts":"2026-01-15T10:16:13.307-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497373307,"seq":20,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T10:16:18.095-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"cass","agent_id":"a3","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497378095,"seq":21,"seat":true,"seat_slug":"cass"},{"v":1,"ts":"2026-01-15T10:16:18.106-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497378106,"seq":22,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:16:29.777-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497389777,"seq":23,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:16:30.138-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"yusuf","agent_id":"a1","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497390138,"seq":24,"seat":true,"seat_slug":"yusuf"},{"v":1,"ts":"2026-01-15T10:16:38.025-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"cass","agent_id":"a3","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497398025,"seq":25,"seat":true,"seat_slug":"cass"},{"v":1,"ts":"2026-01-15T10:16:39.551-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497399551,"seq":26,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:16:41.399-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497401399,"seq":27,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T10:16:42.638-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497402638,"seq":28,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T10:16:44.873-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497404873,"seq":29,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:16:44.874-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497404874,"seq":30,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:17:12.643-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497432643,"seq":31,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T10:17:14.691-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768497434691,"seq":32,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:17:52.923-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497472923,"seq":34,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T10:17:54.167-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497474167,"seq":35,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T10:17:54.253-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497474253,"seq":36,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:18:22.623-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497502623,"seq":38,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T10:18:23.781-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497503781,"seq":39,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:18:51.225-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"document","ts_ms":1768497531225,"seq":41,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T10:22:42.657-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768497762657,"seq":42,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:23:13.918-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768497793918,"seq":43,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:36:29.573-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768498589573,"seq":56,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T10:36:31.103-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768498591103,"seq":57,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:37:44.037-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768498664037,"seq":58,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T10:38:59.760-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"team-charter.md","kind":"method","ts_ms":1768498739760,"seq":59,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:06:04.409-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500364409,"seq":61,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:06:49.110-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768500409110,"seq":62,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:07:56.909-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500476909,"seq":64,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:08:06.059-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"brain.css","kind":"page","ts_ms":1768500486059,"seq":65,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:08:15.586-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"brain.css","kind":"page","ts_ms":1768500495586,"seq":66,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:08:32.388-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"brain.css","kind":"page","ts_ms":1768500512388,"seq":67,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:09:30.371-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500570371,"seq":69,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:09:38.741-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500578741,"seq":70,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:10:08.932-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500608932,"seq":72,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:10:16.354-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"index.html","kind":"page","ts_ms":1768500616354,"seq":73,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:10:17.763-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"data.js","kind":"code","ts_ms":1768500617763,"seq":74,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:10:24.273-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500624273,"seq":75,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:10:33.668-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"brain3d.js","kind":"code","ts_ms":1768500633668,"seq":76,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:11:32.172-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500692172,"seq":78,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:13:24.525-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500804525,"seq":80,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:13:45.247-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500825247,"seq":81,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:14:04.472-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500844472,"seq":82,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:15:15.414-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768500915414,"seq":84,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:16:42.931-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501002931,"seq":86,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:16:56.884-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501016884,"seq":87,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T11:20:10.340-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768501210340,"seq":89,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T11:20:43.083-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501243083,"seq":90,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:21:31.748-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501291748,"seq":92,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T11:21:33.077-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501293077,"seq":93,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:21:57.721-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768501317721,"seq":94,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:27:00.679-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501620679,"seq":96,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:27:26.205-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501646205,"seq":97,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T11:27:33.912-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"marcus","agent_id":"a5","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501653912,"seq":98,"seat":true,"seat_slug":"marcus"},{"v":1,"ts":"2026-01-15T11:27:36.806-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"marcus","agent_id":"a5","tool":"Read","target":null,"path":"brain_append.py","kind":"code","ts_ms":1768501656806,"seq":99,"seat":true,"seat_slug":"marcus"},{"v":1,"ts":"2026-01-15T11:27:37.197-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"marcus","agent_id":"a5","tool":"Read","target":null,"path":"a file","kind":"document","ts_ms":1768501657197,"seq":100,"seat":true,"seat_slug":"marcus"},{"v":1,"ts":"2026-01-15T11:28:08.645-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"marcus","agent_id":"a5","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501688645,"seq":102,"seat":true,"seat_slug":"marcus"},{"v":1,"ts":"2026-01-15T11:28:09.662-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501689662,"seq":103,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:29:00.507-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768501740507,"seq":105,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T11:29:49.389-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501789389,"seq":106,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T11:30:02.434-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501802434,"seq":107,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:30:34.214-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"a file","kind":"code","ts_ms":1768501834214,"seq":108,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:30:47.484-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"code","ts_ms":1768501847484,"seq":109,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:33:05.766-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768501985766,"seq":111,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:33:12.601-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"team-charter.md","kind":"method","ts_ms":1768501992601,"seq":112,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:33:16.161-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768501996161,"seq":113,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:34:19.317-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768502059317,"seq":115,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:36:14.937-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768502174937,"seq":117,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:36:45.232-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768502205232,"seq":119,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:38:03.817-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768502283817,"seq":124,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:38:20.473-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"a file","kind":"method","ts_ms":1768502300473,"seq":125,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T11:38:25.754-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768502305754,"seq":126,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:21:22.473-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512082473,"seq":392,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:22:52.360-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512172360,"seq":394,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:23:04.939-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512184939,"seq":395,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T14:23:19.386-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"serve.mjs","kind":"code","ts_ms":1768512199386,"seq":396,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:23:24.683-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Write","target":null,"path":"a file","kind":"document","ts_ms":1768512204683,"seq":397,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:24:04.355-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512244355,"seq":398,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T14:24:07.303-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512247303,"seq":399,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:24:50.549-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768512290549,"seq":400,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:26:22.664-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512382664,"seq":402,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:28:44.574-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512524574,"seq":404,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:29:01.611-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"yusuf","agent_id":"a1","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512541611,"seq":405,"seat":true,"seat_slug":"yusuf"},{"v":1,"ts":"2026-01-15T14:29:04.071-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"yusuf","agent_id":"a1","tool":"Read","target":null,"path":"brain_append.py","kind":"code","ts_ms":1768512544071,"seq":406,"seat":true,"seat_slug":"yusuf"},{"v":1,"ts":"2026-01-15T14:29:08.734-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"yusuf","agent_id":"a1","tool":"Read","target":null,"path":"make_demo.py","kind":"code","ts_ms":1768512548734,"seq":407,"seat":true,"seat_slug":"yusuf"},{"v":1,"ts":"2026-01-15T14:29:09.256-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"helen","agent_id":"a6","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512549256,"seq":408,"seat":true,"seat_slug":"helen"},{"v":1,"ts":"2026-01-15T14:29:11.901-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Read","target":null,"path":"brain_append.py","kind":"code","ts_ms":1768512551901,"seq":409,"seat":true,"seat_slug":"helen"},{"v":1,"ts":"2026-01-15T14:29:19.064-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512559064,"seq":410,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T14:29:26.068-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"bea","agent_id":"a7","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512566068,"seq":411,"seat":true,"seat_slug":"bea"},{"v":1,"ts":"2026-01-15T14:29:28.221-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"helen","agent_id":"a6","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512568221,"seq":412,"seat":true,"seat_slug":"helen"},{"v":1,"ts":"2026-01-15T14:29:29.921-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512569921,"seq":413,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:29:37.108-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"yusuf","agent_id":"a1","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512577108,"seq":414,"seat":true,"seat_slug":"yusuf"},{"v":1,"ts":"2026-01-15T14:29:38.572-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512578572,"seq":416,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:30:15.750-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512615750,"seq":418,"seat":true,"seat_slug":"david"},{"v":1,"ts":"2026-01-15T14:30:17.339-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512617339,"seq":419,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:30:37.330-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"bea","agent_id":"a7","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512637330,"seq":421,"seat":true,"seat_slug":"bea"},{"v":1,"ts":"2026-01-15T14:30:39.027-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768512639027,"seq":422,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:38:51.457-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513131457,"seq":424,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:38:58.683-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"team-charter.md","kind":"method","ts_ms":1768513138683,"seq":425,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:39:16.514-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513156514,"seq":426,"seat":true,"seat_slug":"alex"},{"v":1,"ts":"2026-01-15T14:39:59.906-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513199906,"seq":428,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:41:35.656-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513295656,"seq":430,"seat":false,"seat_slug":null},{"v":1,"ts":"2026-01-15T14:42:00.865-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"document","ts_ms":1768513320865,"seq":432,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:43:32.122-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513412122,"seq":433,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:43:43.756-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"helen","agent_id":"a6","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513423756,"seq":434,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T14:43:51.709-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513431709,"seq":435,"seat":true,"seat_slug":"david"},{"v":2,"ts":"2026-01-15T14:43:51.954-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768513431954,"seq":436,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:43:59.125-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"helen","agent_id":"a6","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513439125,"seq":438,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T14:44:00.689-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513440689,"seq":439,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:44:27.869-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"david","agent_id":"a2","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513467869,"seq":441,"seat":true,"seat_slug":"david"},{"v":2,"ts":"2026-01-15T14:44:29.301-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513469301,"seq":442,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:45:07.969-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"document","ts_ms":1768513507969,"seq":444,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:46:24.132-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768513584132,"seq":445,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:47:44.903-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768513664903,"seq":446,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:49:12.840-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768513752840,"seq":447,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:52:55.164-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768513975164,"seq":448,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:55:09.111-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768514109111,"seq":450,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:55:14.452-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768514114452,"seq":451,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:55:50.267-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768514150267,"seq":453,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:56:54.629-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768514214629,"seq":454,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:57:20.835-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768514240835,"seq":455,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:57:43.635-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"document","ts_ms":1768514263635,"seq":456,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:57:54.605-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768514274605,"seq":457,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:58:03.295-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Write","target":null,"path":"a file","kind":"memory:other","ts_ms":1768514283295,"seq":458,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:58:03.959-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"a file","kind":"method","ts_ms":1768514283959,"seq":459,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:58:07.346-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768514287346,"seq":460,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T14:58:10.006-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"document","ts_ms":1768514290006,"seq":461,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T14:59:09.686-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768514349686,"seq":463,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:02:44.540-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768514564540,"seq":464,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:02:47.702-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768514567702,"seq":465,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:03:24.280-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768514604280,"seq":466,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:08:58.612-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768514938612,"seq":468,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:09:45.782-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768514985782,"seq":470,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:10:43.224-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515043224,"seq":472,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:11:02.637-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515062637,"seq":474,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:11:21.619-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515081619,"seq":476,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:11:28.379-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515088379,"seq":477,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:11:35.167-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"WebSearch","target":null,"path":null,"kind":"document","ts_ms":1768515095167,"seq":478,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:11:41.238-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515101238,"seq":479,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:11:51.201-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768515111201,"seq":480,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:14:19.003-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515259003,"seq":482,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:14:34.850-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768515274850,"seq":483,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:14:47.607-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768515287607,"seq":484,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:14:56.641-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768515296641,"seq":485,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:15:03.801-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768515303801,"seq":486,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:15:14.048-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"WebSearch","target":null,"path":null,"kind":"document","ts_ms":1768515314048,"seq":487,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:15:22.413-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768515322413,"seq":488,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:16:38.844-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515398844,"seq":490,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:16:44.506-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515404506,"seq":491,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:16:47.692-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515407692,"seq":492,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:16:58.318-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515418318,"seq":493,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:02.756-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"mcp","target":null,"path":null,"kind":"document","ts_ms":1768515422756,"seq":494,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:11.045-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"mcp","target":null,"path":null,"kind":"document","ts_ms":1768515431045,"seq":495,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:17.398-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"WebSearch","target":null,"path":null,"kind":"document","ts_ms":1768515437398,"seq":496,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:26.721-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"mcp","target":null,"path":null,"kind":"document","ts_ms":1768515446721,"seq":497,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:34.815-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515454815,"seq":498,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:37.592-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515457592,"seq":499,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:45.433-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515465433,"seq":500,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:17:48.515-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515468515,"seq":501,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:18:07.520-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"WebSearch","target":null,"path":null,"kind":"document","ts_ms":1768515487520,"seq":502,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:18:11.352-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"mcp","target":null,"path":null,"kind":"document","ts_ms":1768515491352,"seq":503,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:18:11.360-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515491360,"seq":504,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:19:56.432-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515596432,"seq":506,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:20:10.470-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Write","target":null,"path":"a file","kind":"memory:other","ts_ms":1768515610470,"seq":507,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:20:12.222-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768515612222,"seq":508,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:20:19.447-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"claude-code-guide","agent_id":"a8","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515619447,"seq":509,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:20:41.897-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515641897,"seq":510,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:20:52.490-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515652490,"seq":511,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:21:05.107-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515665107,"seq":512,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:21:07.860-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515667860,"seq":513,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:21:09.715-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"Read","target":null,"path":"a file","kind":"document","ts_ms":1768515669715,"seq":514,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:21:37.741-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515697741,"seq":515,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:21:56.870-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebSearch","target":null,"path":null,"kind":"document","ts_ms":1768515716870,"seq":516,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:22:20.175-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515740175,"seq":517,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:22:23.609-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768515743609,"seq":518,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:22:25.532-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"Read","target":null,"path":"a file","kind":"document","ts_ms":1768515745532,"seq":519,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:22:42.544-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"claude-code-guide","agent_id":"a8","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515762544,"seq":521,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:23:21.950-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768515801950,"seq":522,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:23:45.010-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515825010,"seq":524,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:24:04.301-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768515844301,"seq":525,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:24:37.812-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515877812,"seq":526,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:25:18.445-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768515918445,"seq":527,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:25:37.199-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515937199,"seq":529,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:26:03.751-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515963751,"seq":536,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:26:20.082-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768515980082,"seq":540,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:26:51.998-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768516011998,"seq":543,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:27:02.901-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516022901,"seq":544,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:27:13.889-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516033889,"seq":545,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:28:36.535-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516116535,"seq":551,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:28:53.439-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516133439,"seq":552,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:29:03.340-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516143340,"seq":553,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T15:29:06.280-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516146280,"seq":554,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:29:20.215-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516160215,"seq":555,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:29:33.594-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516173594,"seq":556,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:32:45.860-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516365860,"seq":565,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:32:57.683-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516377683,"seq":566,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:34:21.552-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516461552,"seq":569,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:34:30.231-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768516470231,"seq":570,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:34:30.233-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516470233,"seq":571,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:34:42.730-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516482730,"seq":572,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:34:42.730-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768516482730,"seq":573,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:35:48.652-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516548652,"seq":596,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:35:56.664-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768516556664,"seq":600,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:36:32.522-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516592522,"seq":614,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:36:40.050-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768516600050,"seq":618,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:36:42.607-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"a file","kind":"memory:other","ts_ms":1768516602607,"seq":619,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:36:50.096-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516610096,"seq":621,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:36:52.393-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Read","target":null,"path":"expert-bench.md","kind":"method","ts_ms":1768516612393,"seq":622,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:37:00.596-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUseFailure","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516620596,"seq":624,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:37:06.900-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516626900,"seq":625,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:38:33.534-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768516713534,"seq":639,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:38:39.697-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PermissionRequest","agent":null,"agent_id":null,"tool":"AskUserQuestion","target":null,"path":null,"kind":"document","ts_ms":1768516719697,"seq":641,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:38:45.658-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"Notification","agent":null,"agent_id":null,"tool":null,"target":"decision","path":null,"kind":"document","ts_ms":1768516725658,"seq":643,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:39:35.933-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"AskUserQuestion","target":null,"path":null,"kind":"document","ts_ms":1768516775933,"seq":654,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:39:41.654-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768516781654,"seq":655,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:39:51.738-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"a file","kind":"method","ts_ms":1768516791738,"seq":658,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T15:39:51.961-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Edit","target":null,"path":"team-charter.md","kind":"method","ts_ms":1768516791961,"seq":659,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:06:51.644-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768518411644,"seq":745,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:07:14.244-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"claude-code-guide","agent_id":"a8","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768518434244,"seq":747,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:07:30.864-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768518450864,"seq":751,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:07:34.520-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768518454520,"seq":752,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:07:53.270-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"claude-code-guide","agent_id":"a8","tool":"WebFetch","target":"a site","path":null,"kind":"document","ts_ms":1768518473270,"seq":756,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:08:06.819-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"claude-code-guide","agent_id":"a8","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768518486819,"seq":758,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:08:08.261-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768518488261,"seq":759,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:08:28.021-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518508021,"seq":760,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:08:52.724-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768518532724,"seq":761,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:09:30.531-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518570531,"seq":763,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:10:07.289-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768518607289,"seq":764,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:10:17.422-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518617422,"seq":765,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:10:41.042-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768518641042,"seq":766,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:10:56.878-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518656878,"seq":767,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:11:28.858-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518688858,"seq":768,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:12:22.579-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768518742579,"seq":770,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:12:45.140-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518765140,"seq":772,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:13:02.376-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518782376,"seq":773,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:13:21.526-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518801526,"seq":774,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:13:24.631-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768518804631,"seq":775,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:13:43.967-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518823967,"seq":776,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:14:08.574-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518848574,"seq":778,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:14:42.405-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768518882405,"seq":779,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:14:52.338-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518892338,"seq":780,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:14:58.837-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768518898837,"seq":781,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:15:28.615-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Write","target":null,"path":"a file","kind":"code","ts_ms":1768518928615,"seq":783,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:15:42.523-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518942523,"seq":784,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:16:10.289-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518970289,"seq":785,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:16:24.934-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768518984934,"seq":786,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:16:53.188-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"alex","agent_id":"a4","tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519013188,"seq":787,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:17:05.692-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"alex","agent_id":"a4","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519025692,"seq":789,"seat":true,"seat_slug":"alex"},{"v":2,"ts":"2026-01-15T16:17:07.591-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519027591,"seq":790,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:17:22.710-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519042710,"seq":793,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:17:33.007-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"PowerShell","target":null,"path":null,"kind":"document","ts_ms":1768519053007,"seq":795,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:20:40.307-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519240307,"seq":799,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:20:47.859-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519247859,"seq":800,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:20:55.005-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519255005,"seq":802,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:21:42.124-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519302124,"seq":808,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:21:54.373-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"theo","agent_id":"a9","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519314373,"seq":809,"seat":true,"seat_slug":"theo"},{"v":2,"ts":"2026-01-15T16:22:14.073-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"theo","agent_id":"a9","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519334073,"seq":811,"seat":true,"seat_slug":"theo"},{"v":2,"ts":"2026-01-15T16:22:15.723-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519335723,"seq":812,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:22:22.545-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519342545,"seq":813,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:23:45.913-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519425913,"seq":815,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:23:59.672-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519439672,"seq":816,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:06.101-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519446101,"seq":817,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:11.983-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519451983,"seq":818,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:14.873-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519454873,"seq":819,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:25.813-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519465813,"seq":820,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:29.503-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519469503,"seq":821,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:38.754-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519478754,"seq":822,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:45.174-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519485174,"seq":823,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:24:55.252-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519495252,"seq":824,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:25:04.349-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519504349,"seq":825,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:25:11.553-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519511553,"seq":826,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:25:20.787-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519520787,"seq":827,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:25:28.184-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519528184,"seq":828,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:25:43.214-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"helen","agent_id":"a6","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519543214,"seq":829,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:25:48.911-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519548911,"seq":830,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:25:49.509-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Read","target":null,"path":"a file","kind":"document","ts_ms":1768519549509,"seq":831,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:25:49.679-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"cass","agent_id":"a3","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519549679,"seq":832,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:25:53.352-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"cass","agent_id":"a3","tool":"Read","target":null,"path":"a file","kind":"document","ts_ms":1768519553352,"seq":833,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:25:54.386-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519554386,"seq":834,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:25:55.117-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"cass","agent_id":"a3","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519555117,"seq":835,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:25:56.206-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519556206,"seq":836,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:25:56.899-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"marcus","agent_id":"a5","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519556899,"seq":837,"seat":true,"seat_slug":"marcus"},{"v":2,"ts":"2026-01-15T16:26:01.440-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUseFailure","agent":"cass","agent_id":"a3","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519561440,"seq":838,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:26:02.007-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"marcus","agent_id":"a5","tool":"Read","target":null,"path":"a file","kind":"document","ts_ms":1768519562007,"seq":839,"seat":true,"seat_slug":"marcus"},{"v":2,"ts":"2026-01-15T16:26:03.004-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUseFailure","agent":"cass","agent_id":"a3","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519563004,"seq":840,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:26:03.028-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519563028,"seq":841,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:26:03.742-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"marcus","agent_id":"a5","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519563742,"seq":843,"seat":true,"seat_slug":"marcus"},{"v":2,"ts":"2026-01-15T16:26:04.534-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUseFailure","agent":"helen","agent_id":"a6","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519564534,"seq":844,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:26:06.539-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"cass","agent_id":"a3","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519566539,"seq":845,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:26:07.829-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"cass","agent_id":"a3","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519567829,"seq":846,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:26:09.230-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519569230,"seq":847,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:26:10.479-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"helen","agent_id":"a6","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519570479,"seq":848,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:26:20.328-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"marcus","agent_id":"a5","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519580328,"seq":850,"seat":true,"seat_slug":"marcus"},{"v":2,"ts":"2026-01-15T16:26:21.769-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519581769,"seq":851,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:26:21.968-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"cass","agent_id":"a3","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519581968,"seq":852,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:26:29.377-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":"cass","agent_id":"a3","tool":"Grep","target":null,"path":null,"kind":"document","ts_ms":1768519589377,"seq":853,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:26:32.040-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"helen","agent_id":"a6","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519592040,"seq":855,"seat":true,"seat_slug":"helen"},{"v":2,"ts":"2026-01-15T16:26:33.609-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519593609,"seq":856,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:26:51.334-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"cass","agent_id":"a3","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519611334,"seq":858,"seat":true,"seat_slug":"cass"},{"v":2,"ts":"2026-01-15T16:26:52.825-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519612825,"seq":859,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:27:07.219-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStart","agent":"ai-joe","agent_id":"a10","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519627219,"seq":860,"seat":true,"seat_slug":"ai-joe"},{"v":2,"ts":"2026-01-15T16:27:27.501-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"SubagentStop","agent":"ai-joe","agent_id":"a10","tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519647501,"seq":862,"seat":true,"seat_slug":"ai-joe"},{"v":2,"ts":"2026-01-15T16:27:29.130-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519649130,"seq":863,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:29:16.379-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"UserPromptSubmit","agent":null,"agent_id":null,"tool":null,"target":null,"path":null,"kind":"document","ts_ms":1768519756379,"seq":865,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:29:21.552-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519761552,"seq":866,"seat":false,"seat_slug":null},{"v":2,"ts":"2026-01-15T16:29:30.951-07:00","session_id":"00000000-0000-4000-8000-000000000000","project":"project-a","event":"PostToolUse","agent":null,"agent_id":null,"tool":"Bash","target":null,"path":null,"kind":"document","ts_ms":1768519770951,"seq":867,"seat":false,"seat_slug":null}]}</script>
 <script type="application/json" id="brain-labels">{"version":1,"files":{"expert-bench.md":{"label":"The bench","public":"The bench"},"team-charter.md":{"label":"Team charter","public":"Team charter"},"open-items.md":{"label":"Open items ledger","public":"Open items ledger"},"BRIEF.md":{"label":"Project brief","public":"Project brief"},"MEMORY.md":{"label":"Memory index","public":"Memory index","append":"project"},"CLAUDE.md":{"label":"Project rules","public":"Project rules","global_label":"Global rules","global_public":"Global rules"}}}</script>
 <script>
@@ -844,6 +929,10 @@ const BRAIN_LABELS = {
   // property by Cass, voice by AI-Joe, layout by David; Joe chose "The" and
   // left Cass's ownership sentence out. Shown only on a pack whose origin is
   // log, like the caption it replaces, because it says "a real session".
+  // The track that plays under the demo intro, matched by title. Tessa's
+  // working title, 2026-09-25; change it here if Joe names the file otherwise.
+  // Absent from the library, the intro runs silent.
+  introTrack: 'Quiet, Then Arriving',
   demoHeader: {
     title: 'The Expert Project Team',
     subhead: 'One real working session, replayed',
@@ -1600,6 +1689,21 @@ const Settings = {
     }
     body.appendChild(motion);
 
+    // The demo's opening plays once per visit. This brings it back.
+    if (demo && window.Brain3D && window.Brain3D.introAvailable) {
+      const intro = this.group('Intro');
+      const row = this.el('div', 'srow');
+      row.appendChild(this.el('span', 'lab', 'Opening'));
+      const box = this.el('div', 'schoice');
+      const b = this.el('button', '', 'Play again');
+      b.type = 'button';
+      b.addEventListener('click', () => { this.open(false); window.Brain3D.replayIntro(); });
+      box.appendChild(b);
+      row.appendChild(box);
+      intro.appendChild(row);
+      body.appendChild(intro);
+    }
+
     if (!demo) {
       const labels = this.group('Labels');
       this.choice(labels, 'Roles', 'roleMode',
@@ -1933,6 +2037,24 @@ const CONFIG = {
   logMax: 400,            // activity panel keeps this many events, newest first
   panelOpenDefault: true, // first visit only; after that the last choice is remembered
   panelShiftEase: 0.14,
+  // Demo intro, David 2026-09-25: title, a tap (the tap is what lets a browser
+  // play sound), a flight in from deep space, the paragraph, then the header.
+  // Once per visit. Timings are David's judgment, not tested on viewers.
+  introFlightMs: 5500,
+  introFromDistance: 60,
+  introStarCount: 500,
+  introNebulae: 8,
+  introStarFadeMs: 1500,
+  introReadMs: 22000,       // the paragraph moves on by itself after this
+  introAutoBeginMs: 10000,  // a viewer who never taps still gets the flight, silent
+  introSettleMs: 700,
+  introLabelFromK: 0.7,     // labels fade in over the last 30% of the flight
+  introCrossfadeMs: 2500,   // intro music into the demo track
+  // Where the first hit lands in "Quiet, Then Arriving", measured from the
+  // file's loudness on 2026-09-25 (near silence, a rise, a jump at 4.0 s).
+  // With music playing the flight lasts exactly this long, so the brain
+  // arrives on the hit. A silent flight keeps introFlightMs.
+  introHitSec: 4.0,
   headerHoldMs: 22000,     // David: about one relaxed read of the paragraph (judgment, outside seat)
   headerNarrowPx: 900,     // below this width the demo header stays compact   // how quickly the scene recentres when the panel slides
   memoryCap: 14,
@@ -3227,7 +3349,7 @@ function drawNode(item, breath) {
   const hovered = hover.key === node.key;
   const px = clamp(node.labelSize * (CONFIG.labelScale || 1) * p.scale * size,
     CONFIG.labelMinPx, CONFIG.labelMaxPx);
-  const labelAlpha = hovered ? 1 : lerp(CONFIG.depthLabelNear, CONFIG.depthLabelFar, k) * fade;
+  const labelAlpha = (hovered ? 1 : lerp(CONFIG.depthLabelNear, CONFIG.depthLabelFar, k) * fade) * intro.labelK;
   if (labelAlpha <= 0.02) return;
   ctx.globalCompositeOperation = 'source-over';
   ctx.globalAlpha = labelAlpha;
@@ -3262,7 +3384,7 @@ function drawNode(item, breath) {
   if (!CONFIG.showRoles || !node.role) return;
   if (!hovered && !CONFIG.roleAlways && !node.alwaysRole && k > CONFIG.roleNearK) return;
   const roleDepth = Math.pow(lerp(CONFIG.depthLabelNear, CONFIG.depthLabelFar, k), CONFIG.roleDepthPower);
-  const roleAlpha = (hovered ? 1 : roleDepth * CONFIG.roleAlpha) * fade;
+  const roleAlpha = (hovered ? 1 : roleDepth * CONFIG.roleAlpha) * fade * intro.labelK;
   if (roleAlpha <= 0.02) return;
   const rpx = Math.max(CONFIG.roleMinPx, px * CONFIG.roleScale);
   ctx.globalAlpha = roleAlpha;
@@ -3559,6 +3681,7 @@ function drawFrame(at, now) {
 
   stepAmbient(now);
   drawAmbient(now);
+  drawIntroStars(now);
 
   // Painter's algorithm: everything sorted by camera space z, far to near.
   const items = [];
@@ -4056,14 +4179,14 @@ function musicRecall() {
 }
 
 /** Ease volume rather than cutting it, both on the way in and on the way out. */
-function musicFade(to, done) {
+function musicFade(to, done, ms) {
   if (music.fade) clearInterval(music.fade);
   const audio = music.audio;
   if (!audio) return;
   const from = audio.volume;
   const started = performance.now();
   music.fade = setInterval(() => {
-    const k = clamp((performance.now() - started) / CONFIG.musicFadeMs, 0, 1);
+    const k = clamp((performance.now() - started) / (ms || CONFIG.musicFadeMs), 0, 1);
     audio.volume = clamp(from + (to - from) * k, 0, 1);
     if (k >= 1) {
       clearInterval(music.fade);
@@ -4168,6 +4291,12 @@ async function initMusic() {
       music.tracks = [];
     }
   }
+
+  // The intro track plays only under the opening. It is not a listening
+  // track, so it never appears in the picker or the playlist.
+  const introTitle = Brain.LABELS.introTrack;
+  music.intro = music.tracks.find((t) => introTitle && t.title === introTitle) || null;
+  if (music.intro) music.tracks = music.tracks.filter((t) => t !== music.intro);
 
   if (!music.tracks.length) return;   // stays hidden, nothing to offer
   for (const t of music.tracks) {
@@ -4436,7 +4565,13 @@ function buildDemoHeader(h, fallback) {
   link.href = h.linkHref;
   link.target = '_blank';
   link.rel = 'noopener';
-  box.append(title, sub, body, link);
+  // The intro's four-colour line, kept under the title for the whole demo so
+  // the header matches the opening. Joe, 2026-09-25.
+  const rule = el('div', 'hRule');
+  rule.style.background = 'linear-gradient(90deg, ' + PALETTE.sectionOrder.join(', ') + ')';
+  const head = el('div', 'hHead');
+  head.append(title, rule);
+  box.append(head, sub, body, link);
   box.classList.add('header');
 
   let timer = 0;
@@ -4466,9 +4601,347 @@ function buildDemoHeader(h, fallback) {
     if (isPhone() && !box.classList.contains('compact') && !box.contains(ev.target)) compact();
   }, true);
   window.addEventListener('resize', () => { if (narrow()) compact(); });
+  state.headerExpand = expand;
   new MutationObserver(() => { if (narrow()) compact(); })
     .observe(document.body, { attributes: true, attributeFilter: ['class'] });
   expand();
+}
+
+// ------------------------------------------------------------------ intro
+// The demo's opening, David 2026-09-25. It moves the camera and nothing else:
+// no seat lights, nothing travels along an edge, and the replay stays on frame
+// one until the header has landed. Stars are dust and faint, never the pulse
+// colour, so none of it can be read as an event.
+
+const intro = {
+  phase: null, t0: 0, from: 0, to: 0, timer: 0, sound: false,
+  labelK: 1, stars: [], nebulae: [], fadeAt: 0, prevDist: 0, flightMs: 0, readAt: 0,
+};
+
+function introSeen() {
+  try { return sessionStorage.getItem('brain.introSeen') === '1'; } catch (err) { return false; }
+}
+
+function introMarkSeen() {
+  try { sessionStorage.setItem('brain.introSeen', '1'); } catch (err) { /* fine */ }
+}
+
+const reducedMotion = () => Boolean(window.matchMedia
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+function buildIntroStars() {
+  intro.stars = [];
+  for (let i = 0; i < CONFIG.introStarCount; i += 1) {
+    // a is the distance from the brain toward the start of the flight. Stars
+    // ahead of the arrival point stream past; the ones behind the brain stay
+    // as its backdrop, spread wider so they reach the edges of the screen.
+    const a = lerp(-25, CONFIG.introFromDistance + 5, Math.random());
+    const th = Math.random() * Math.PI * 2;
+    const spread = 1 + Math.max(0, 3 - a) / 4;
+    const r = (0.9 + Math.pow(Math.random(), 0.6) * 9) * spread;
+    const roll = Math.random();
+    intro.stars.push({
+      a, x: r * Math.cos(th), y: r * Math.sin(th),
+      sz: 0.6 + Math.random() * 1.4,
+      al: 0.15 + Math.random() * 0.45,
+      // Never PALETTE.accent: it is the pulse colour, and a star that looks
+      // like a pulse is a fake event. Section colours are structure, not work.
+      color: roll < 0.16 ? PALETTE.sectionOrder[i % 4] : roll < 0.6 ? PALETTE.dust : PALETTE.faint,
+    });
+  }
+  // Nebulae: large soft glows in the four section colours. Some sit along the
+  // flight and are passed through; the rest stay behind the brain as its
+  // backdrop while the paragraph is read. Joe, 2026-09-25: "more color".
+  intro.nebulae = [];
+  for (let i = 0; i < CONFIG.introNebulae; i += 1) {
+    const behind = i < CONFIG.introNebulae / 2;
+    const a = behind ? lerp(-18, -6, Math.random()) : lerp(8, CONFIG.introFromDistance - 5, Math.random());
+    const th = (i / CONFIG.introNebulae) * Math.PI * 2 + Math.random() * 0.8;
+    const r = behind ? lerp(5, 10, Math.random()) : lerp(2, 6, Math.random());
+    intro.nebulae.push({
+      a, x: r * Math.cos(th), y: r * Math.sin(th) * 0.7,
+      R: behind ? lerp(5, 8, Math.random()) : lerp(2.5, 4.5, Math.random()),
+      color: PALETTE.sectionOrder[i % 4],
+      al: behind ? lerp(0.24, 0.34, Math.random()) : lerp(0.12, 0.18, Math.random()),
+      ph: Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+function drawIntroNebulae(now, k) {
+  for (const n of intro.nebulae || []) {
+    const z = cam.distance - n.a;
+    if (z < 0.5) continue;
+    const drift = 0.4 * Math.sin(now / 17000 + n.ph);
+    const p = project({ x: n.x + drift, y: n.y + drift * 0.5, z });
+    if (!p) continue;
+    const rPx = Math.min(n.R * p.scale, Math.max(view.w, view.h) * 1.5);
+    // Fade as the camera passes through, so a cloud never fills the screen.
+    const alpha = n.al * k * clamp((z - 0.5) / 4, 0, 1);
+    if (alpha <= 0.005 || rPx < 1) continue;
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rPx);
+    g.addColorStop(0, hexAlpha(n.color, alpha));
+    g.addColorStop(0.45, hexAlpha(n.color, alpha * 0.45));
+    g.addColorStop(1, hexAlpha(n.color, 0));
+    ctx.fillStyle = g;
+    ctx.fillRect(p.x - rPx, p.y - rPx, rPx * 2, rPx * 2);
+  }
+}
+
+function drawIntroStars(now) {
+  if (!intro.stars.length) return;
+  let k = intro.phase === 'title' ? clamp((now - intro.t0) / 800, 0, 1) : 1;
+  if (intro.fadeAt) {
+    k = 1 - (now - intro.fadeAt) / CONFIG.introStarFadeMs;
+    if (k <= 0) { intro.stars = []; intro.fadeAt = 0; return; }
+  }
+  const dz = intro.prevDist ? intro.prevDist - cam.distance : 0;
+  ctx.globalCompositeOperation = 'lighter';
+  drawIntroNebulae(now, k);
+  ctx.globalAlpha = 1;
+  for (const s of intro.stars) {
+    const z = cam.distance - s.a;
+    if (z < 0.2) continue;
+    const p = project({ x: s.x, y: s.y, z });
+    if (!p) continue;
+    ctx.globalAlpha = s.al * k * clamp(z / 1.5, 0, 1);
+    if (dz > 0.002) {
+      // A streak back along the line of flight, as long as the frame's travel.
+      const q = project({ x: s.x, y: s.y, z: z + dz * 4 });
+      if (!q) continue;
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = s.sz;
+      ctx.beginPath();
+      ctx.moveTo(q.x, q.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    } else {
+      ctx.fillStyle = s.color;
+      ctx.fillRect(p.x - s.sz / 2, p.y - s.sz / 2, s.sz, s.sz);
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+/** Owns the camera while the intro runs. False when there is no intro. */
+function stepIntro(now) {
+  if (!intro.phase) { intro.prevDist = 0; return false; }
+  // Still for the title and the flight. From the paragraph on it turns at the
+  // normal rotation speed, so the replay picks up the same motion unbroken.
+  const turning = intro.phase === 'read' || intro.phase === 'settle';
+  const perTurn = CONFIG.autoRotate === false ? 0 : CONFIG.autoRotateSecPerTurn;
+  cam.yaw = CONFIG.yawStart + (turning && perTurn
+    ? ((now - intro.readAt) / 1000) * ((Math.PI * 2) / perTurn) : 0);
+  cam.pitch = rad(CONFIG.elevationDeg);
+  cam.yawVel = 0;
+  cam.pitchVel = 0;
+  cam.tween = null;
+  intro.prevDist = cam.distance;
+  if (intro.phase === 'title') {
+    cam.distance = intro.from;
+    intro.labelK = 0;
+  } else if (intro.phase === 'flight') {
+    const k = clamp((now - intro.t0) / intro.flightMs, 0, 1);
+    const e = easeInOut(k);
+    // In log space, so the brain grows at an even rate on screen. Linear in
+    // distance would leave it a dot for four seconds and then leap.
+    cam.distance = Math.exp(lerp(Math.log(intro.from), Math.log(intro.to), e));
+    intro.labelK = clamp((e - CONFIG.introLabelFromK) / (1 - CONFIG.introLabelFromK), 0, 1);
+    if (k >= 1) introRead();
+  } else {
+    cam.distance = intro.to;
+    // Names dimmed under the paragraph so they never show through the text,
+    // back to full as it settles into the header.
+    intro.labelK = intro.phase === 'read' ? 0.25 : 1;
+  }
+  return true;
+}
+
+function introDom() {
+  let box = dom('intro');
+  if (box) return box;
+  const h = Brain.LABELS.demoHeader;
+  box = el('div', '');
+  box.id = 'intro';
+  const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const titleCard = el('div', 'iTitleCard');
+  const go = el('button', 'iGo', coarse ? 'Tap to begin' : 'Click to begin');
+  go.type = 'button';
+  const rule = el('div', 'iRule');
+  rule.style.background = 'linear-gradient(90deg, ' + PALETTE.sectionOrder.join(', ') + ')';
+  titleCard.append(el('div', 'iTitle', h.title), rule, el('div', 'iSub', h.subhead), go);
+  const card = el('div', 'iCard');
+  card.id = 'introCard';
+  // The title again, smaller, so the paragraph has a head and the card
+  // shrinks title into title when it settles into the header.
+  const cardRule = el('div', 'iRule iCardRule');
+  cardRule.style.background = rule.style.background;
+  card.append(el('div', 'iCardTitle', h.title), cardRule, introBody(h.body),
+    el('div', 'iHint', coarse ? 'Tap to continue' : 'Click to continue'));
+  box.append(titleCard, card);
+  box.addEventListener('click', (ev) => { ev.stopPropagation(); introAdvance(true); });
+  document.body.appendChild(box);
+  // Keys advance the intro and reach nothing else while it runs, so space
+  // cannot pause a replay that has not started.
+  window.addEventListener('keydown', (ev) => {
+    if (!intro.phase || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    if (['Shift', 'Control', 'Alt', 'Meta', 'Tab'].includes(ev.key)) return;
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+    introAdvance(true);
+  }, true);
+  return box;
+}
+
+/** The paragraph, with the two gates and Joe's line in their node colours. */
+function introBody(text) {
+  const p = el('p', 'iBody');
+  const marks = [
+    ['Marcus', PALETTE.gates.marcus],
+    ['AI-Joe', PALETTE.gates['ai-joe']],
+    ['Then I make the call.', PALETTE.joe],
+  ];
+  let rest = text;
+  for (;;) {
+    let best = null;
+    for (const [word, color] of marks) {
+      const at = rest.indexOf(word);
+      if (at >= 0 && (!best || at < best.at)) best = { at, word, color };
+    }
+    if (!best) { p.appendChild(document.createTextNode(rest)); break; }
+    p.appendChild(document.createTextNode(rest.slice(0, best.at)));
+    const span = el('span', 'iMark', best.word);
+    span.style.color = best.color;
+    p.appendChild(span);
+    rest = rest.slice(best.at + best.word.length);
+  }
+  return p;
+}
+
+function introBegin() {
+  const box = introDom();
+  clearTimeout(intro.timer);
+  intro.from = CONFIG.introFromDistance;
+  intro.to = isPhone() ? CONFIG.phoneDistance : CONFIG.distance;
+  intro.sound = false;
+  intro.fadeAt = 0;
+  buildIntroStars();
+  intro.phase = 'title';
+  intro.t0 = performance.now();
+  intro.labelK = 0;
+  box.className = 'title';
+  box.style.display = '';
+  const card = dom('introCard');
+  card.style.transition = '';
+  card.style.transform = '';
+  card.style.opacity = '';
+  document.body.classList.remove('intro-out');
+  document.body.classList.add('intro');
+  intro.timer = setTimeout(() => introAdvance(false), CONFIG.introAutoBeginMs);
+}
+
+function introAdvance(gesture) {
+  if (!intro.phase) return;
+  clearTimeout(intro.timer);
+  if (gesture && !intro.sound && (intro.phase === 'title' || intro.phase === 'flight')) introSound();
+  if (intro.phase === 'title') {
+    if (reducedMotion()) { introRead(); return; }
+    intro.phase = 'flight';
+    intro.t0 = performance.now();
+    intro.flightMs = intro.sound && CONFIG.introHitSec ? CONFIG.introHitSec * 1000 : CONFIG.introFlightMs;
+    dom('intro').className = 'flight';
+  } else if (intro.phase === 'flight') {
+    introRead();
+  } else if (intro.phase === 'read') {
+    introSettle();
+  }
+}
+
+function introRead() {
+  intro.phase = 'read';
+  intro.t0 = performance.now();
+  intro.readAt = intro.t0;
+  intro.labelK = 0.25;
+  cam.distance = intro.to;
+  dom('intro').className = 'read';
+  clearTimeout(intro.timer);
+  intro.timer = setTimeout(() => introAdvance(false), CONFIG.introReadMs);
+}
+
+/** The paragraph shrinks into the corner header, then the replay starts. */
+function introSettle() {
+  intro.phase = 'settle';
+  const box = dom('intro');
+  const card = dom('introCard');
+  const cap = dom('caption');
+  box.className = 'settle';
+  document.body.classList.remove('intro');
+  document.body.classList.add('intro-out');
+  if (state.headerExpand) state.headerExpand();
+  const from = card.getBoundingClientRect();
+  const to = cap.getBoundingClientRect();
+  card.style.transition = 'transform ' + CONFIG.introSettleMs + 'ms ease-in-out, opacity '
+    + CONFIG.introSettleMs + 'ms ease-in';
+  if (to.width && from.width) {
+    card.style.transformOrigin = '0 0';
+    card.style.transform = 'translate(' + (to.left - from.left) + 'px, ' + (to.top - from.top)
+      + 'px) scale(' + (to.width / from.width) + ')';
+  }
+  card.style.opacity = '0';
+  intro.fadeAt = performance.now();
+  if (intro.sound) introHandOff();
+  clearTimeout(intro.timer);
+  intro.timer = setTimeout(() => {
+    intro.phase = null;
+    box.style.display = 'none';
+    document.body.classList.remove('intro-out');
+    // As if the viewer let go long ago, so auto-rotate carries on at full
+    // speed rather than pausing and easing back in.
+    cam.lastInput = performance.now() - CONFIG.autoRotateResumeMs - CONFIG.autoRotateEaseMs;
+    introMarkSeen();
+  }, CONFIG.introSettleMs);
+}
+
+function introSound() {
+  if (!music.intro) return;
+  if (!music.audio) {
+    music.audio = new Audio();
+    music.audio.addEventListener('ended', () => musicAdvance());
+  }
+  music.audio.loop = false;
+  music.audio.src = music.intro.url;
+  music.audio.volume = 0;
+  music.audio.muted = music.muted;
+  const started = music.audio.play();
+  if (started && started.catch) started.catch(() => {});
+  musicFade(CONFIG.musicVolume);
+  intro.sound = true;
+}
+
+/** Intro music out, the demo track in. Only after a real gesture started it. */
+function introHandOff() {
+  const remembered = musicRecall();
+  const next = music.tracks.some((t) => t.file === remembered) ? remembered
+    : (music.tracks[0] && music.tracks[0].file);
+  if (!next) {
+    musicFade(0, () => { if (music.audio) music.audio.pause(); }, CONFIG.introCrossfadeMs);
+    return;
+  }
+  musicFade(0, () => {
+    const pick = dom('musicPick');
+    if (pick) pick.value = next;
+    musicPlay(next);
+  }, CONFIG.introCrossfadeMs);
+}
+
+/** Settings, "Play again": back to frame one and the title. */
+function replayIntro() {
+  if (!state.headerExpand || !Brain.session) return;
+  if (music.audio && !music.audio.paused) musicFade(0, () => music.audio.pause());
+  seek(Brain.start);
+  state.holdUntil = 0;
+  introBegin();
 }
 
 function stepCamera(dtMs, now) {
@@ -4523,7 +4996,9 @@ function frame(now) {
   lastFrame = now;
 
   // Live never runs the replay clock. The scene is whatever has landed.
-  if (state.mode !== 'LIVE' && state.playing && Brain.events.length) {
+  // The intro holds the replay on frame one. Marcus: the clock does not start
+  // until the header has landed.
+  if (state.mode !== 'LIVE' && state.playing && Brain.events.length && !intro.phase) {
     if (state.holdUntil) {
       if (now >= state.holdUntil) { state.holdUntil = 0; startCrossfade(now); }
     } else {
@@ -4550,7 +5025,7 @@ function frame(now) {
     }
   }
 
-  stepCamera(dtMs, now);
+  if (!stepIntro(now)) stepCamera(dtMs, now);
   stepView();
   const at = currentAt();
   syncChips(at);
@@ -4671,6 +5146,7 @@ function applyPaletteToCss() {
     panelNote('No session qualifies for replay. A seat has to have started and stopped in it.');
   } else {
     seek(Brain.start);
+    if (state.mode === 'DEMO' && state.headerExpand && !introSeen()) introBegin();
   }
 
   document.addEventListener('visibilitychange', () => {
@@ -4703,7 +5179,8 @@ function applyPaletteToCss() {
   }
 
   requestAnimationFrame(frame);
-  window.Brain3D = { CONFIG, PALETTE, LAYOUT, cam, state, scene, stats, live, music, pollTail, seek };
+  window.Brain3D = { CONFIG, PALETTE, LAYOUT, cam, state, scene, stats, live, music, pollTail, seek,
+    intro, replayIntro, introAvailable: Boolean(state.headerExpand && Brain.session) };
 })();
 
 </script>
