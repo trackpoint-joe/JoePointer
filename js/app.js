@@ -156,12 +156,7 @@ var employerProfiles = {
             links: [['The Agent System I Built', '#project-careerpointers'], ['The CareerSpark Case Study', '#project-careerspark']]
         },
         resume: 'resources/Joe_Pointer_Resume_Baker_Tilly.pdf' },
-    'avalara': { industry: 'tech', company: 'Avalara',
-        welcome: {
-            role: 'Principal, AI Capability & Reskilling',
-            body: 'I ran one adoption operating model across seven Client Services business areas whose leaders did not report to me, and named a liaison in each. Those liaisons found the use cases I never would have.',
-            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
-        },
+    'avalara': { industry: 'tech', company: 'Avalara', welcome: '',
         resume: 'resources/Joe_Pointer_Resume_Avalara.pdf' },
     'sun-chemical': { industry: 'operations', company: 'Sun Chemical',
         welcome: {
