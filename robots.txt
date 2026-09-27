@@ -17,9 +17,10 @@ Allow: /resources/Joe_Pointer_Resume.pdf
 Disallow: /*?company=
 Disallow: /*?industry=
 
-# The Expert Team Brain replay. Published so Joe can share the URL deliberately,
-# not so a name search surfaces it. Lift this together with the noindex meta in
-# brain/index.html when the decision to link it from the site is made.
-Disallow: /brain
+# The Expert Team Brain replay (/brain) is linked from the homepage since
+# 2026-09-27 and deliberately NOT blocked here. It stays out of search through
+# the noindex meta in brain/index.html, written by export_demo.py --web. Nina,
+# 2026-09-27: a crawl block on a linked page hides that noindex from Google, and
+# the bare URL can then be listed with no description. Keep the crawl open.
 
 Sitemap: https://joepointer.com/sitemap.xml

@@ -2691,6 +2691,20 @@ body {
     color: var(--text-dark);
 }
 
+/* Links inside an expanded principle (the /brain replay link, 2026-09-27). The
+   darker gold, not --accent: the light gold is about 2:1 on this panel. */
+.principle-expanded a {
+    color: var(--accent-dark, var(--gold-dark));
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.principle-expanded a:hover,
+.principle-expanded a:focus-visible {
+    color: var(--primary, var(--midnight));
+}
+
 /* ============================================
    NAVIGATION ENHANCEMENTS
    ============================================ */
