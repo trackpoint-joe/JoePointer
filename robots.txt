@@ -4,7 +4,9 @@ Disallow: /admin.html
 Disallow: /storybank.html
 Disallow: /resources/
 Allow: /resources/Joe_Pointer_Resume_Full.pdf
-Allow: /resources/Joe_Pointer_Resume.pdf
+# The one-page resume (Joe_Pointer_Resume.pdf) is deliberately NOT allowed since
+# 2026-09-27: Joe wants the two-page resume to be the one search shows. Nothing on
+# the site links to the one-pager; the Disallow above covers it.
 
 # Magic-link URLs carry a company name and a tailored resume. The canonical in
 # index.html points them all back to the bare domain, but a canonical is a hint
