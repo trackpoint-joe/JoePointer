@@ -5303,3 +5303,54 @@ input:focus-visible {
     .welcome-band-body { font-size: 1.1rem; }
     .welcome-band-links { flex-direction: column; gap: var(--space-sm); }
 }
+
+/* ---------------------------------------------------------------- BRAND MARK
+   2026-09-28. Joe's laser-pointer mark: a gold dot inside a faint gold ring, used as
+   the period after "Joe Pointer" and after the headline keyword. Joe's rule: the gap
+   between the dot and the ring equals the dot's width (ring inner diameter = 3 x dot).
+   It stays gold in EVERY magic-link template (it is his signature, and his node in the
+   Expert Team Brain); the keyword, eyebrow, buttons and links follow the template.
+   Dark ground: Brain-gold dot with glow, faint site-gold ring. White nav (.on-light):
+   site-gold dot, darker 2px ring, because the faint ring vanishes on white (David). */
+.brand-mark {
+    position: relative;
+    display: inline-block;
+    width: 0.14em;
+    height: 0.14em;
+    margin-left: 0.16em;
+    border-radius: 50%;
+    background: #ffd27a;
+    box-shadow: 0 0 0.2em rgba(255, 210, 122, 0.85);
+}
+.brand-mark::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    box-sizing: border-box;
+    width: calc(0.42em + 2px);
+    height: calc(0.42em + 2px);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 97, 0.6);
+}
+.brand-mark.on-light {
+    background: var(--gold);
+    box-shadow: 0 0 0.12em rgba(201, 169, 97, 0.6);
+}
+.brand-mark.on-light::after {
+    width: calc(0.42em + 4px);
+    height: calc(0.42em + 4px);
+    border: 2px solid #a8873f;
+}
+/* The wordmark is near-black in every template (Joe, 2026-09-28). Each template's
+   catch-all link rule, e.g. [data-industry="tech"] a:not(.btn), used to recolor it. */
+.nav a.name,
+[data-industry] .nav a.name {
+    color: var(--midnight);
+}
+/* The headline keyword: true italic (the italic files now load), in the template accent. */
+.hero h1 em {
+    font-style: italic;
+    color: var(--accent, var(--gold));
+}
