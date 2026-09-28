@@ -5334,6 +5334,19 @@ input:focus-visible {
     border-radius: 50%;
     border: 1px solid rgba(201, 169, 97, 0.6);
 }
+/* The headline mark glows more than the nav mark: bigger means more glow, so it reads as
+   the same light as Joe's node in the Brain. Joe chose the level between medium and the
+   Brain's full glow on 2026-09-28: white-hot center, halo kept tight so "adoption" leads. */
+.hero h1 .brand-mark {
+    background: radial-gradient(circle, #fff6e0 0 28%, #ffd27a 72%);
+    box-shadow: 0 0 0.25em 0.07em rgba(255, 210, 122, 0.95),
+                0 0 0.75em 0.15em rgba(255, 210, 122, 0.38);
+}
+.hero h1 .brand-mark::after {
+    border-color: rgba(236, 200, 125, 0.85);
+    box-shadow: 0 0 0.22em rgba(255, 210, 122, 0.55),
+                inset 0 0 0.16em rgba(255, 210, 122, 0.42);
+}
 .brand-mark.on-light {
     background: var(--gold);
     box-shadow: 0 0 0.12em rgba(201, 169, 97, 0.6);
