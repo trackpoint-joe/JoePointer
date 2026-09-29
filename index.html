@@ -100,7 +100,7 @@
                 "name": "Joe Pointer (Joseph Pointer) | AI Adoption & Workforce Transformation Leader",
                 "isPartOf": { "@id": "https://joepointer.com/#website" },
                 "mainEntity": { "@id": "https://joepointer.com/#joe" },
-                "dateModified": "2026-09-28T21:00:00-06:00"
+                "dateModified": "2026-09-28T21:30:00-06:00"
             },
             {
                 "@type": "Person",
@@ -2211,7 +2211,7 @@
         .chat-header-id {
             display: flex;
             align-items: center;
-            gap: 0.7rem;
+            gap: 1rem; /* room for the avatar's outer ring */
             min-width: 0;
         }
 
@@ -2224,6 +2224,11 @@
             flex-shrink: 0;
             border: 2px solid rgba(201,169,97,0.55); /* fallback for pre-color-mix browsers */
             border: 2px solid color-mix(in srgb, var(--accent, #c9a961) 55%, transparent);
+            /* The mark's outer ring, as on the hero headshot (2026-09-28): faint gold, gold
+               in every template, gap scaled down for a 40px photo. */
+            outline: 1px solid rgba(201,169,97,0.55);
+            outline-offset: 4px;
+            margin-left: 5px;
         }
 
         .chat-header-text {
