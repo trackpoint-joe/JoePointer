@@ -1490,6 +1490,27 @@ body {
     color: var(--text-mid);
 }
 
+/* Arrow lists: the arrow hangs in the left gutter so wrapped lines align
+   with the text, not with the arrow. */
+.arrow-list {
+    list-style: none;
+    margin: 0 0 var(--space-sm);
+    padding: 0;
+    line-height: 1.8;
+    color: var(--text-mid);
+}
+
+.arrow-list li {
+    position: relative;
+    padding-left: 1.5em;
+}
+
+.arrow-list li::before {
+    content: "\2192";
+    position: absolute;
+    left: 0;
+}
+
 .timeline-result {
     background: linear-gradient(135deg, rgba(201, 169, 97, 0.08), rgba(201, 169, 97, 0.04));
     padding: var(--space-md);
