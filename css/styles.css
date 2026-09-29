@@ -5494,3 +5494,17 @@ input:focus-visible {
         font-size: 0.9rem;
     }
 }
+
+/* The headshot carries the mark's outer ring (Joe, 2026-09-28): a faint gold ring with a
+   gap, outside the dark gap and template-colored ring it already had, so every circle that
+   means Joe (nav mark, headline mark, headshot, Brain portal) reads as dot-in-ring. The
+   outer ring stays gold in every template because it is the mark. outline, not a
+   pseudo-element, because .hero-headshot clips with overflow:hidden; outline follows the
+   border-radius and is not clipped. The gap tightens where the portrait drops to 160px. */
+.hero-headshot {
+    outline: 1px solid rgba(201, 169, 97, 0.4);
+    outline-offset: 22px;
+}
+@media (max-width: 1199px) {
+    .hero-headshot { outline-offset: 14px; }
+}
