@@ -5367,3 +5367,130 @@ input:focus-visible {
     font-style: italic;
     color: var(--accent, var(--gold));
 }
+
+/* ---------------------------------------------------------------- BRAIN CALLOUT + TEASER
+   2026-09-28. Makes the Expert Project Team replay (brain/) easy to reach; before this it
+   was linked only inside a collapsed panel on the last How I Think card. Joe's choices:
+   a large dark card that breaks up the light sections, text first so it explains before
+   it shows, and his node framed in a round portal that echoes the hero headshot (dark gap,
+   thin ring) and the mark (a fainter outer ring with a gap). The label, button, border and
+   heading font follow the template like every other accent; the portal ring stays gold
+   because it is the mark. The hero teaser links down to the callout, not off the site. */
+.brain-callout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 56px;
+    margin: var(--space-2xl) 0 var(--space-xl);
+    padding: 56px 64px;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--accent, var(--gold)) 60%, transparent);
+    background: radial-gradient(ellipse at 82% 50%, #121829 0, #0b0f1a 55%);
+    box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.07), 0 18px 40px rgba(10, 14, 26, 0.18);
+    color: #e8ecf4;
+}
+.brain-callout-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-light, #ffd27a);
+    margin-bottom: 10px;
+}
+.brain-callout h3 {
+    font-family: var(--font-heading, var(--font-display));
+    font-size: 1.75rem;
+    line-height: 1.25;
+    color: #fff;
+    margin: 0 0 14px;
+}
+.brain-callout p {
+    color: #c5cbd8;
+    font-size: 1rem;
+    line-height: 1.65;
+    margin: 0 0 20px;
+}
+.brain-callout p .brand-mark {
+    font-size: 1.9em;
+    vertical-align: -0.05em;
+    margin: 0 0.2em;
+}
+.brain-callout .brain-callout-btn {
+    padding: 12px 24px;
+}
+.brain-callout .brain-callout-note {
+    font-size: 0.85rem;
+    color: #8f97a8;
+    margin: 14px 0 0;
+}
+.brain-callout-art {
+    position: relative;
+    width: 340px;
+    height: 340px;
+    margin-right: 12px;
+}
+.brain-callout-art img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 0 5px #0b0f1a, 0 0 0 6px var(--gold), 0 0 60px rgba(255, 210, 122, 0.18);
+}
+.brain-callout-art::after {
+    content: "";
+    position: absolute;
+    inset: -22px;
+    border-radius: 50%;
+    border: 1px solid rgba(201, 169, 97, 0.28);
+    pointer-events: none;
+}
+@media (max-width: 900px) {
+    .brain-callout {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 36px;
+        padding: 32px 24px;
+    }
+    .brain-callout h3 { font-size: 1.4rem; }
+    .brain-callout-art { width: 220px; height: 220px; margin: 8px 0 14px; }
+    .brain-callout-art::after { inset: -14px; }
+}
+
+.brain-teaser {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: fit-content;
+    margin: var(--space-lg) 0 0;
+    padding: 0.55rem 0.9rem 0.55rem 0.7rem;
+    border: 1px solid rgba(201, 169, 97, 0.35);
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    color: var(--on-dark-mid);
+    text-decoration: none;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+.brain-teaser:hover {
+    border-color: rgba(255, 210, 122, 0.8);
+    color: #fff;
+}
+/* Each template's catch-all a:not(.btn) rule would recolor the pill; keep it on-dark. */
+[data-industry] a.brain-teaser { color: var(--on-dark-mid); }
+[data-industry] a.brain-teaser:hover { color: #fff; }
+.brain-teaser .brand-mark {
+    font-size: 1.6em;
+    margin: 0 0.25em 0 0.15em;
+}
+.brain-teaser strong {
+    color: var(--accent-light, #ffd27a);
+    font-weight: 600;
+}
+@media (max-width: 768px) {
+    .brain-teaser {
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 0.9rem;
+    }
+}
