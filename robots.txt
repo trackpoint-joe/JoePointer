@@ -3,10 +3,12 @@ Allow: /
 Disallow: /admin.html
 Disallow: /storybank.html
 Disallow: /resources/
+Allow: /resources/Joe_Pointer_Resume.pdf
 Allow: /resources/Joe_Pointer_Resume_Full.pdf
-# The one-page resume (Joe_Pointer_Resume.pdf) is deliberately NOT allowed since
-# 2026-09-27: Joe wants the two-page resume to be the one search shows. Nothing on
-# the site links to the one-pager; the Disallow above covers it.
+# 2026-09-28: Joe_Pointer_Resume.pdf, the address Google already listed, now serves
+# the TWO-page resume (byte-identical to _Full.pdf, which stays live for links sent
+# since February). The one-pager moved to Joe_Pointer_Resume_1page.pdf and stays
+# blocked by the /resources/ Disallow. Publish every two-pager update to BOTH names.
 
 # Magic-link URLs carry a company name and a tailored resume. The canonical in
 # index.html points them all back to the bare domain, but a canonical is a hint
@@ -20,9 +22,8 @@ Disallow: /*?company=
 Disallow: /*?industry=
 
 # The Expert Team Brain replay (/brain) is linked from the homepage since
-# 2026-09-27 and deliberately NOT blocked here. It stays out of search through
-# the noindex meta in brain/index.html, written by export_demo.py --web. Nina,
-# 2026-09-27: a crawl block on a linked page hides that noindex from Google, and
-# the bare URL can then be listed with no description. Keep the crawl open.
+# 2026-09-27 and deliberately NOT blocked here. Since 2026-09-27 it is indexable
+# (robots meta "index, follow" written by export_demo.py --web) and listed in the
+# sitemap, so Joe's Brain can be found in search. Keep the crawl open.
 
 Sitemap: https://joepointer.com/sitemap.xml
