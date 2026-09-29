@@ -87,6 +87,7 @@ var employerProfiles = {
             links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Florida_Blue.pdf' },
+    'bpx': { industry: 'energy', company: 'BPX Energy', welcome: '', resume: 'resources/Joe_Pointer_Resume_BPX.pdf' },
 
     // Active Applications
     // NOTE: Per-company chatContext (Joe's private positioning strategy) has been
