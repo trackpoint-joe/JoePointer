@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Delivery Readiness Review</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=20260928">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=20260928">
+<meta name="description" content="A five-gate instrument for reviewing an AI result before it ships, built by Joe Pointer. Toggle each gate, get a readiness verdict, see the questions it sends back.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+    --midnight:#0a0e27;
+    --navy:#1a2332;
+    --prussian:#2d3e50;
+    --gold:#c9a961;
+    --gold-light:#e4d4a8;
+    --gold-dark:#8a6d2f;
+    --off-white:#f8f9fa;
+    --white:#ffffff;
+    --text-dark:#1a1a1a;
+    --text-mid:#5a6c7d;
+    --line:#e4e7ec;
+    --pass:#166534;
+    --gap:#92400e;
+    --unknown:#334155;
+    --font-display:'Playfair Display', serif;
+    --font-body:'Inter', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth;}
+body{
+    font-family:var(--font-body);
+    color:var(--text-dark);
+    background:var(--off-white);
+    line-height:1.7;
+    overflow-x:hidden;
+}
+.sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+a{color:var(--gold-dark);}
+a:focus-visible, button:focus-visible{outline:2px solid var(--gold-dark);outline-offset:2px;}
+.wrap{
+    max-width:780px;
+    margin:0 auto;
+    padding-inline:clamp(16px, 4vw, 40px);
+}
+
+/* Header */
+.site-header{
+    background:var(--midnight);
+    padding:18px 0;
+}
+.site-header .wrap{display:flex;align-items:center;justify-content:space-between;}
+.site-header .name{
+    font-family:var(--font-display);
+    font-size:1.25rem;
+    font-weight:700;
+    color:var(--white);
+    text-decoration:none;
+    letter-spacing:-0.01em;
+}
+.site-header .name:hover{color:var(--gold-light);}
+
+/* Hero */
+.hero{
+    background:linear-gradient(135deg, var(--midnight) 0%, var(--navy) 55%, var(--prussian) 100%);
+    color:var(--white);
+    padding:clamp(40px, 8vw, 72px) 0 clamp(32px, 6vw, 56px);
+}
+.eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    font-size:0.8125rem;
+    font-weight:700;
+    color:var(--gold-light);
+    margin-bottom:16px;
+}
+.eyebrow::before{
+    content:'';
+    width:32px;
+    height:2px;
+    background:linear-gradient(90deg, var(--gold-dark), var(--gold));
+}
+.hero h1{
+    font-family:var(--font-display);
+    font-size:clamp(2rem, 6vw, 2.75rem);
+    font-weight:700;
+    line-height:1.15;
+    letter-spacing:-0.02em;
+    margin-bottom:16px;
+    text-wrap:balance;
+}
+.hero .lede{
+    text-wrap:pretty;
+    font-size:clamp(1.05rem, 2.5vw, 1.25rem);
+    color:#c6cede;
+    max-width:60ch;
+    margin-bottom:20px;
+}
+.howto{
+    list-style:none;
+    margin:0 0 24px;
+    padding:16px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    max-width:60ch;
+}
+.howto li{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    font-size:0.9375rem;
+    color:#dce1ec;
+}
+.howto-num{
+    flex-shrink:0;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.3);
+    color:var(--gold-light);
+    font-weight:700;
+    font-size:0.75rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:1px;
+}
+.hero .lede-sub{
+    font-size:1rem;
+    color:#aeb7c9;
+    max-width:72ch;
+    text-wrap:pretty;
+    margin:-8px 0 20px;
+}
+.verdict-key{
+    max-width:72ch;
+    margin:-8px 0 20px;
+    display:grid;
+    gap:8px;
+}
+.verdict-key div{
+    display:grid;
+    grid-template-columns:13rem 1fr;
+    gap:12px;
+    align-items:baseline;
+}
+.verdict-key dt{
+    font-size:0.8125rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--gold-light);
+}
+.verdict-key dd{
+    margin:0;
+    text-wrap:pretty;
+    font-size:0.9375rem;
+    color:#dce1ec;
+}
+@media (max-width:560px){
+    .verdict-key div{grid-template-columns:1fr;gap:2px;}
+}
+.hero .howto-note{
+    font-size:0.875rem;
+    color:#c6cede;
+    margin:8px 0 20px;
+}
+.hero .meta{
+    font-size:0.875rem;
+    color:#b4bccc;
+}
+
+/* Sections */
+.section{
+    padding:clamp(40px, 7vw, 64px) 0;
+}
+.section + .section{
+    border-top:1px solid var(--line);
+}
+#instrument{
+    padding-bottom:calc(clamp(40px, 7vw, 64px) + 64px);
+}
+.section-intro{
+    margin-bottom:clamp(24px, 5vw, 36px);
+}
+.section-label-sm{
+    font-size:0.8125rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--gold-dark);
+    margin-bottom:8px;
+}
+.section-intro h2{
+    font-family:var(--font-display);
+    font-size:clamp(1.5rem, 4.5vw, 2.1rem);
+    font-weight:700;
+    color:var(--midnight);
+    letter-spacing:-0.01em;
+    margin-bottom:10px;
+    text-wrap:balance;
+}
+.section-intro p{
+    color:var(--text-mid);
+    font-size:1.0625rem;
+    max-width:62ch;
+    margin-bottom:10px;
+}
+.section-intro p:last-child{margin-bottom:0;}
+
+/* Preset bar */
+.preset-bar{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px;
+    margin-bottom:clamp(24px, 4vw, 32px);
+}
+.preset-label{
+    font-size:0.8125rem;
+    font-weight:600;
+    color:var(--text-mid);
+    margin-right:2px;
+}
+.preset-btn{
+    background:var(--white);
+    border:1.5px solid var(--line);
+    color:var(--midnight);
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:0.8125rem;
+    padding:9px 16px;
+    border-radius:50px;
+    cursor:pointer;
+    transition:all 0.15s ease;
+}
+.preset-btn:hover{border-color:var(--gold-dark);color:var(--gold-dark);}
+.preset-btn.preset-reset{color:var(--text-mid);border-style:dashed;}
+/* Selected example: filled, with a check, so the choice is obvious. */
+.preset-btn.is-active,
+.preset-btn.is-active:hover{background:var(--midnight);border-color:var(--midnight);color:#fff;}
+.preset-btn.is-active::before{content:"\2713\00a0";color:var(--gold-light);}
+.preset-status{
+    margin:-12px 0 28px;
+    padding:12px 16px;
+    border-left:3px solid var(--gold);
+    background:rgba(201,169,97,0.12);
+    border-radius:8px;
+    font-size:0.9375rem;
+    line-height:1.55;
+    color:var(--midnight);
+}
+.preset-status a{font-weight:700;color:var(--gold-dark);white-space:nowrap;}
+/* The gate an example changed gets a brief gold outline, so the eye finds it. */
+.gate-card.just-set{box-shadow:0 0 0 3px var(--gold);}
+@media (prefers-reduced-motion:no-preference){.gate-card{transition:box-shadow 0.4s ease;}}
+
+/* Gate cards */
+.gate-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:clamp(20px, 4vw, 28px);
+    margin-bottom:18px;
+}
+.gate-head{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    margin-bottom:14px;
+}
+.gate-number{
+    flex-shrink:0;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--midnight), var(--prussian));
+    color:var(--white);
+    font-weight:700;
+    font-size:0.9375rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.gate-head h3{
+    font-size:1.1875rem;
+    font-weight:700;
+    color:var(--midnight);
+    margin-bottom:2px;
+}
+.gate-head .gate-sub{
+    font-size:0.9375rem;
+    color:var(--text-mid);
+    margin-bottom:8px;
+}
+.gate-owner{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+.owner-tag{
+    display:inline-block;
+    font-size:0.6875rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:3px 10px;
+    border-radius:50px;
+    background:#eef1f5;
+    color:var(--navy);
+}
+
+/* Start Here tag, gate 1 only. Same visual language as the hero .eyebrow
+   (uppercase, tracked, gold, thin gradient rule) recoloured for a white card
+   instead of the dark hero ground. */
+.start-here-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    font-size:0.75rem;
+    font-weight:700;
+    color:var(--gold-dark);
+    margin-bottom:12px;
+}
+.start-here-tag::before{
+    content:'';
+    width:24px;
+    height:2px;
+    background:linear-gradient(90deg, var(--gold-dark), var(--gold));
+}
+
+/* Gate 1 stepper. Reuses .howto-num from the hero, recoloured here for a
+   white background, connected by a thin gold line instead of the hero's
+   translucent-white rule. */
+.gate-card .howto-num{
+    background:#f4ead2;
+    border:1px solid rgba(138,109,47,0.35);
+    color:var(--gold-dark);
+}
+.g1-stepper{margin-bottom:18px;}
+.g1-step{
+    position:relative;
+    display:flex;
+    gap:14px;
+    padding-bottom:18px;
+}
+.g1-step:last-child{padding-bottom:0;}
+.g1-step-marker{
+    position:relative;
+    flex-shrink:0;
+    width:24px;
+    display:flex;
+    justify-content:center;
+}
+.g1-step:not(:last-child) .g1-step-marker::after{
+    content:'';
+    position:absolute;
+    top:26px;
+    bottom:-18px;
+    left:50%;
+    width:2px;
+    transform:translateX(-50%);
+    background:linear-gradient(180deg, var(--gold-dark), rgba(138,109,47,0.15));
+}
+.g1-step-body{flex:1;min-width:0;}
+.g1-step-title{
+    font-weight:700;
+    font-size:0.9375rem;
+    color:var(--midnight);
+    margin-bottom:8px;
+}
+.g1-step-body .gate-questions{margin-bottom:0;}
+.gate-questions{
+    list-style:none;
+    margin:0 0 18px;
+    padding:0;
+}
+.gate-questions li{
+    position:relative;
+    padding-left:1.5em;
+    font-size:0.9375rem;
+    color:#3a4552;
+    margin-bottom:10px;
+}
+.gate-questions li::before{
+    content:"\2192";
+    position:absolute;
+    left:0;
+    color:var(--gold-dark);
+    font-weight:700;
+}
+.gate-questions li:last-child{margin-bottom:0;}
+.q-helper{
+    display:block;
+    font-size:0.8125rem;
+    font-weight:400;
+    font-style:italic;
+    color:var(--text-mid);
+    margin-top:4px;
+}
+
+.toggle-group{
+    display:flex;
+    gap:8px;
+    border:0;
+}
+.toggle-input{
+    position:absolute;
+    opacity:0;
+    width:1px;
+    height:1px;
+}
+.toggle-btn{
+    flex:1;
+    text-align:center;
+    padding:9px 6px;
+    border-radius:8px;
+    border:1.5px solid var(--line);
+    background:var(--white);
+    font-family:var(--font-body);
+    color:var(--text-mid);
+    cursor:pointer;
+    transition:all 0.15s ease;
+    user-select:none;
+    line-height:1.3;
+}
+.tb-label{display:block;font-weight:700;font-size:0.8125rem;}
+.tb-desc{display:block;font-weight:500;font-size:0.6875rem;margin-top:2px;}
+.toggle-input:focus-visible + .toggle-btn{
+    outline:2px solid var(--gold-dark);
+    outline-offset:2px;
+}
+.toggle-input:checked + .toggle-btn.toggle-pass{
+    background:var(--pass);
+    border-color:var(--pass);
+    color:var(--white);
+}
+.toggle-input:checked + .toggle-btn.toggle-gap{
+    background:var(--gap);
+    border-color:var(--gap);
+    color:var(--white);
+}
+.toggle-input:checked + .toggle-btn.toggle-unknown{
+    background:var(--unknown);
+    border-color:var(--unknown);
+    color:var(--white);
+}
+.toggle-btn:hover{border-color:#b7bdc6;}
+
+/* Verdict */
+.verdict-panel{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-left:5px solid var(--unknown);
+    border-radius:16px;
+    padding:clamp(20px, 4vw, 28px);
+    transition:border-color 0.2s ease;
+}
+.verdict-panel.is-ready{border-left-color:var(--pass);}
+.verdict-panel.is-conditions{border-left-color:var(--gap);}
+.verdict-panel.is-not-ready{border-left-color:var(--unknown);}
+.verdict-badge{
+    display:inline-block;
+    font-size:0.75rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    padding:5px 12px;
+    border-radius:50px;
+    margin-bottom:12px;
+    color:var(--white);
+    background:var(--unknown);
+}
+.verdict-panel.is-ready .verdict-badge{background:var(--pass);}
+.verdict-panel.is-conditions .verdict-badge{background:var(--gap);}
+.verdict-panel.is-not-ready .verdict-badge{background:var(--unknown);}
+.verdict-headline{
+    font-family:var(--font-display);
+    font-size:1.375rem;
+    font-weight:700;
+    color:var(--midnight);
+    margin-bottom:8px;
+}
+.verdict-rule{
+    font-size:0.875rem;
+    color:var(--text-mid);
+    margin-bottom:18px;
+}
+
+/* Send-back, collapsible */
+.sendback{
+    border-top:1px solid var(--line);
+    padding-top:16px;
+}
+.sendback summary{
+    cursor:pointer;
+    list-style:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:0.8125rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--text-dark);
+    font-weight:700;
+}
+.sendback summary::-webkit-details-marker{display:none;}
+.sendback summary::after{
+    content:'+';
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--gold-dark);
+    margin-left:12px;
+    flex-shrink:0;
+}
+.sendback[open] summary::after{content:'\2212';}
+.sendback-body{margin-top:14px;}
+.sendback-gate{
+    margin-bottom:16px;
+    padding-bottom:16px;
+    border-bottom:1px solid var(--line);
+}
+.sendback-gate:last-child{
+    margin-bottom:0;
+    padding-bottom:0;
+    border-bottom:0;
+}
+.sendback-gate .sg-title{
+    font-weight:700;
+    font-size:0.9375rem;
+    color:var(--text-dark);
+    margin-bottom:6px;
+}
+.sendback-gate .sg-title .sg-status{
+    font-weight:600;
+    text-transform:capitalize;
+}
+.sendback-gate ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+.sendback-gate li{
+    position:relative;
+    padding-left:1.5em;
+    font-size:0.9375rem;
+    color:#3a4552;
+    margin-bottom:6px;
+}
+.sendback-gate li::before{
+    content:"\2192";
+    position:absolute;
+    left:0;
+    color:var(--gold-dark);
+    font-weight:700;
+}
+
+/* Sticky verdict bar */
+.sticky-verdict{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:600;
+    background:var(--white);
+    border-top:1px solid var(--line);
+    box-shadow:0 -6px 20px rgba(10,14,39,0.14);
+    padding:10px clamp(16px, 4vw, 40px);
+}
+.sticky-verdict[hidden]{display:none;}
+.sv-inner{
+    max-width:780px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+.sv-badge{
+    flex-shrink:0;
+    font-size:0.6875rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    padding:4px 10px;
+    border-radius:50px;
+    color:var(--white);
+    background:var(--unknown);
+}
+.sticky-verdict.is-ready .sv-badge{background:var(--pass);}
+.sticky-verdict.is-conditions .sv-badge{background:var(--gap);}
+.sticky-verdict.is-not-ready .sv-badge{background:var(--unknown);}
+.sv-headline{
+    flex:1;
+    min-width:0;
+    font-size:0.875rem;
+    color:var(--text-dark);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.sv-link{
+    flex-shrink:0;
+    font-size:0.8125rem;
+    font-weight:600;
+    color:var(--gold-dark);
+    text-decoration:underline;
+    white-space:nowrap;
+}
+
+/* Case study */
+.case-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:clamp(20px, 4vw, 28px);
+    margin-bottom:20px;
+}
+.case-card p{margin-bottom:14px;color:#3a4552;}
+.case-card p:last-child{margin-bottom:0;}
+.case-card strong{color:var(--midnight);}
+
+.gate-map{
+    list-style:none;
+    padding:0;
+    margin:0 0 20px;
+}
+.gate-map li{
+    display:flex;
+    gap:12px;
+    align-items:baseline;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    font-size:0.9375rem;
+}
+.gate-map li:last-child{border-bottom:0;}
+.gate-map .gm-label{
+    flex-shrink:0;
+    width:9.5em;
+    font-weight:700;
+    color:var(--midnight);
+}
+.gate-map .gm-tag{
+    flex-shrink:0;
+    font-size:0.75rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:2px 8px;
+    border-radius:50px;
+    color:var(--white);
+    align-self:flex-start;
+    margin-top:2px;
+}
+.gm-tag.gm-pass{background:var(--pass);}
+.gm-tag.gm-gap{background:var(--gap);}
+.gm-tag.gm-na{background:#94a3b8;}
+.gate-map .gm-note{color:var(--text-mid);}
+
+@media (max-width: 560px){
+    .gate-map li{flex-direction:column;gap:4px;}
+    .gate-map .gm-label{width:auto;}
+}
+
+/* Own-build callout */
+.callout{
+    background:var(--navy);
+    color:var(--white);
+    border-radius:16px;
+    padding:clamp(22px, 4vw, 30px);
+}
+.callout p{
+    font-size:1.0625rem;
+    line-height:1.75;
+}
+.callout .callout-tag{
+    display:block;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    font-weight:700;
+    color:var(--gold-light);
+    margin-bottom:10px;
+}
+.callout-gate-label{
+    display:inline-block;
+    font-size:0.6875rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:3px 10px;
+    border-radius:50px;
+    background:var(--gap);
+    color:var(--white);
+    margin-bottom:12px;
+}
+
+/* Closer */
+.closer{
+    background:linear-gradient(135deg, var(--midnight) 0%, var(--navy) 55%, var(--prussian) 100%);
+    color:var(--white);
+}
+.closer .section-intro h2{color:var(--white);}
+.closer .section-intro p{color:#c6cede;}
+.closer-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+    margin-top:24px;
+}
+.btn-primary{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:1rem 2rem;
+    background:var(--gold);
+    color:var(--midnight);
+    font-weight:700;
+    font-size:0.9375rem;
+    text-decoration:none;
+    border-radius:50px;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px rgba(201,169,97,0.3);
+}
+.link-back{
+    font-size:0.9375rem;
+    font-weight:600;
+    color:var(--gold-light);
+    text-decoration:underline;
+}
+
+footer{
+    padding:24px 0 40px;
+    text-align:center;
+    font-size:0.8125rem;
+    color:#8b93a8;
+    background:var(--midnight);
+}
+
+/* Brand mark, copied from /css/styles.css BRAND MARK (2026-09-28). Dark-ground version:
+   Brain-gold dot inside a faint gold ring; the ring gap equals the dot width. The headline
+   mark glows more than the nav mark, because bigger means more glow. */
+.brand-mark{position:relative;display:inline-block;width:0.14em;height:0.14em;margin-left:0.16em;border-radius:50%;background:#ffd27a;box-shadow:0 0 0.2em rgba(255,210,122,0.85);}
+.brand-mark::after{content:"";position:absolute;left:50%;top:50%;box-sizing:border-box;width:calc(0.42em + 2px);height:calc(0.42em + 2px);transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(201,169,97,0.6);}
+.hero h1 .brand-mark{background:radial-gradient(circle,#fff6e0 0 28%,#ffd27a 72%);box-shadow:0 0 0.25em 0.07em rgba(255,210,122,0.95),0 0 0.75em 0.15em rgba(255,210,122,0.38);}
+.hero h1 .brand-mark::after{border-color:rgba(236,200,125,0.85);box-shadow:0 0 0.22em rgba(255,210,122,0.55),inset 0 0 0.16em rgba(255,210,122,0.42);}
+
+/* Industry themes, matching the magic-link templates on joepointer.com (energy borrows
+   operations, as on the main site). The top section stays at each template's darkest color
+   so every text style passes WCAG AA. Brand mark and verdict colors never change. */
+body[data-theme="operations"]{--midnight:#292524;--navy:#292524;--prussian:#1c1917;--gold:#ea580c;--gold-dark:#c2410c;--gold-light:#fb923c;}
+body[data-theme="finance"]{--midnight:#1a365d;--navy:#1a365d;--prussian:#102a4c;--gold:#b8860b;--gold-dark:#8a6d2f;--gold-light:#daa520;}
+body[data-theme="tech"]{--midnight:#0A1E3D;--navy:#0A1E3D;--prussian:#071530;--gold:#3B82F6;--gold-dark:#2563EB;--gold-light:#60A5FA;}
+body[data-theme="consulting"]{--midnight:#334155;--navy:#334155;--prussian:#1e293b;--gold:#d97706;--gold-dark:#B45309;--gold-light:#f59e0b;}
+body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a55;--gold:#00A3AD;--gold-dark:#007079;--gold-light:#4DC4CB;}
+/* Examples grouped by the verdict they produce. */
+.preset-bar{flex-direction:column;align-items:stretch;}
+.preset-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.preset-groups{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-start;}
+.preset-group{display:flex;flex-direction:column;gap:6px;}
+.preset-group-label{font-size:0.6875rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);}
+.preset-group-buttons{display:flex;flex-wrap:wrap;gap:8px;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="wrap">
+        <a class="name return-link" href="https://joepointer.com/">Joe Pointer<span class="brand-mark" aria-hidden="true"></span></a>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="wrap">
+        <div class="eyebrow">Interactive Review</div>
+        <h1>AI Delivery Readiness Review<span class="brand-mark" aria-hidden="true"></span></h1>
+        <p class="lede">Before anyone trusts an AI result enough to act on it, the result should clear five checks. This page walks you through them and tells you whether to accept it or send it back.</p>
+        <p class="lede-sub">An AI result is anything a model produces that someone will act on, such as <span id="exampleList">a forecast, a&nbsp;risk&nbsp;score, a recommended action,</span> or an answer from an&nbsp;AI&nbsp;assistant.</p>
+        <ol class="howto">
+            <li><span class="howto-num">1</span><span>Think of one AI result your team is being asked to trust.</span></li>
+            <li><span class="howto-num">2</span><span>Mark each of the five gates Pass, Gap, or Unknown.</span></li>
+            <li><span class="howto-num">3</span><span>Get a verdict and the questions to send back to the team.</span></li>
+        </ol>
+        <dl class="verdict-key">
+            <div><dt>Accept</dt><dd>Every check has evidence behind it.</dd></div>
+            <div><dt>Accept with conditions</dt><dd>It can be acted on once one or two missing answers come back.</dd></div>
+            <div><dt>Send back</dt><dd>Do not act on it yet. The questions go back to the team.</dd></div>
+        </dl>
+        <p class="howto-note key-note">Accept is the reviewer's recommendation. The owner of the result still decides.</p>
+        <p class="howto-note">About two minutes. Nothing you mark leaves this page.</p>
+        <p class="meta">Built by Joe Pointer in September 2026. These are the questions I ask before I trust an AI result.</p>
+    </div>
+</section>
+
+<section class="section" id="instrument">
+    <div class="wrap">
+        <div class="section-intro">
+            <h2>The Five Gates</h2>
+            <p>Mark each gate based on what you actually know about the result. The verdict updates as you go, in the bar at the bottom of your screen and in the full panel below the gates.</p>
+            <p>Each gate also shows where the check happens. Some run automatically in the pipeline on every change. Some are a human review. Some are watched after launch.</p>
+        </div>
+
+        <div class="preset-bar">
+            <div class="preset-head">
+                <span class="preset-label">Try an example:</span>
+                <button type="button" class="preset-btn preset-reset" id="resetGates">Reset</button>
+            </div>
+            <div class="preset-groups">
+                <div class="preset-group">
+                    <span class="preset-group-label">Accept</span>
+                    <div class="preset-group-buttons"><button type="button" class="preset-btn" aria-pressed="false" id="presetAllPass">Everything checks out</button></div>
+                </div>
+                <div class="preset-group">
+                    <span class="preset-group-label">Accept with conditions</span>
+                    <div class="preset-group-buttons"><button type="button" class="preset-btn" aria-pressed="false" id="presetOneOpen">Good model, no adoption plan yet</button></div>
+                </div>
+                <div class="preset-group">
+                    <span class="preset-group-label">Send back</span>
+                    <div class="preset-group-buttons">
+                        <button type="button" class="preset-btn" aria-pressed="false" id="presetGate1">Would a report have done the job?</button>
+                        <button type="button" class="preset-btn" aria-pressed="false" id="presetAllExceptEval">Strong business case, weak testing</button>
+                        <button type="button" class="preset-btn" aria-pressed="false" id="presetGate4">A number nobody can trace</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="preset-status" id="presetStatus" role="status" hidden>
+            <span id="presetStatusText"></span> <a href="#verdictPanel">Jump to the verdict</a>
+        </div>
+
+        <div class="gate-card" data-gate="1" data-gate-name="Audience, objectives, problem">
+            <span class="start-here-tag">Start Here</span>
+            <div class="gate-head">
+                <div class="gate-number">1</div>
+                <div>
+                    <h3>Audience, objectives, problem</h3>
+                    <div class="gate-sub">Who is this result for, what should change for them, and what stands in the way?</div>
+                    <div class="gate-owner"><span class="owner-tag">Human review</span></div>
+                </div>
+            </div>
+            <div class="g1-stepper">
+                <div class="g1-step">
+                    <div class="g1-step-marker"><span class="howto-num">1</span></div>
+                    <div class="g1-step-body">
+                        <div class="g1-step-title">Audience</div>
+                        <ul class="gate-questions">
+                            <li>Who uses this result, and in what role?</li>
+                            <li>What do they do today instead?</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="g1-step">
+                    <div class="g1-step-marker"><span class="howto-num">2</span></div>
+                    <div class="g1-step-body">
+                        <div class="g1-step-title">Objectives</div>
+                        <ul class="gate-questions">
+                            <li>What outcome should change for them, and who is accountable for it today?</li>
+                            <li>What quantity would move if this works?</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="g1-step">
+                    <div class="g1-step-marker"><span class="howto-num">3</span></div>
+                    <div class="g1-step-body">
+                        <div class="g1-step-title">Problem</div>
+                        <ul class="gate-questions">
+                            <li>What breaks today that this result is meant to fix?</li>
+                            <li>What decision does this result change?</li>
+                            <li>Would a report, a list, or a spreadsheet get the same decision made?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <fieldset class="toggle-group">
+                <legend class="sr-only">Status for Gate 1, Audience, objectives, problem</legend>
+                <input type="radio" class="toggle-input" name="gate1" id="gate1-pass" value="pass">
+                <label class="toggle-btn toggle-pass" for="gate1-pass"><span class="tb-label">Pass</span><span class="tb-desc">Answered, with evidence</span></label>
+                <input type="radio" class="toggle-input" name="gate1" id="gate1-gap" value="gap">
+                <label class="toggle-btn toggle-gap" for="gate1-gap"><span class="tb-label">Gap</span><span class="tb-desc">Answered, and it falls short</span></label>
+                <input type="radio" class="toggle-input" name="gate1" id="gate1-unknown" value="unknown" checked>
+                <label class="toggle-btn toggle-unknown" for="gate1-unknown"><span class="tb-label">Unknown</span><span class="tb-desc">Nobody knows yet</span></label>
+            </fieldset>
+        </div>
+
+        <div class="gate-card" data-gate="2" data-gate-name="Success criteria and baseline">
+            <div class="gate-head">
+                <div class="gate-number">2</div>
+                <div>
+                    <h3>Success criteria and baseline</h3>
+                    <div class="gate-sub">How will you know it is better than the way the work gets done today?</div>
+                    <div class="gate-owner"><span class="owner-tag">Human review</span></div>
+                </div>
+            </div>
+            <ul class="gate-questions">
+                <li>What does success look like, in a number anyone can check?</li>
+                <li>What is the baseline, the simple rule or the current process, that this has to beat?</li>
+                <li>Has anyone actually run that baseline, or is it assumed?</li>
+                <li>What does a false alarm cost compared with a missed problem?</li>
+                <li>Was the threshold chosen with that in mind?</li>
+                <li>Over what population and what period?</li>
+            </ul>
+            <fieldset class="toggle-group">
+                <legend class="sr-only">Status for Gate 2, Success criteria and baseline</legend>
+                <input type="radio" class="toggle-input" name="gate2" id="gate2-pass" value="pass">
+                <label class="toggle-btn toggle-pass" for="gate2-pass"><span class="tb-label">Pass</span><span class="tb-desc">Answered, with evidence</span></label>
+                <input type="radio" class="toggle-input" name="gate2" id="gate2-gap" value="gap">
+                <label class="toggle-btn toggle-gap" for="gate2-gap"><span class="tb-label">Gap</span><span class="tb-desc">Answered, and it falls short</span></label>
+                <input type="radio" class="toggle-input" name="gate2" id="gate2-unknown" value="unknown" checked>
+                <label class="toggle-btn toggle-unknown" for="gate2-unknown"><span class="tb-label">Unknown</span><span class="tb-desc">Nobody knows yet</span></label>
+            </fieldset>
+        </div>
+
+        <div class="gate-card" data-gate="3" data-gate-name="Evaluation">
+            <div class="gate-head">
+                <div class="gate-number">3</div>
+                <div>
+                    <h3>Evaluation</h3>
+                    <div class="gate-sub">Was it tested on data it had never seen, the way it will be used for real?</div>
+                    <div class="gate-owner"><span class="owner-tag">Human review</span></div>
+                </div>
+            </div>
+            <ul class="gate-questions">
+                <li><span class="q-main">Was the test data kept separate in time from the data the model learned on?</span><span class="q-helper">In plain terms: was it graded on a stretch of time it had already learned from?</span></li>
+                <li><span class="q-main">Could any input leak the answer the model is supposed to produce?</span><span class="q-helper">In plain terms: is there a clue hidden in the data that gives away the answer?</span></li>
+                <li><span class="q-main">Is the test set representative of what the model will see once it is live?</span><span class="q-helper">In plain terms: does the practice test look like the real thing it will face later?</span></li>
+                <li><span class="q-main">Is the score a calibrated probability, or only a ranking?</span><span class="q-helper">In plain terms: when it says seventy percent, do about seventy out of a hundred of those turn out that way?</span></li>
+                <li><span class="q-main">Were related records (the same site, the same equipment, the same customer) kept on one side of the split?</span><span class="q-helper">In plain terms: if ten readings came from one machine, did all ten stay together on one side, training or test, instead of leaking across both?</span></li>
+                <li><span class="q-main">What counts as a failure, and who defined it?</span><span class="q-helper">In plain terms: someone decided what counts as wrong here. Who made that call, and would you agree with it?</span></li>
+            </ul>
+            <fieldset class="toggle-group">
+                <legend class="sr-only">Status for Gate 3, Evaluation</legend>
+                <input type="radio" class="toggle-input" name="gate3" id="gate3-pass" value="pass">
+                <label class="toggle-btn toggle-pass" for="gate3-pass"><span class="tb-label">Pass</span><span class="tb-desc">Answered, with evidence</span></label>
+                <input type="radio" class="toggle-input" name="gate3" id="gate3-gap" value="gap">
+                <label class="toggle-btn toggle-gap" for="gate3-gap"><span class="tb-label">Gap</span><span class="tb-desc">Answered, and it falls short</span></label>
+                <input type="radio" class="toggle-input" name="gate3" id="gate3-unknown" value="unknown" checked>
+                <label class="toggle-btn toggle-unknown" for="gate3-unknown"><span class="tb-label">Unknown</span><span class="tb-desc">Nobody knows yet</span></label>
+            </fieldset>
+        </div>
+
+        <div class="gate-card" data-gate="4" data-gate-name="Claims check">
+            <div class="gate-head">
+                <div class="gate-number">4</div>
+                <div>
+                    <h3>Claims check</h3>
+                    <div class="gate-sub">Can every number reported about this result be traced to its source?</div>
+                    <div class="gate-owner"><span class="owner-tag">Automated check where possible</span><span class="owner-tag">Human review</span></div>
+                </div>
+            </div>
+            <ul class="gate-questions">
+                <li>Does every reported result trace to a named person, a shipped feature, or a linked measurement?</li>
+                <li>Could someone ask "show me" and get an answer in under a minute?</li>
+                <li>Is there a claim here that nobody currently on the team can stand behind?</li>
+                <li>Has anyone checked the number independently, beyond naming where it came from?</li>
+            </ul>
+            <fieldset class="toggle-group">
+                <legend class="sr-only">Status for Gate 4, Claims check</legend>
+                <input type="radio" class="toggle-input" name="gate4" id="gate4-pass" value="pass">
+                <label class="toggle-btn toggle-pass" for="gate4-pass"><span class="tb-label">Pass</span><span class="tb-desc">Answered, with evidence</span></label>
+                <input type="radio" class="toggle-input" name="gate4" id="gate4-gap" value="gap">
+                <label class="toggle-btn toggle-gap" for="gate4-gap"><span class="tb-label">Gap</span><span class="tb-desc">Answered, and it falls short</span></label>
+                <input type="radio" class="toggle-input" name="gate4" id="gate4-unknown" value="unknown" checked>
+                <label class="toggle-btn toggle-unknown" for="gate4-unknown"><span class="tb-label">Unknown</span><span class="tb-desc">Nobody knows yet</span></label>
+            </fieldset>
+        </div>
+
+        <div class="gate-card" data-gate="5" data-gate-name="Adoption and value">
+            <div class="gate-head">
+                <div class="gate-number">5</div>
+                <div>
+                    <h3>Adoption and value</h3>
+                    <div class="gate-sub">Are people actually using this result, and which person owns it after launch?</div>
+                    <div class="gate-owner"><span class="owner-tag">Monitored after launch</span><span class="owner-tag">Human review</span></div>
+                </div>
+            </div>
+            <ul class="gate-questions">
+                <li>Is this actually used in the work, or only available to use?</li>
+                <li>How is the benefit measured, and who checks it?</li>
+                <li>Who owns this after the team that built it moves on?</li>
+                <li>Do the people using the output trust it, and can they tell you when it is wrong?</li>
+                <li>What is watched after launch, and what triggers a rollback?</li>
+                <li>Is the benefit measured in the same quantity named in Gate 1?</li>
+            </ul>
+            <fieldset class="toggle-group">
+                <legend class="sr-only">Status for Gate 5, Adoption and value</legend>
+                <input type="radio" class="toggle-input" name="gate5" id="gate5-pass" value="pass">
+                <label class="toggle-btn toggle-pass" for="gate5-pass"><span class="tb-label">Pass</span><span class="tb-desc">Answered, with evidence</span></label>
+                <input type="radio" class="toggle-input" name="gate5" id="gate5-gap" value="gap">
+                <label class="toggle-btn toggle-gap" for="gate5-gap"><span class="tb-label">Gap</span><span class="tb-desc">Answered, and it falls short</span></label>
+                <input type="radio" class="toggle-input" name="gate5" id="gate5-unknown" value="unknown" checked>
+                <label class="toggle-btn toggle-unknown" for="gate5-unknown"><span class="tb-label">Unknown</span><span class="tb-desc">Nobody knows yet</span></label>
+            </fieldset>
+        </div>
+
+        <div class="verdict-panel is-not-ready" id="verdictPanel" aria-live="polite">
+            <div class="verdict-badge" id="verdictBadge">Send back</div>
+            <div class="verdict-headline" id="verdictHeadline">Gate 1 (audience, objectives, problem) and Gate 3 (evaluation) have not passed. Neither can be traded away, so this goes back to the team.</div>
+            <div class="verdict-rule" id="verdictRule">How the verdict works. Any gate not marked Pass counts against the result. Gate 1 and Gate 3 cannot be traded away, so if either has not passed, the result goes back to the team. A claim marked Gap in Gate 4 sends it back too. Otherwise, all five passed is accept, one or two not passed is accept with conditions, and three or more is send back.</div>
+            <details class="sendback" id="sendback">
+                <summary><span>Questions I would send back to the team (<span id="sendbackCount">5</span>)</span></summary>
+                <div class="sendback-body" id="sendbackList"></div>
+            </details>
+        </div>
+    </div>
+</section>
+
+<div class="sticky-verdict is-not-ready" id="stickyVerdict" hidden>
+    <div class="sv-inner">
+        <span class="sv-badge" id="svBadge">Send back</span>
+        <span class="sv-headline" id="svHeadline">Gates 1, 3 not passed.</span>
+        <a href="#verdictPanel" class="sv-link">See details</a>
+    </div>
+</div>
+
+<section class="section" id="case">
+    <div class="wrap">
+        <div class="section-intro">
+            <p class="section-label-sm">Applied To My Own Work</p>
+            <h2>Quality Control on AI Output in Production</h2>
+        </div>
+
+        <div class="case-card">
+            <p>The AI I was using on Future Me, Answered invented two testimonials, and they stayed live for three months before a review agent I built caught them. What changed afterward was where the rule lives and where the review runs.</p>
+            <p>My rule against invented quotes lived in a comment in one code file. Until that sweep, the review agent had never been pointed at the marketing pages, and it was not on the pull request path.</p>
+        </div>
+
+        <ul class="gate-map">
+            <li><span class="gm-label">Gate 1</span><span class="gm-tag gm-na">Not the failure point</span><span class="gm-note">It was already clear who the page was for and what it had to do.</span></li>
+            <li><span class="gm-label">Gate 2</span><span class="gm-tag gm-na">Not the failure point</span><span class="gm-note">No baseline question was in play here.</span></li>
+            <li><span class="gm-label">Gate 3</span><span class="gm-tag gm-na">Not applicable, no model here</span><span class="gm-note">Nothing was trained, so there was no evaluation to test. The veto applies to model-backed results.</span></li>
+            <li><span class="gm-label">Gate 4</span><span class="gm-tag gm-gap">Gap, twice</span><span class="gm-note">The rule lived in a code comment in one file, and the review agent was never pointed at the marketing pages or put on the pull request path.</span></li>
+            <li><span class="gm-label">Gate 5</span><span class="gm-tag gm-na">Not the failure point</span><span class="gm-note">Adoption was not what failed here.</span></li>
+        </ul>
+
+        <div class="case-card">
+            <p><strong>The fix.</strong> I moved the rule into the instruction file every AI session loads now: every public claim has to trace to a named person, a shipped feature, or a linked measurement. My co-founder and I put review agents on every pull request, not only where I happened to aim it.</p>
+            <p><strong>The recurrence.</strong> Three weeks later, the same kind of defect came back. This time it was caught on the first commit, before it ever reached a live page.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="own-build">
+    <div class="wrap">
+        <div class="callout">
+            <span class="callout-tag">Where I Missed It</span>
+            <span class="callout-gate-label">Gate 2 miss</span>
+            <p>In April I built a demo dashboard for an electric cooperative, including a price forecast on simulated data. I skipped the baseline. This review would have caught it.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section closer" id="contact">
+    <div class="wrap">
+        <div class="section-intro">
+            <h2>Bring Me a Claim</h2>
+            <p>Pick any AI result already in front of you. These are the questions I would ask it.</p>
+        </div>
+        <div class="closer-actions">
+            <a class="btn-primary" href="mailto:joe@joepointer.com"><span>Email joe@joepointer.com</span></a>
+            <a class="link-back return-link" href="https://joepointer.com/">More of my work at joepointer.com</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    Joe Pointer &middot; joepointer.com
+</footer>
+
+<script>
+(function () {
+    'use strict';
+
+    var gateCards = Array.prototype.slice.call(document.querySelectorAll('.gate-card'));
+    var verdictPanel = document.getElementById('verdictPanel');
+    var verdictBadge = document.getElementById('verdictBadge');
+    var verdictHeadline = document.getElementById('verdictHeadline');
+    var sendbackList = document.getElementById('sendbackList');
+    var sendbackCount = document.getElementById('sendbackCount');
+    var stickyVerdict = document.getElementById('stickyVerdict');
+    var svBadge = document.getElementById('svBadge');
+    var svHeadline = document.getElementById('svHeadline');
+    var resetBtn = document.getElementById('resetGates');
+    var presetAllExceptEval = document.getElementById('presetAllExceptEval');
+    var presetOneOpen = document.getElementById('presetOneOpen');
+    var presetGate1 = document.getElementById('presetGate1');
+    var presetAllPass = document.getElementById('presetAllPass');
+    var presetGate4 = document.getElementById('presetGate4');
+
+    function getGateState(card) {
+        var checked = card.querySelector('input[type="radio"]:checked');
+        return checked ? checked.value : 'unknown';
+    }
+
+    function getGateQuestions(card) {
+        var items = card.querySelectorAll('.gate-questions li');
+        return Array.prototype.map.call(items, function (li) {
+            var main = li.querySelector('.q-main');
+            return (main ? main.textContent : li.textContent).trim();
+        });
+    }
+
+    function setGateValue(number, value) {
+        var card = document.querySelector('.gate-card[data-gate="' + number + '"]');
+        if (!card) { return; }
+        var input = card.querySelector('input[value="' + value + '"]');
+        if (input) { input.checked = true; }
+    }
+
+    function renderSendback(openGates) {
+        sendbackList.innerHTML = '';
+        sendbackCount.textContent = String(openGates.length);
+        if (openGates.length === 0) {
+            var none = document.createElement('p');
+            none.style.color = '#5a6c7d';
+            none.style.fontSize = '0.9375rem';
+            none.textContent = 'Nothing to send back.';
+            sendbackList.appendChild(none);
+            return;
+        }
+        openGates.forEach(function (gate) {
+            var block = document.createElement('div');
+            block.className = 'sendback-gate';
+
+            var title = document.createElement('div');
+            title.className = 'sg-title';
+            title.innerHTML = 'Gate ' + gate.number + ': ' + gate.name +
+                ' (<span class="sg-status">' + gate.status + '</span>)';
+            block.appendChild(title);
+
+            var ul = document.createElement('ul');
+            gate.questions.forEach(function (q) {
+                var li = document.createElement('li');
+                li.textContent = q;
+                ul.appendChild(li);
+            });
+            block.appendChild(ul);
+
+            sendbackList.appendChild(block);
+        });
+    }
+
+    function computeVerdict() {
+        var openGates = [];
+
+        gateCards.forEach(function (card) {
+            var status = getGateState(card);
+            if (status !== 'pass') {
+                openGates.push({
+                    number: card.getAttribute('data-gate'),
+                    name: card.getAttribute('data-gate-name'),
+                    status: status,
+                    questions: getGateQuestions(card)
+                });
+            }
+        });
+
+        var openCount = openGates.length;
+        var vetoGates = openGates.filter(function (g) {
+            return g.number === '1' || g.number === '3';
+        });
+        var hasGate1 = vetoGates.some(function (g) { return g.number === '1'; });
+        var hasGate3 = vetoGates.some(function (g) { return g.number === '3'; });
+        var gate4Failed = openGates.some(function (g) { return g.number === '4' && g.status === 'gap'; });
+        var mode, badgeText, headline, shortText;
+
+        if (vetoGates.length === 0 && gate4Failed) {
+            mode = 'is-not-ready';
+            badgeText = 'Send back';
+            headline = 'Gate 4 (claims check) found a claim that falls short. A result carrying a claim that fails goes back to the team.';
+            shortText = 'Gate 4 failed.';
+        } else if (vetoGates.length > 0) {
+            mode = 'is-not-ready';
+            badgeText = 'Send back';
+            if (hasGate1 && hasGate3) {
+                headline = 'Gate 1 (audience, objectives, problem) and Gate 3 (evaluation) have not passed. Neither can be traded away, so this goes back to the team.';
+                shortText = 'Gates 1, 3 not passed.';
+            } else if (hasGate1) {
+                headline = 'Gate 1 (audience, objectives, problem) has not passed. That gate cannot be traded away, so this goes back to the team regardless of the other gates.';
+                shortText = 'Gate 1 not passed.';
+            } else {
+                headline = 'Gate 3 (evaluation) has not passed. That gate cannot be traded away, so this goes back to the team regardless of the other gates.';
+                shortText = 'Gate 3 not passed.';
+            }
+        } else if (openCount === 0) {
+            mode = 'is-ready';
+            badgeText = 'Accept';
+            headline = 'Accept. Every gate has an answer with evidence behind it. The owner of the result still decides.';
+            shortText = 'Every gate has evidence.';
+        } else if (openCount <= 2) {
+            mode = 'is-conditions';
+            badgeText = 'Accept with conditions';
+            headline = openCount + (openCount === 1 ? ' gate needs' : ' gates need') + ' an answer before anyone acts on this result.';
+            shortText = openCount + (openCount === 1 ? ' gate needs' : ' gates need') + ' an answer.';
+        } else {
+            mode = 'is-not-ready';
+            badgeText = 'Send back';
+            headline = openCount + ' gates have not passed. Do not act on this result yet.';
+            shortText = openCount + ' gates not passed.';
+        }
+
+        verdictPanel.classList.remove('is-ready', 'is-conditions', 'is-not-ready');
+        verdictPanel.classList.add(mode);
+        verdictBadge.textContent = badgeText;
+        verdictHeadline.textContent = headline;
+
+        stickyVerdict.classList.remove('is-ready', 'is-conditions', 'is-not-ready');
+        stickyVerdict.classList.add(mode);
+        svBadge.textContent = badgeText;
+        svHeadline.textContent = shortText;
+
+        renderSendback(openGates);
+    }
+
+    var presetButtons = [presetAllPass, presetOneOpen, presetGate1, presetAllExceptEval, presetGate4];
+    var presetStatus = document.getElementById('presetStatus');
+    var presetStatusText = document.getElementById('presetStatusText');
+    var flashTimer = null;
+    var PRESET_MESSAGES = {
+        presetAllPass: { gate: null, text: 'Example applied below. All five gates are marked Pass, and the verdict is Accept. Scroll down to see each gate, or' },
+        presetGate4: { gate: '4', text: 'Example applied below. Gate 4 (claims check) is marked Gap, the other four are marked Pass, and the verdict is Send back. Scroll down to see each gate, or' },
+        presetAllExceptEval: { gate: '3', text: 'Example applied below. Gate 3 (evaluation) is marked Gap, the other four are marked Pass, and the verdict is Send back. Scroll down to see each gate, or' },
+        presetGate1: { gate: '1', text: 'Example applied below. Gate 1 (audience, objectives, problem) is marked Gap, the other four are marked Pass, and the verdict is Send back. Scroll down to see each gate, or' },
+        presetOneOpen: { gate: '5', text: 'Example applied below. Gate 5 (adoption and value) is marked Gap, the other four are marked Pass, and the verdict is Accept with conditions. Scroll down to see each gate, or' }
+    };
+
+    function showPreset(btn) {
+        var info = PRESET_MESSAGES[btn.id];
+        presetButtons.forEach(function (b) {
+            var on = (b === btn);
+            b.classList.toggle('is-active', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        presetStatusText.textContent = info.text;
+        presetStatus.hidden = false;
+        gateCards.forEach(function (card) { card.classList.remove('just-set'); });
+        var changed = info.gate ? document.querySelector('.gate-card[data-gate="' + info.gate + '"]') : null;
+        if (changed) { changed.classList.add('just-set'); }
+        if (flashTimer) { clearTimeout(flashTimer); }
+        flashTimer = setTimeout(function () {
+            gateCards.forEach(function (card) { card.classList.remove('just-set'); });
+        }, 2500);
+    }
+
+    function clearPreset() {
+        presetButtons.forEach(function (b) {
+            b.classList.remove('is-active');
+            b.setAttribute('aria-pressed', 'false');
+        });
+        presetStatus.hidden = true;
+        gateCards.forEach(function (card) { card.classList.remove('just-set'); });
+    }
+
+    document.addEventListener('change', function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains('toggle-input')) {
+            clearPreset();
+            computeVerdict();
+        }
+    });
+
+    resetBtn.addEventListener('click', function () {
+        gateCards.forEach(function (card) {
+            var unknownInput = card.querySelector('input[value="unknown"]');
+            if (unknownInput) {
+                unknownInput.checked = true;
+            }
+        });
+        clearPreset();
+        computeVerdict();
+    });
+
+    presetAllExceptEval.addEventListener('click', function () {
+        setGateValue('1', 'pass');
+        setGateValue('2', 'pass');
+        setGateValue('3', 'gap');
+        setGateValue('4', 'pass');
+        setGateValue('5', 'pass');
+        showPreset(presetAllExceptEval);
+        computeVerdict();
+    });
+
+    presetAllPass.addEventListener('click', function () {
+        ['1', '2', '3', '4', '5'].forEach(function (n) { setGateValue(n, 'pass'); });
+        showPreset(presetAllPass);
+        computeVerdict();
+    });
+
+    presetGate4.addEventListener('click', function () {
+        setGateValue('1', 'pass');
+        setGateValue('2', 'pass');
+        setGateValue('3', 'pass');
+        setGateValue('4', 'gap');
+        setGateValue('5', 'pass');
+        showPreset(presetGate4);
+        computeVerdict();
+    });
+
+    presetGate1.addEventListener('click', function () {
+        setGateValue('1', 'gap');
+        setGateValue('2', 'pass');
+        setGateValue('3', 'pass');
+        setGateValue('4', 'pass');
+        setGateValue('5', 'pass');
+        showPreset(presetGate1);
+        computeVerdict();
+    });
+
+    presetOneOpen.addEventListener('click', function () {
+        setGateValue('1', 'pass');
+        setGateValue('2', 'pass');
+        setGateValue('3', 'pass');
+        setGateValue('4', 'pass');
+        setGateValue('5', 'gap');
+        showPreset(presetOneOpen);
+        computeVerdict();
+    });
+
+    if ('IntersectionObserver' in window) {
+        var instrumentSection = document.getElementById('instrument');
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                stickyVerdict.hidden = !entry.isIntersecting;
+            });
+        }, { threshold: 0 });
+        observer.observe(instrumentSection);
+    } else {
+        stickyVerdict.hidden = false;
+    }
+
+    /* Per-company examples. The link from a magic link carries ?company=<slug>.
+       To add a company: add one line to COMPANIES with its industry (the same
+       industry as its profile in /js/app.js). Unknown or missing company shows
+       the default examples. Nothing here is sent anywhere. */
+    var COMPANIES = {
+        'bpx': 'energy'
+    };
+    var NB = '\u00a0';
+    var EXAMPLES = {
+        'default':    'a forecast, a' + NB + 'risk' + NB + 'score, a recommended action,',
+        'energy':     'a' + NB + 'production' + NB + 'forecast, a pump failure alert, a' + NB + 'recommended maintenance action,',
+        'finance':    'a fraud alert, a recommended next step for an advisor, a' + NB + 'summary of a client document,',
+        'healthcare': 'a patient scheduling forecast, a coding suggestion on a claim, a' + NB + 'summary of a member call,',
+        'tech':       'a churn prediction, a support ticket routed to a team, a' + NB + 'code suggestion from a coding assistant,',
+        'consulting': 'a market sizing estimate, a staffing recommendation, a' + NB + 'research summary,',
+        'operations': 'a demand forecast, a delivery route recommendation, a' + NB + 'quality defect alert,'
+    };
+    (function applyCompany() {
+        var slug = '';
+        try { slug = (new URLSearchParams(window.location.search).get('company') || '').toLowerCase(); } catch (e) {}
+        if (!/^[a-z0-9-]{1,40}$/.test(slug)) { slug = ''; }
+        var industry = (slug && Object.prototype.hasOwnProperty.call(COMPANIES, slug)) ? COMPANIES[slug] : 'default';
+        var THEMES = { energy: 'operations', finance: 'finance', healthcare: 'healthcare', tech: 'tech', consulting: 'consulting', operations: 'operations' };
+        if (THEMES[industry]) { document.body.setAttribute('data-theme', THEMES[industry]); }
+        var list = document.getElementById('exampleList');
+        if (list && EXAMPLES[industry]) { list.textContent = EXAMPLES[industry]; }
+        if (slug) {
+            var href = 'https://joepointer.com/?company=' + encodeURIComponent(slug);
+            Array.prototype.forEach.call(document.querySelectorAll('.return-link'), function (a) { a.setAttribute('href', href); });
+        }
+    })();
+
+    computeVerdict();
+})();
+</script>
+
+</body>
+</html>

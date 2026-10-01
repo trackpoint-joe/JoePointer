@@ -91,7 +91,7 @@ var employerProfiles = {
         welcome: {
             role: 'Principal AI Delivery & Quality Lead',
             body: 'The AI I was using on Future Me, Answered invented two testimonials, and they sat live for three months before a review agent I built caught them. I moved my rule against made-up quotes into the instruction file every AI session loads, my co-founder and I put review agents on every pull request, and the same defect three weeks later was caught on the first commit.',
-            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=bpx'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_BPX.pdf' },
 
