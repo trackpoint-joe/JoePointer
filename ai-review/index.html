@@ -780,6 +780,13 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 .preset-group{display:flex;flex-direction:column;gap:6px;}
 .preset-group-label{font-size:0.6875rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-mid);}
 .preset-group-buttons{display:flex;flex-wrap:wrap;gap:8px;}
+
+/* "Prepared for" sits after the label on wide screens and on its own line on phones. */
+.prepared-for:not(:empty)::before{content:"\00b7";margin:0 0.5em;}
+@media (max-width:560px){
+    .prepared-for:not(:empty){display:block;margin-top:2px;}
+    .prepared-for:not(:empty)::before{content:none;}
+}
 </style>
 </head>
 <body>
@@ -792,7 +799,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 
 <section class="hero">
     <div class="wrap">
-        <div class="eyebrow">Interactive Review</div>
+        <div class="eyebrow"><span class="eyebrow-text">Interactive Review<span class="prepared-for" id="preparedFor"></span></span></div>
         <h1>AI Delivery Readiness Review<span class="brand-mark" aria-hidden="true"></span></h1>
         <p class="lede">Before anyone trusts an AI result enough to act on it, the result should clear five checks. This page walks you through them and tells you whether to accept it or send it back.</p>
         <p class="lede-sub">An AI result is anything a model produces that someone will act on, such as <span id="exampleList">a forecast, a&nbsp;risk&nbsp;score, a recommended action,</span> or an answer from an&nbsp;AI&nbsp;assistant.</p>
@@ -1348,10 +1355,11 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 
     /* Per-company examples. The link from a magic link carries ?company=<slug>.
        To add a company: add one line to COMPANIES with its industry (the same
-       industry as its profile in /js/app.js). Unknown or missing company shows
+       industry as its profile in /js/app.js) and its name exactly as the posting
+       and cover letter write it. Unknown or missing company shows
        the default examples. Nothing here is sent anywhere. */
     var COMPANIES = {
-        'bpx': 'energy'
+        'bpx': { industry: 'energy', name: 'BPX Energy' }
     };
     var NB = '\u00a0';
     var EXAMPLES = {
@@ -1367,7 +1375,14 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         var slug = '';
         try { slug = (new URLSearchParams(window.location.search).get('company') || '').toLowerCase(); } catch (e) {}
         if (!/^[a-z0-9-]{1,40}$/.test(slug)) { slug = ''; }
-        var industry = (slug && Object.prototype.hasOwnProperty.call(COMPANIES, slug)) ? COMPANIES[slug] : 'default';
+        var known = slug && Object.prototype.hasOwnProperty.call(COMPANIES, slug);
+        var industry = known ? COMPANIES[slug].industry : 'default';
+        /* "Prepared for" shows only for a company on this list, never the raw slug.
+           Remove the company's line here in the same edit that blanks its welcome band. */
+        if (known) {
+            var prepared = document.getElementById('preparedFor');
+            if (prepared) { prepared.textContent = 'Prepared for ' + COMPANIES[slug].name; }
+        }
         var THEMES = { energy: 'operations', finance: 'finance', healthcare: 'healthcare', tech: 'tech', consulting: 'consulting', operations: 'operations' };
         if (THEMES[industry]) { document.body.setAttribute('data-theme', THEMES[industry]); }
         var list = document.getElementById('exampleList');
