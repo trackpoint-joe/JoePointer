@@ -636,46 +636,52 @@ a:focus-visible, button:focus-visible{outline:2px solid var(--gold-dark);outline
 .case-card p:last-child{margin-bottom:0;}
 .case-card strong{color:var(--midnight);}
 
+.case-lead{margin:0 0 12px;color:var(--text-mid);}
 .gate-map{
     list-style:none;
     padding:0;
     margin:0 0 20px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
 }
+/* Three aligned columns: gate, status, note. Every row starts in the same place. */
 .gate-map li{
-    display:flex;
-    gap:12px;
-    align-items:baseline;
-    padding:12px 0;
+    display:grid;
+    grid-template-columns:13rem 9rem 1fr;
+    gap:16px;
+    align-items:start;
+    padding:14px 20px;
     border-bottom:1px solid var(--line);
     font-size:0.9375rem;
 }
 .gate-map li:last-child{border-bottom:0;}
-.gate-map .gm-label{
-    flex-shrink:0;
-    width:9.5em;
-    font-weight:700;
-    color:var(--midnight);
-}
+.gate-map .gm-label{font-weight:700;color:var(--midnight);}
+.gate-map .gm-label small{display:block;font-weight:500;font-size:0.8125rem;color:var(--text-mid);}
 .gate-map .gm-tag{
-    flex-shrink:0;
+    justify-self:start;
     font-size:0.75rem;
     font-weight:700;
     text-transform:uppercase;
     letter-spacing:0.05em;
-    padding:2px 8px;
+    padding:3px 10px;
     border-radius:50px;
     color:var(--white);
-    align-self:flex-start;
+    white-space:nowrap;
     margin-top:2px;
 }
 .gm-tag.gm-pass{background:var(--pass);}
 .gm-tag.gm-gap{background:var(--gap);}
-.gm-tag.gm-na{background:#94a3b8;}
-.gate-map .gm-note{color:var(--text-mid);}
+.gm-tag.gm-na{background:var(--unknown);}
+.gate-map .gm-note{color:#3a4552;}
+.gate-map li.gm-verdict{background:rgba(51,65,85,0.06);}
+.gate-map li.gm-verdict .gm-label{align-self:center;}
+.gm-tag.gm-sendback{background:var(--midnight);}
 
-@media (max-width: 560px){
-    .gate-map li{flex-direction:column;gap:4px;}
-    .gate-map .gm-label{width:auto;}
+@media (max-width: 760px){
+    .gate-map li{grid-template-columns:1fr;gap:6px;padding:14px 16px;}
+    .gate-map .gm-label small{display:inline;margin-left:6px;}
 }
 
 /* Own-build callout */
@@ -786,6 +792,262 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 @media (max-width:560px){
     .prepared-for:not(:empty){display:block;margin-top:2px;}
     .prepared-for:not(:empty)::before{content:none;}
+}
+
+/* ============================================================
+   ASK JOE on this page. Same Cloudflare Worker that serves the
+   chat on joepointer.com, same localStorage daily budget. Colors
+   come from the theme variables, so BPX gets charcoal and orange.
+   Gate selections are NEVER sent; only what the visitor types.
+   --ask-offset is set by script to the height of the sticky
+   verdict bar, so the launcher sits above it instead of over it.
+   ============================================================ */
+.ask-launcher{
+    position:fixed;
+    right:clamp(12px, 3vw, 24px);
+    bottom:calc(14px + var(--ask-offset, 0px));
+    z-index:700;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 18px;
+    border:1px solid var(--gold);
+    border-radius:50px;
+    background:var(--midnight);
+    color:var(--white);
+    font-family:var(--font-body);
+    font-size:0.875rem;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(10,14,39,0.28);
+    transition:transform 0.15s ease, box-shadow 0.15s ease, bottom 0.2s ease;
+}
+.ask-launcher:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(10,14,39,0.34);}
+.ask-launcher:focus-visible{outline:3px solid var(--gold-light);outline-offset:2px;}
+.ask-launcher svg{flex-shrink:0;}
+.ask-launcher[hidden]{display:none;}
+
+.ask-overlay{
+    position:fixed;
+    inset:0;
+    z-index:900;
+    background:rgba(10,14,39,0.5);
+}
+.ask-overlay[hidden]{display:none;}
+
+.ask-panel{
+    position:fixed;
+    right:clamp(0px, 2vw, 20px);
+    bottom:0;
+    z-index:901;
+    width:400px;
+    max-width:100vw;
+    height:580px;
+    max-height:88vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-bottom:0;
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -10px 40px rgba(10,14,39,0.26);
+    overflow:hidden;
+    overscroll-behavior:contain;
+    visibility:hidden;
+    transform:translateY(100%);
+    transition:transform 0.25s ease, visibility 0.25s ease;
+}
+.ask-panel.is-open{visibility:visible;transform:translateY(0);}
+@media (prefers-reduced-motion:reduce){
+    .ask-panel{transition:none;}
+}
+
+.ask-header{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 16px;
+    background:linear-gradient(135deg, var(--midnight) 0%, var(--prussian) 100%);
+    color:var(--white);
+}
+.ask-header-text{display:flex;flex-direction:column;min-width:0;}
+.ask-title{font-family:var(--font-display);font-size:1.0625rem;font-weight:700;color:var(--gold-light);}
+.ask-subtitle{font-size:0.75rem;line-height:1.4;color:#dde3ef;}
+.ask-close{
+    flex-shrink:0;
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:8px;
+    background:transparent;
+    color:var(--white);
+    font-size:1rem;
+    line-height:1;
+    cursor:pointer;
+}
+.ask-close:hover{background:rgba(255,255,255,0.14);}
+.ask-close:focus-visible{outline:3px solid var(--gold-light);outline-offset:2px;}
+
+.ask-messages{
+    flex:1;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.ask-msg{display:flex;max-width:88%;scroll-margin-top:10px;}
+.ask-msg--ai{align-self:flex-start;}
+.ask-msg--user{align-self:flex-end;}
+.ask-bubble{
+    padding:10px 13px;
+    border-radius:14px;
+    font-size:0.9375rem;
+    line-height:1.6;
+    color:var(--text-dark);
+    background:var(--off-white);
+    border:1px solid var(--line);
+    border-bottom-left-radius:4px;
+}
+.ask-msg--user .ask-bubble{
+    background:var(--midnight);
+    border-color:var(--midnight);
+    color:var(--white);
+    border-bottom-left-radius:14px;
+    border-bottom-right-radius:4px;
+}
+.ask-bubble p{margin:0 0 0.5em;}
+.ask-bubble p:last-child{margin-bottom:0;}
+.ask-bubble ul{margin:0.3em 0 0.5em 1.1em;padding:0;}
+.ask-bubble li{margin-bottom:0.2em;}
+.ask-bubble strong{color:var(--midnight);}
+.ask-msg--user .ask-bubble strong{color:var(--white);}
+
+.ask-chips{display:flex;flex-direction:column;gap:7px;}
+.ask-chip{
+    text-align:left;
+    background:var(--white);
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:9px 13px;
+    font-family:var(--font-body);
+    font-size:0.875rem;
+    font-weight:600;
+    line-height:1.45;
+    color:var(--midnight);
+    cursor:pointer;
+    transition:border-color 0.15s ease, color 0.15s ease;
+}
+.ask-chip:hover{border-color:var(--gold-dark);color:var(--gold-dark);}
+.ask-chip:focus-visible{outline:2px solid var(--gold-dark);outline-offset:2px;}
+
+.ask-dots{display:flex;gap:5px;align-items:center;padding:3px 2px;}
+.ask-dots span{
+    width:7px;height:7px;border-radius:50%;background:#8b93a8;
+    animation:askDot 1.2s infinite ease-in-out;
+}
+.ask-dots span:nth-child(2){animation-delay:0.2s;}
+.ask-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes askDot{0%,80%,100%{transform:scale(0.7);opacity:0.5;}40%{transform:scale(1);opacity:1;}}
+
+.ask-privacy{
+    flex-shrink:0;
+    margin:0;
+    padding:8px 14px;
+    font-size:0.75rem;
+    line-height:1.5;
+    color:#4a5568;
+    background:rgba(201,169,97,0.12);
+    border-top:1px solid var(--line);
+}
+.ask-rate{
+    flex-shrink:0;
+    padding:7px 14px;
+    font-size:0.8125rem;
+    text-align:center;
+    color:#4a5568;
+    background:var(--off-white);
+    border-top:1px solid var(--line);
+}
+.ask-rate[hidden]{display:none;}
+
+.ask-input-row{
+    flex-shrink:0;
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    padding:10px 14px;
+    border-top:1px solid var(--line);
+    background:var(--white);
+}
+.ask-input{
+    flex:1;
+    min-width:0;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:9px 12px;
+    font-family:var(--font-body);
+    font-size:0.9375rem;
+    line-height:1.5;
+    color:var(--text-dark);
+    background:var(--white);
+    resize:none;
+    max-height:120px;
+}
+.ask-input:focus-visible{outline:2px solid var(--gold-dark);outline-offset:1px;border-color:var(--gold-dark);}
+.ask-send{
+    flex-shrink:0;
+    width:40px;
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:0;
+    border-radius:10px;
+    background:var(--midnight);
+    color:var(--white);
+    cursor:pointer;
+    transition:background 0.15s ease;
+}
+.ask-send:hover:not(:disabled){background:var(--prussian);}
+.ask-send:focus-visible{outline:3px solid var(--gold-dark);outline-offset:2px;}
+.ask-send:disabled{opacity:0.45;cursor:not-allowed;}
+
+.ask-footer{
+    flex-shrink:0;
+    padding:7px 14px;
+    font-size:0.75rem;
+    line-height:1.5;
+    text-align:center;
+    color:#5a6472;
+    background:var(--off-white);
+    border-top:1px solid var(--line);
+}
+
+@media (max-width:768px){
+    /* Full-screen sheet on phones. dvh tracks the on-screen keyboard so the
+       input row stays visible while typing. */
+    .ask-panel{
+        right:0;
+        left:0;
+        top:0;
+        width:100vw;
+        height:100vh;
+        height:100dvh;
+        max-height:none;
+        border:0;
+        border-radius:0;
+    }
+    .ask-input-row{padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));}
+}
+@media (max-width:420px){
+    .ask-launcher{padding:10px 15px;font-size:0.8125rem;}
 }
 </style>
 </head>
@@ -1042,26 +1304,27 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 <section class="section" id="case">
     <div class="wrap">
         <div class="section-intro">
-            <p class="section-label-sm">Applied To My Own Work</p>
-            <h2>Quality Control on AI Output in Production</h2>
+            <h2>How does my own work score?</h2>
         </div>
 
         <div class="case-card">
-            <p>The AI I was using on Future Me, Answered invented two testimonials, and they stayed live for three months before a review agent I built caught them. What changed afterward was where the rule lives and where the review runs.</p>
+            <p>The AI I was using on Future Me, Answered invented two testimonials, and they stayed live for three months before a review agent I built caught them.</p>
             <p>My rule against invented quotes lived in a comment in one code file. Until that sweep, the review agent had never been pointed at the marketing pages, and it was not on the pull request path.</p>
         </div>
 
+        <p class="case-lead">Here is how the five gates read against it.</p>
         <ul class="gate-map">
-            <li><span class="gm-label">Gate 1</span><span class="gm-tag gm-na">Not the failure point</span><span class="gm-note">It was already clear who the page was for and what it had to do.</span></li>
-            <li><span class="gm-label">Gate 2</span><span class="gm-tag gm-na">Not the failure point</span><span class="gm-note">No baseline question was in play here.</span></li>
-            <li><span class="gm-label">Gate 3</span><span class="gm-tag gm-na">Not applicable, no model here</span><span class="gm-note">Nothing was trained, so there was no evaluation to test. The veto applies to model-backed results.</span></li>
-            <li><span class="gm-label">Gate 4</span><span class="gm-tag gm-gap">Gap, twice</span><span class="gm-note">The rule lived in a code comment in one file, and the review agent was never pointed at the marketing pages or put on the pull request path.</span></li>
-            <li><span class="gm-label">Gate 5</span><span class="gm-tag gm-na">Not the failure point</span><span class="gm-note">Adoption was not what failed here.</span></li>
+            <li><span class="gm-label">Gate 1<small>Audience, objectives, problem</small></span><span class="gm-tag gm-pass">Pass</span><span class="gm-note">It was clear who the page was for and what it had to do.</span></li>
+            <li><span class="gm-label">Gate 2<small>Success criteria and baseline</small></span><span class="gm-tag gm-na">Not applicable</span><span class="gm-note">Marketing copy had no success number or baseline at stake.</span></li>
+            <li><span class="gm-label">Gate 3<small>Evaluation</small></span><span class="gm-tag gm-na">Not applicable</span><span class="gm-note">Nothing was trained, so there was no model to test.</span></li>
+            <li><span class="gm-label">Gate 4<small>Claims check</small></span><span class="gm-tag gm-gap">Gap</span><span class="gm-note">Two quotes from people who did not exist.</span></li>
+            <li><span class="gm-label">Gate 5<small>Adoption and value</small></span><span class="gm-tag gm-gap">Gap</span><span class="gm-note">The live pages were not being checked after they shipped.</span></li>
+            <li class="gm-verdict"><span class="gm-label">Verdict</span><span class="gm-tag gm-sendback">Send back</span><span class="gm-note">Gate 4 alone is enough.</span></li>
         </ul>
 
         <div class="case-card">
-            <p><strong>The fix.</strong> I moved the rule into the instruction file every AI session loads now: every public claim has to trace to a named person, a shipped feature, or a linked measurement. My co-founder and I put review agents on every pull request, not only where I happened to aim it.</p>
-            <p><strong>The recurrence.</strong> Three weeks later, the same kind of defect came back. This time it was caught on the first commit, before it ever reached a live page.</p>
+            <p><strong>The fix.</strong> I moved the rule into the instruction file every AI session loads. Every public claim now has to trace to a named person, a shipped feature, or a linked measurement. My co-founder, Mike Pointer, and I put review agents on every pull request, including the marketing pages.</p>
+            <p><strong>It came back.</strong> Three weeks later the same kind of defect appeared on a different page. This time it was caught on the first commit, before it reached a live page.</p>
         </div>
     </div>
 </section>
@@ -1071,7 +1334,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         <div class="callout">
             <span class="callout-tag">Where I Missed It</span>
             <span class="callout-gate-label">Gate 2 miss</span>
-            <p>In April I built a demo dashboard for an electric cooperative, including a price forecast on simulated data. I skipped the baseline. This review would have caught it.</p>
+            <p>In April I built a demo dashboard for an electric cooperative, including a price forecast on simulated data. I kept the test in time order but skipped the baseline. This review would have caught it.</p>
         </div>
     </div>
 </section>
@@ -1092,6 +1355,53 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 <footer>
     Joe Pointer &middot; joepointer.com
 </footer>
+
+<!-- ========================================================
+     ASK JOE. Launcher, overlay and panel. The gate radios are
+     never read by this chat; only the text the visitor types
+     is sent to the Worker.
+     ======================================================== -->
+<button type="button" class="ask-launcher" id="askLauncher" aria-haspopup="dialog" aria-expanded="false" aria-controls="askPanel">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    <span>Ask about this page</span>
+</button>
+
+<div class="ask-overlay" id="askOverlay" hidden></div>
+
+<div class="ask-panel" id="askPanel" role="dialog" aria-modal="true" aria-labelledby="askPanelTitle" aria-hidden="true">
+    <div class="ask-header">
+        <div class="ask-header-text">
+            <span class="ask-title" id="askPanelTitle">Ask Joe</span>
+            <span class="ask-subtitle">An AI version of Joe, powered by Claude</span>
+        </div>
+        <button type="button" class="ask-close" id="askClose" aria-label="Close chat">&#10005;</button>
+    </div>
+
+    <div class="ask-messages" id="askMessages" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="ask-msg ask-msg--ai">
+            <div class="ask-bubble">Ask me how this review works, what a gate is checking, or what to do with the verdict you got.</div>
+        </div>
+        <div class="ask-chips" id="askChips">
+            <button type="button" class="ask-chip">How do I use this review?</button>
+            <button type="button" class="ask-chip">Why are Gate 1 and Gate 3 never traded away?</button>
+            <button type="button" class="ask-chip">What does Send back mean?</button>
+            <button type="button" class="ask-chip">Why does a failed claim send it back?</button>
+        </div>
+    </div>
+
+    <p class="ask-privacy">Your gate selections stay on this page. Only the question you type is sent.</p>
+    <div class="ask-rate" id="askRate" role="status" hidden></div>
+
+    <div class="ask-input-row">
+        <label class="sr-only" for="askInput">Your question for Joe</label>
+        <textarea id="askInput" class="ask-input" rows="1" placeholder="Ask a question..."></textarea>
+        <button type="button" class="ask-send" id="askSend" aria-label="Send question">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+    </div>
+
+    <div class="ask-footer">It can get details wrong. <a href="mailto:joe@joepointer.com">Email me directly</a>.</div>
+</div>
 
 <script>
 (function () {
@@ -1382,6 +1692,9 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         if (known) {
             var prepared = document.getElementById('preparedFor');
             if (prepared) { prepared.textContent = 'Prepared for ' + COMPANIES[slug].name; }
+            /* The only slug the Ask Joe chat is allowed to send. An unknown or
+               missing ?company= leaves this unset and the chat sends null. */
+            document.body.setAttribute('data-company', slug);
         }
         var THEMES = { energy: 'operations', finance: 'finance', healthcare: 'healthcare', tech: 'tech', consulting: 'consulting', operations: 'operations' };
         if (THEMES[industry]) { document.body.setAttribute('data-theme', THEMES[industry]); }
@@ -1394,6 +1707,327 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     })();
 
     computeVerdict();
+})();
+</script>
+
+<script>
+/* ============================================================================
+   ASK JOE on the review page.
+
+   Reuses the Cloudflare Worker that serves the chat on joepointer.com. The
+   system prompt and the per-company context live in the Worker, never here.
+
+   Request body: { messages, company, page }
+     messages  the typed conversation only, same shape as the main site
+     company   the validated ?company= slug, or null when it is not on the
+               page's COMPANIES list
+     page      the string "ai-review", so the Worker can tell this surface
+               apart from the main site. The Worker ignores fields it does
+               not read, so this is inert until handling is added for it.
+
+   The gate radios are never read here. "Nothing you mark leaves this page"
+   stays true: the only visitor data in the body is text the visitor typed.
+   ============================================================================ */
+(function () {
+    'use strict';
+
+    var ENDPOINT = 'https://joe-portfolio-chat.joe-pointer.workers.dev';
+    var PAGE_ID = 'ai-review';
+    var DAILY_LIMIT = 15;                 // same budget as the main site
+    var RATE_PREFIX = 'joe_chat_';        // same key, so the two surfaces share it
+
+    var launcher = document.getElementById('askLauncher');
+    var panel = document.getElementById('askPanel');
+    var overlay = document.getElementById('askOverlay');
+    var closeBtn = document.getElementById('askClose');
+    var messagesEl = document.getElementById('askMessages');
+    var chipsEl = document.getElementById('askChips');
+    var input = document.getElementById('askInput');
+    var sendBtn = document.getElementById('askSend');
+    var rateEl = document.getElementById('askRate');
+    var stickyBar = document.getElementById('stickyVerdict');
+
+    if (!launcher || !panel || !input || !sendBtn) { return; }
+
+    var history = [];
+    var lastFocused = null;
+    var sending = false;
+    var memoryCount = 0;   // fallback when localStorage is unavailable
+
+    /* ---------- daily limit, localStorage with a memory fallback ---------- */
+    function todayKey() {
+        return RATE_PREFIX + new Date().toISOString().slice(0, 10);
+    }
+    function getCount() {
+        try {
+            var raw = window.localStorage.getItem(todayKey());
+            return parseInt(raw || '0', 10) || 0;
+        } catch (e) {
+            return memoryCount;
+        }
+    }
+    function bumpCount() {
+        var next = getCount() + 1;
+        memoryCount = next;
+        try { window.localStorage.setItem(todayKey(), String(next)); } catch (e) {}
+    }
+    function limitReached() {
+        return getCount() >= DAILY_LIMIT;
+    }
+    function updateRateUI() {
+        var remaining = Math.max(0, DAILY_LIMIT - getCount());
+        if (remaining === 0) {
+            rateEl.textContent = 'Daily limit reached. Email me at joe@joepointer.com.';
+            rateEl.hidden = false;
+            input.disabled = true;
+            sendBtn.disabled = true;
+        } else if (remaining <= 5) {
+            rateEl.textContent = remaining + (remaining === 1 ? ' question' : ' questions') + ' left today';
+            rateEl.hidden = false;
+        } else {
+            rateEl.hidden = true;
+        }
+    }
+
+    /* ---------- the launcher stays clear of the sticky verdict bar ----------
+       Two things must never be covered: the sticky verdict bar, and the
+       "Jump to the verdict" line that appears when an example is loaded. The
+       bar sets the base offset; if the status line would sit under the
+       launcher, the launcher rises above that too. */
+    var statusEl = document.getElementById('presetStatus');
+    var BASE_GAP = 14;
+
+    function syncOffset() {
+        var offset = (stickyBar && !stickyBar.hidden) ? stickyBar.offsetHeight : 0;
+        if (statusEl && !statusEl.hidden && launcher.offsetHeight) {
+            var vh = window.innerHeight;
+            var r = statusEl.getBoundingClientRect();
+            var top = vh - offset - BASE_GAP - launcher.offsetHeight;
+            var bottom = vh - offset - BASE_GAP;
+            if (r.bottom > top && r.top < bottom) {
+                offset = Math.max(offset, vh - r.top - BASE_GAP + 8);
+            }
+        }
+        document.documentElement.style.setProperty('--ask-offset', offset + 'px');
+    }
+
+    var offsetQueued = false;
+    function queueOffset() {
+        if (offsetQueued) { return; }
+        offsetQueued = true;
+        window.requestAnimationFrame(function () {
+            offsetQueued = false;
+            syncOffset();
+        });
+    }
+
+    syncOffset();
+    if ('MutationObserver' in window) {
+        var mo = new MutationObserver(queueOffset);
+        var opts = { attributes: true, childList: true, subtree: true, characterData: true };
+        if (stickyBar) { mo.observe(stickyBar, opts); }
+        if (statusEl) { mo.observe(statusEl, opts); }
+    }
+    window.addEventListener('resize', queueOffset);
+    window.addEventListener('scroll', queueOffset, { passive: true });
+
+    /* ---------- open and close ---------- */
+    // Pulling focus into the textarea summons the on-screen keyboard, which
+    // would cover the welcome message. On touch, focus the close button
+    // instead; on a real pointer, focus the input.
+    function pointerIsFine() {
+        return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    }
+
+    function openPanel() {
+        lastFocused = document.activeElement;
+        overlay.hidden = false;
+        panel.classList.add('is-open');
+        panel.setAttribute('aria-hidden', 'false');
+        launcher.setAttribute('aria-expanded', 'true');
+        launcher.hidden = true;
+        document.body.style.overflow = 'hidden';
+        updateRateUI();
+        // The panel is visibility:hidden until the open transition starts, and a
+        // hidden element cannot take focus, so the move waits one beat. Measured
+        // in headless Edge: focusing synchronously here leaves focus on the body.
+        window.setTimeout(function () {
+            if (pointerIsFine() && !input.disabled) { input.focus(); } else { closeBtn.focus(); }
+        }, 90);
+    }
+
+    function closePanel() {
+        panel.classList.remove('is-open');
+        panel.setAttribute('aria-hidden', 'true');
+        overlay.hidden = true;
+        launcher.hidden = false;
+        launcher.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        // Back to whatever opened the panel. document.body answers to focus()
+        // without taking it, which left focus stranded inside the closed panel,
+        // so anything that is not a real control falls through to the launcher.
+        var back = (lastFocused && lastFocused !== document.body &&
+                    typeof lastFocused.focus === 'function' &&
+                    document.contains(lastFocused) && !panel.contains(lastFocused))
+            ? lastFocused : launcher;
+        back.focus();
+    }
+
+    /* ---------- keep Tab inside the panel while it is open ---------- */
+    function focusables() {
+        return Array.prototype.filter.call(
+            panel.querySelectorAll('button, textarea, a[href], [tabindex]:not([tabindex="-1"])'),
+            function (el) { return !el.disabled && el.offsetParent !== null; }
+        );
+    }
+
+    panel.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') { return; }
+        var items = focusables();
+        if (items.length === 0) { return; }
+        var first = items[0];
+        var last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && panel.classList.contains('is-open')) { closePanel(); }
+    });
+
+    /* ---------- rendering ---------- */
+    var OWNED = 'joepointer\\.com|futuremeanswered\\.com|careerpointers\\.org|careerpointers\\.net';
+
+    // Escape first, then linkify, so nothing the model returns can inject markup.
+    function render(text) {
+        var s = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        s = s.replace(
+            new RegExp('(https?:\\/\\/[^\\s<]+[^\\s<.,;:!?)\'"]|(?:www\\.)?(?:' + OWNED + ')(?:\\/[^\\s<]*[^\\s<.,;:!?)\'"])?)', 'gi'),
+            function (m) {
+                var href = /^https?:\/\//i.test(m) ? m : 'https://' + m;
+                return '<a href="' + href + '" target="_blank" rel="noopener noreferrer">' + m + '</a>';
+            }
+        );
+        s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        var lines = s.split('\n');
+        var html = '';
+        var inList = false;
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (/^[-•]\s+/.test(line)) {
+                if (!inList) { html += '<ul>'; inList = true; }
+                html += '<li>' + line.replace(/^[-•]\s+/, '') + '</li>';
+            } else {
+                if (inList) { html += '</ul>'; inList = false; }
+                if (line) { html += '<p>' + line + '</p>'; }
+            }
+        }
+        if (inList) { html += '</ul>'; }
+        return html;
+    }
+
+    function appendMessage(role, text) {
+        var wrap = document.createElement('div');
+        wrap.className = 'ask-msg ask-msg--' + role;
+        var bubble = document.createElement('div');
+        bubble.className = 'ask-bubble';
+        if (role === 'ai') { bubble.innerHTML = render(text); } else { bubble.textContent = text; }
+        wrap.appendChild(bubble);
+        messagesEl.appendChild(wrap);
+        wrap.scrollIntoView({ block: 'start' });
+        return wrap;
+    }
+
+    function appendLoading() {
+        var wrap = document.createElement('div');
+        wrap.className = 'ask-msg ask-msg--ai';
+        wrap.innerHTML = '<div class="ask-bubble"><span class="sr-only">Joe is typing</span><span class="ask-dots" aria-hidden="true"><span></span><span></span><span></span></span></div>';
+        messagesEl.appendChild(wrap);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+        return wrap;
+    }
+
+    /* ---------- send ---------- */
+    // The slug comes from the data attribute the page sets only for a company
+    // on its own COMPANIES list, so an unknown ?company= sends null.
+    function knownSlug() {
+        var slug = document.body.getAttribute('data-company');
+        return (slug && /^[a-z0-9-]{1,40}$/.test(slug)) ? slug : null;
+    }
+
+    function send(text) {
+        if (sending || !text || limitReached()) { updateRateUI(); return; }
+        sending = true;
+        if (chipsEl) { chipsEl.hidden = true; }
+        input.value = '';
+        input.style.height = 'auto';
+        sendBtn.disabled = true;
+
+        var userEl = appendMessage('user', text);
+        history.push({ role: 'user', content: text });
+        var loading = appendLoading();
+        bumpCount();
+        updateRateUI();
+
+        fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                messages: history,
+                company: knownSlug(),
+                page: PAGE_ID
+            })
+        }).then(function (res) {
+            if (!res.ok) { throw new Error('API error ' + res.status); }
+            return res.json();
+        }).then(function (data) {
+            loading.remove();
+            var reply = (data && data.content && data.content[0] && data.content[0].text)
+                || 'I had trouble with that one. Email me at joe@joepointer.com.';
+            appendMessage('ai', reply);
+            history.push({ role: 'assistant', content: reply });
+            userEl.scrollIntoView({ block: 'start' });
+        }).catch(function (err) {
+            loading.remove();
+            appendMessage('ai', 'Something went wrong on my end. Try again, or email me at joe@joepointer.com.');
+            if (window.console) { console.error('Ask Joe error:', err); }
+        }).then(function () {
+            sending = false;
+            if (!limitReached()) { sendBtn.disabled = false; }
+            if (pointerIsFine() && !input.disabled) { input.focus(); }
+        });
+    }
+
+    /* ---------- wiring ---------- */
+    launcher.addEventListener('click', openPanel);
+    closeBtn.addEventListener('click', closePanel);
+    overlay.addEventListener('click', closePanel);
+    sendBtn.addEventListener('click', function () { send(input.value.trim()); });
+
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            send(input.value.trim());
+        }
+    });
+    input.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    if (chipsEl) {
+        chipsEl.addEventListener('click', function (e) {
+            var chip = e.target.closest ? e.target.closest('.ask-chip') : null;
+            if (chip) { send(chip.textContent.trim()); }
+        });
+    }
+
+    updateRateUI();
 })();
 </script>
 
