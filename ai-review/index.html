@@ -1049,6 +1049,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 @media (max-width:420px){
     .ask-launcher{padding:10px 15px;font-size:0.8125rem;}
 }
+
 </style>
 </head>
 <body>
@@ -1283,8 +1284,8 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 
         <div class="verdict-panel is-not-ready" id="verdictPanel" aria-live="polite">
             <div class="verdict-badge" id="verdictBadge">Send back</div>
-            <div class="verdict-headline" id="verdictHeadline">Gate 1 (audience, objectives, problem) and Gate 3 (evaluation) have not passed. Neither can be traded away, so this goes back to the team.</div>
-            <div class="verdict-rule" id="verdictRule">How the verdict works. Any gate not marked Pass counts against the result. Gate 1 and Gate 3 cannot be traded away, so if either has not passed, the result goes back to the team. A claim marked Gap in Gate 4 sends it back too. Otherwise, all five passed is accept, one or two not passed is accept with conditions, and three or more is send back.</div>
+            <div class="verdict-headline" id="verdictHeadline">Gate 1 (audience, objectives, problem) and Gate 3 (evaluation) have not passed. Both must pass, so this goes back to the team.</div>
+            <div class="verdict-rule" id="verdictRule">How the verdict works. Any gate not marked Pass counts against the result. Gate 1 and Gate 3 must pass. If either has not, the result goes back to the team, no matter how the other gates look. A claim marked Gap in Gate 4 sends it back too. Otherwise, all five passed is accept, one or two not passed is accept with conditions, and three or more is send back.</div>
             <details class="sendback" id="sendback">
                 <summary><span>Questions I would send back to the team (<span id="sendbackCount">5</span>)</span></summary>
                 <div class="sendback-body" id="sendbackList"></div>
@@ -1325,16 +1326,6 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         <div class="case-card">
             <p><strong>The fix.</strong> I moved the rule into the instruction file every AI session loads. Every public claim now has to trace to a named person, a shipped feature, or a linked measurement. My co-founder, Mike Pointer, and I put review agents on every pull request, including the marketing pages.</p>
             <p><strong>It came back.</strong> Three weeks later the same kind of defect appeared on a different page. This time it was caught on the first commit, before it reached a live page.</p>
-        </div>
-    </div>
-</section>
-
-<section class="section" id="own-build">
-    <div class="wrap">
-        <div class="callout">
-            <span class="callout-tag">Where I Missed It</span>
-            <span class="callout-gate-label">Gate 2 miss</span>
-            <p>In April I built a demo dashboard for an electric cooperative, including a price forecast on simulated data. I kept the test in time order but skipped the baseline. This review would have caught it.</p>
         </div>
     </div>
 </section>
@@ -1383,7 +1374,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         </div>
         <div class="ask-chips" id="askChips">
             <button type="button" class="ask-chip">How do I use this review?</button>
-            <button type="button" class="ask-chip">Why are Gate 1 and Gate 3 never traded away?</button>
+            <button type="button" class="ask-chip">Why must Gate 1 and Gate 3 pass?</button>
             <button type="button" class="ask-chip">What does Send back mean?</button>
             <button type="button" class="ask-chip">Why does a failed claim send it back?</button>
         </div>
@@ -1509,13 +1500,13 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
             mode = 'is-not-ready';
             badgeText = 'Send back';
             if (hasGate1 && hasGate3) {
-                headline = 'Gate 1 (audience, objectives, problem) and Gate 3 (evaluation) have not passed. Neither can be traded away, so this goes back to the team.';
+                headline = 'Gate 1 (audience, objectives, problem) and Gate 3 (evaluation) have not passed. Both must pass, so this goes back to the team.';
                 shortText = 'Gates 1, 3 not passed.';
             } else if (hasGate1) {
-                headline = 'Gate 1 (audience, objectives, problem) has not passed. That gate cannot be traded away, so this goes back to the team regardless of the other gates.';
+                headline = 'Gate 1 (audience, objectives, problem) has not passed. That gate must pass, so this goes back to the team no matter how the other gates look.';
                 shortText = 'Gate 1 not passed.';
             } else {
-                headline = 'Gate 3 (evaluation) has not passed. That gate cannot be traded away, so this goes back to the team regardless of the other gates.';
+                headline = 'Gate 3 (evaluation) has not passed. That gate must pass, so this goes back to the team no matter how the other gates look.';
                 shortText = 'Gate 3 not passed.';
             }
         } else if (openCount === 0) {
@@ -2034,6 +2025,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     updateRateUI();
 })();
 </script>
+
 
 </body>
 </html>
