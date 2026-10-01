@@ -77,14 +77,14 @@ var employerProfiles = {
         welcome: {
             role: 'Principal AI Enablement Engineer',
             body: 'I build what I enable. I direct multi-agent systems every day and decide what each agent is allowed to do, which is why I can tell a good technical answer from a bad one.',
-            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=labcorp'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Labcorp.pdf' },
     'florida-blue': { industry: 'healthcare', company: 'Florida Blue',
         welcome: {
             role: 'Principal AI Enablement',
             body: 'At TIAA I was a founding member of an internal AI use case intake function, a stage gate that controlled which use cases advanced to a second gate for the larger organization.',
-            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=florida-blue'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Florida_Blue.pdf' },
     'bpx': { industry: 'energy', company: 'BPX Energy',
@@ -108,14 +108,14 @@ var employerProfiles = {
         welcome: {
             role: 'Director, AI Acceleration, Business Strategy',
             body: 'Seven business areas, seven leaders who did not report to me, one rhythm and one set of standards. Getting them to give up their own version of the work was the whole job.',
-            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=schwab'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Schwab_AI_Acceleration.pdf' },
     'charles-schwab': { industry: 'finance', company: 'Charles Schwab',
         welcome: {
             role: 'Director, AI Acceleration, Business Strategy',
             body: 'Seven business areas, seven leaders who did not report to me, one rhythm and one set of standards. Getting them to give up their own version of the work was the whole job.',
-            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
+            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=charles-schwab'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Schwab_AI_Acceleration.pdf' },
     'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf' },
