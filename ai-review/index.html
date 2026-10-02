@@ -31,7 +31,8 @@
     --font-body:'Inter', sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth;}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth;}}
 body{
     font-family:var(--font-body);
     color:var(--text-dark);
@@ -1149,6 +1150,41 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 .sendback-gate .sg-mark{font-weight:700;color:var(--gap);}
 .sendback-gate .sg-note{display:block;font-size:0.8125rem;font-style:italic;color:var(--text-mid);margin-top:2px;white-space:pre-wrap;}
 .sendback-gate .sg-skipped{font-size:0.8125rem;color:var(--text-mid);margin-top:6px;}
+
+/* ---------- Guided tour (2026-10-01) ---------- */
+.tour-spot{
+    position:fixed;z-index:950;pointer-events:none;
+    border-radius:12px;border:2px solid var(--gold);
+    box-shadow:0 0 0 9999px rgba(10,14,39,0.55);
+}
+.tour-spot[hidden]{display:none;}
+@media (prefers-reduced-motion:no-preference){.tour-spot{transition:top 0.25s ease,left 0.25s ease,width 0.25s ease,height 0.25s ease;}}
+.tour-card{
+    position:fixed;z-index:960;
+    left:50%;transform:translateX(-50%);
+    bottom:calc(16px + var(--ask-offset, 0px));
+    width:min(440px, calc(100% - 24px));
+    padding:16px 18px 14px;border-radius:14px;
+    background:var(--white);color:var(--text-dark);
+    border:1px solid var(--line);border-top:4px solid var(--gold);
+    box-shadow:0 18px 40px rgba(10,14,39,0.35);
+}
+.tour-card[hidden]{display:none;}
+.tour-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.tour-count{font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold-dark);}
+.tour-skip{background:none;border:0;padding:4px 0;cursor:pointer;font:inherit;font-size:0.8125rem;color:var(--text-mid);text-decoration:underline;text-underline-offset:3px;}
+.tour-title{font-family:var(--font-display);font-size:1.125rem;font-weight:700;color:var(--midnight);margin-bottom:4px;}
+.tour-text{font-size:0.9375rem;line-height:1.55;color:#3a4552;margin:0 0 12px;}
+.tour-nav{display:flex;justify-content:flex-end;gap:8px;}
+.tour-back,.tour-next{font:inherit;font-size:0.9375rem;font-weight:600;cursor:pointer;padding:8px 18px;border-radius:8px;}
+.tour-back{background:var(--white);color:var(--text-mid);border:1px solid #cdd3dc;}
+.tour-back[hidden]{display:none;}
+.tour-next{background:var(--midnight);color:#fff;border:1px solid var(--midnight);}
+.tour-skip:focus-visible,.tour-back:focus-visible,.tour-next:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+body.tour-on .ask-launcher{display:none;}
+.ask-chip[hidden]{display:none;}
+.ask-chip.ask-chip--tour{background:var(--midnight);color:#fff;border-color:var(--midnight);}
+.ask-chip.ask-chip--tour:hover{background:var(--navy);color:#fff;}
 </style>
 </head>
 <body>
@@ -1480,6 +1516,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
             <div class="ask-bubble">Ask me how this review works, what a gate is checking, or what to do with the verdict you got.</div>
         </div>
         <div class="ask-chips" id="askChips">
+            <button type="button" class="ask-chip ask-chip--tour" data-tour="1">Walk me through it</button>
             <button type="button" class="ask-chip">How do I use this review?</button>
             <button type="button" class="ask-chip">Why must Gate 1 and Gate 3 pass?</button>
             <button type="button" class="ask-chip">What does Send back mean?</button>
@@ -2473,7 +2510,11 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     function send(text) {
         if (sending || !text || limitReached()) { updateRateUI(); return; }
         sending = true;
-        if (chipsEl) { chipsEl.hidden = true; }
+        /* The question chips go once the conversation starts. The tour chip
+           stays, so a visitor who gets lost later can still take the tour. */
+        if (chipsEl) {
+            Array.prototype.forEach.call(chipsEl.querySelectorAll('.ask-chip:not([data-tour])'), function (c) { c.hidden = true; });
+        }
         input.value = '';
         input.style.height = 'auto';
         sendBtn.disabled = true;
@@ -2533,7 +2574,15 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     if (chipsEl) {
         chipsEl.addEventListener('click', function (e) {
             var chip = e.target.closest ? e.target.closest('.ask-chip') : null;
-            if (chip) { send(chip.textContent.trim()); }
+            if (!chip) { return; }
+            /* The tour chip never calls the model: it closes the chat and
+               starts the guided tour on the page. */
+            if (chip.hasAttribute('data-tour')) {
+                closePanel();
+                document.dispatchEvent(new CustomEvent('review:tour'));
+                return;
+            }
+            send(chip.textContent.trim());
         });
     }
 
@@ -2541,6 +2590,157 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
 })();
 </script>
 
+<script>
+/* ============================================================================
+   Guided tour (2026-10-01). Five steps, started only from the "Walk me
+   through it" chip in Ask Joe. Deterministic on purpose: no model call, no
+   data sent, and nothing it reads leaves the page. The targets are a fixed
+   list; nothing here takes a selector or text from anywhere else.
+   ============================================================================ */
+(function () {
+    'use strict';
+
+    var STEPS = [
+        { target: '.howto', title: 'Pick one AI solution',
+          text: 'Think of one AI solution your team is being asked to trust. Keep that one in mind for every gate.' },
+        { target: '.gate-card[data-gate="1"] .toggle-group', title: 'Mark each gate',
+          text: 'Choose Pass, Gap, or Unknown for each of the five gates, based on what you actually know. Gate 1 and Gate 3 must pass.' },
+        { target: '.gate-card[data-gate="1"] .q-edit', title: 'Go question by question',
+          text: 'Tap the pencil beside any question to mark it Answered or Falls short and add a note. Your marks suggest a status for the gate, and you decide.' },
+        { target: '#verdictPanel', title: 'Read the verdict',
+          text: 'The verdict updates as you go: Accept, Accept with conditions, or Send back. Open the list below it for the questions to send back to the team.' },
+        { target: '#copyReview', title: 'Share it',
+          text: 'Copy the whole review, with your marks and notes, into an email. Everything you mark stays in this browser until you copy it.' }
+    ];
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var spot = null, card = null, titleEl, textEl, countEl, backBtn, nextBtn;
+    var index = 0, current = null, rafQueued = false, lastFocused = null;
+
+    function build() {
+        spot = document.createElement('div');
+        spot.className = 'tour-spot';
+        spot.setAttribute('aria-hidden', 'true');
+
+        card = document.createElement('div');
+        card.className = 'tour-card';
+        card.setAttribute('role', 'dialog');
+        card.setAttribute('aria-modal', 'false');
+        card.setAttribute('aria-labelledby', 'tourTitle');
+        card.setAttribute('aria-describedby', 'tourText');
+
+        var head = document.createElement('div');
+        head.className = 'tour-head';
+        countEl = document.createElement('span');
+        countEl.className = 'tour-count';
+        var skip = document.createElement('button');
+        skip.type = 'button';
+        skip.className = 'tour-skip';
+        skip.textContent = 'Skip tour';
+        skip.addEventListener('click', end);
+        head.appendChild(countEl);
+        head.appendChild(skip);
+
+        titleEl = document.createElement('div');
+        titleEl.className = 'tour-title';
+        titleEl.id = 'tourTitle';
+        textEl = document.createElement('p');
+        textEl.className = 'tour-text';
+        textEl.id = 'tourText';
+
+        var nav = document.createElement('div');
+        nav.className = 'tour-nav';
+        backBtn = document.createElement('button');
+        backBtn.type = 'button';
+        backBtn.className = 'tour-back';
+        backBtn.textContent = 'Back';
+        backBtn.addEventListener('click', function () { show(index - 1); });
+        nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'tour-next';
+        nextBtn.addEventListener('click', function () {
+            if (index === STEPS.length - 1) { end(); } else { show(index + 1); }
+        });
+        nav.appendChild(backBtn);
+        nav.appendChild(nextBtn);
+
+        card.appendChild(head);
+        card.appendChild(titleEl);
+        card.appendChild(textEl);
+        card.appendChild(nav);
+        document.body.appendChild(spot);
+        document.body.appendChild(card);
+    }
+
+    function place() {
+        rafQueued = false;
+        if (!current) { return; }
+        var r = current.getBoundingClientRect();
+        var pad = 8;
+        spot.style.top = (r.top - pad) + 'px';
+        spot.style.left = (r.left - pad) + 'px';
+        spot.style.width = (r.width + pad * 2) + 'px';
+        spot.style.height = (r.height + pad * 2) + 'px';
+    }
+    function queuePlace() {
+        if (rafQueued) { return; }
+        rafQueued = true;
+        window.requestAnimationFrame(place);
+    }
+
+    function show(i) {
+        if (i < 0 || i >= STEPS.length) { return; }
+        var step = STEPS[i];
+        var el = document.querySelector(step.target);
+        if (!el) { if (i < STEPS.length - 1) { show(i + 1); } else { end(); } return; }
+        index = i;
+        current = el;
+        countEl.textContent = 'Step ' + (i + 1) + ' of ' + STEPS.length;
+        titleEl.textContent = step.title;
+        textEl.textContent = step.text;
+        backBtn.hidden = (i === 0);
+        nextBtn.textContent = (i === STEPS.length - 1) ? 'Done' : 'Next';
+
+        /* Put the target in the top part of the screen, clear of the card. */
+        var top = el.getBoundingClientRect().top + window.pageYOffset - 96;
+        window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? 'auto' : 'smooth' });
+        place();
+        nextBtn.focus({ preventScroll: true });
+    }
+
+    function onKey(e) {
+        if (e.key === 'Escape') { end(); }
+    }
+
+    function start() {
+        if (!card) { build(); }
+        lastFocused = document.activeElement;
+        document.body.classList.add('tour-on');
+        spot.hidden = false;
+        card.hidden = false;
+        window.addEventListener('scroll', queuePlace, { passive: true });
+        window.addEventListener('resize', queuePlace);
+        document.addEventListener('keydown', onKey);
+        show(0);
+    }
+
+    function end() {
+        current = null;
+        document.body.classList.remove('tour-on');
+        if (spot) { spot.hidden = true; }
+        if (card) { card.hidden = true; }
+        window.removeEventListener('scroll', queuePlace);
+        window.removeEventListener('resize', queuePlace);
+        document.removeEventListener('keydown', onKey);
+        var launcher = document.getElementById('askLauncher');
+        var back = (lastFocused && document.contains(lastFocused) && lastFocused !== document.body &&
+                    !(card && card.contains(lastFocused))) ? lastFocused : launcher;
+        if (back && typeof back.focus === 'function') { back.focus({ preventScroll: true }); }
+    }
+
+    document.addEventListener('review:tour', start);
+})();
+</script>
 
 </body>
 </html>
