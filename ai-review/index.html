@@ -67,6 +67,15 @@ a:focus-visible, button:focus-visible{outline:2px solid var(--gold-dark);outline
     letter-spacing:-0.01em;
 }
 .site-header .name:hover{color:var(--gold-light);}
+/* A plain way home. The name also links there, but not every visitor knows to try it. */
+.site-header .header-back{
+    font-size:0.875rem;font-weight:600;color:var(--gold-light);
+    text-decoration:underline;text-decoration-color:rgba(228,212,168,0.45);text-underline-offset:4px;
+    white-space:nowrap;
+}
+.site-header .header-back:hover{color:var(--white);text-decoration-color:var(--white);}
+.site-header .header-back:focus-visible{outline:2px solid var(--gold-light);outline-offset:3px;border-radius:2px;}
+@media (max-width:420px){.site-header .hb-long{display:none;}}
 
 /* Hero */
 .hero{
@@ -1192,6 +1201,7 @@ body.tour-on .ask-launcher{display:none;}
 <header class="site-header">
     <div class="wrap">
         <a class="name return-link" href="https://joepointer.com/">Joe Pointer<span class="brand-mark" aria-hidden="true"></span></a>
+        <a class="header-back return-link" href="https://joepointer.com/"><span aria-hidden="true">&larr;</span> <span class="hb-long">Back to </span>joepointer.com</a>
     </div>
 </header>
 
