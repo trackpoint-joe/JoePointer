@@ -2615,7 +2615,7 @@ body.tour-on .ask-launcher{display:none;}
 
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var spot = null, card = null, titleEl, textEl, countEl, backBtn, nextBtn;
-    var index = 0, current = null, rafQueued = false, lastFocused = null;
+    var index = 0, current = null, rafQueued = false, lastFocused = null, startY = 0;
 
     function build() {
         spot = document.createElement('div');
@@ -2637,7 +2637,7 @@ body.tour-on .ask-launcher{display:none;}
         skip.type = 'button';
         skip.className = 'tour-skip';
         skip.textContent = 'Skip tour';
-        skip.addEventListener('click', end);
+        skip.addEventListener('click', function () { end(false); });
         head.appendChild(countEl);
         head.appendChild(skip);
 
@@ -2659,7 +2659,7 @@ body.tour-on .ask-launcher{display:none;}
         nextBtn.type = 'button';
         nextBtn.className = 'tour-next';
         nextBtn.addEventListener('click', function () {
-            if (index === STEPS.length - 1) { end(); } else { show(index + 1); }
+            if (index === STEPS.length - 1) { end(true); } else { show(index + 1); }
         });
         nav.appendChild(backBtn);
         nav.appendChild(nextBtn);
@@ -2692,7 +2692,7 @@ body.tour-on .ask-launcher{display:none;}
         if (i < 0 || i >= STEPS.length) { return; }
         var step = STEPS[i];
         var el = document.querySelector(step.target);
-        if (!el) { if (i < STEPS.length - 1) { show(i + 1); } else { end(); } return; }
+        if (!el) { if (i < STEPS.length - 1) { show(i + 1); } else { end(true); } return; }
         index = i;
         current = el;
         countEl.textContent = 'Step ' + (i + 1) + ' of ' + STEPS.length;
@@ -2709,12 +2709,13 @@ body.tour-on .ask-launcher{display:none;}
     }
 
     function onKey(e) {
-        if (e.key === 'Escape') { end(); }
+        if (e.key === 'Escape') { end(false); }
     }
 
     function start() {
         if (!card) { build(); }
         lastFocused = document.activeElement;
+        startY = window.pageYOffset;
         document.body.classList.add('tour-on');
         spot.hidden = false;
         card.hidden = false;
@@ -2724,8 +2725,19 @@ body.tour-on .ask-launcher{display:none;}
         show(0);
     }
 
-    function end() {
+    /* Where the visitor lands afterwards. Skip and Escape go back to where
+       they asked for help. Done does too, unless they asked before reaching
+       the gates: then it lands on Gate 1, the first thing the tour told them
+       to do. */
+    function end(finished) {
         current = null;
+        var y = startY;
+        var firstGate = document.querySelector('.gate-card[data-gate="1"]');
+        if (finished && firstGate) {
+            var gateY = firstGate.getBoundingClientRect().top + window.pageYOffset - 24;
+            if (startY < gateY - window.innerHeight / 2) { y = gateY; }
+        }
+        window.scrollTo({ top: Math.max(0, y), behavior: reduceMotion ? 'auto' : 'smooth' });
         document.body.classList.remove('tour-on');
         if (spot) { spot.hidden = true; }
         if (card) { card.hidden = true; }
