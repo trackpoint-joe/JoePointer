@@ -6,7 +6,7 @@
 <title>AI Delivery Readiness Review</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico?v=20260928">
 <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=20260928">
-<meta name="description" content="A five-gate instrument for reviewing an AI result before it ships, built by Joe Pointer. Toggle each gate, get a readiness verdict, see the questions it sends back.">
+<meta name="description" content="A five-gate instrument for reviewing an AI solution before it ships, built by Joe Pointer. Toggle each gate, get a readiness verdict, see the questions it sends back.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1163,10 +1163,10 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     <div class="wrap">
         <div class="eyebrow"><span class="eyebrow-text">Interactive Review<span class="prepared-for" id="preparedFor"></span></span></div>
         <h1>AI Delivery Readiness Review<span class="brand-mark" aria-hidden="true"></span></h1>
-        <p class="lede">Before anyone trusts an AI result enough to act on it, the result should clear five checks. This page walks you through them and tells you whether to accept it or send it back.</p>
-        <p class="lede-sub">An AI result is anything a model produces that someone will act on, such as <span id="exampleList">a forecast, a&nbsp;risk&nbsp;score, a recommended action,</span> or an answer from an&nbsp;AI&nbsp;assistant.</p>
+        <p class="lede">Before anyone trusts an AI solution enough to act on what it produces, the solution should clear five checks. This page walks you through them and tells you whether to accept it or send it back.</p>
+        <p class="lede-sub">An AI solution is a model and the way its output reaches the people who act on it. That output might be <span id="exampleList">a forecast, a&nbsp;risk&nbsp;score, a recommended action,</span> or an answer from an&nbsp;AI&nbsp;assistant.</p>
         <ol class="howto">
-            <li><span class="howto-num">1</span><span>Think of one AI result your team is being asked to trust.</span></li>
+            <li><span class="howto-num">1</span><span>Think of one AI solution your team is being asked to trust.</span></li>
             <li><span class="howto-num">2</span><span>Mark each of the five gates Pass, Gap, or Unknown.</span></li>
             <li><span class="howto-num">3</span><span>Get a verdict and the questions to send back to the team.</span></li>
         </ol>
@@ -1175,9 +1175,9 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
             <div><dt>Accept with conditions</dt><dd>It can be acted on once one or two missing answers come back.</dd></div>
             <div><dt>Send back</dt><dd>Do not act on it yet. The questions go back to the team.</dd></div>
         </dl>
-        <p class="howto-note key-note">Accept is the reviewer's recommendation. The owner of the result still decides.</p>
+        <p class="howto-note key-note">Accept is the reviewer's recommendation. The owner of the solution still decides.</p>
         <p class="howto-note">About two minutes. What you mark and write stays in this browser.</p>
-        <p class="meta">Built by Joe Pointer in September 2026. These are the questions I ask before I trust an AI result.</p>
+        <p class="meta">Built by Joe Pointer in September 2026. These are the questions I ask before I trust an AI solution.</p>
     </div>
 </section>
 
@@ -1185,7 +1185,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     <div class="wrap">
         <div class="section-intro">
             <h2>The Five Gates</h2>
-            <p>Mark each gate based on what you actually know about the result. The verdict updates as you go, in the bar at the bottom of your screen and in the full panel below the gates. Use the pencil beside any question to mark it answered or falling short, or to add a note.</p>
+            <p>Mark each gate based on what you actually know about the solution. The verdict updates as you go, in the bar at the bottom of your screen and in the full panel below the gates. Use the pencil beside any question to mark it answered or falling short, or to add a note.</p>
             <p>Each gate also shows where the check happens. Some run automatically in the pipeline on every change. Some are a human review. Some are watched after launch.</p>
         </div>
 
@@ -1223,7 +1223,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
                 <div class="gate-number">1</div>
                 <div>
                     <h3>Audience, objectives, problem</h3>
-                    <div class="gate-sub">Who is this result for, what should change for them, and what stands in the way?</div>
+                    <div class="gate-sub">Who is this solution for, what should change for them, and what stands in the way?</div>
                     <div class="gate-owner"><span class="owner-tag">Human review</span></div>
                 </div>
             </div>
@@ -1233,7 +1233,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
                     <div class="g1-step-body">
                         <div class="g1-step-title">Audience</div>
                         <ul class="gate-questions">
-                            <li>Who uses this result, and in what role?</li>
+                            <li>Who uses this solution, and in what role?</li>
                             <li>What do they do today instead?</li>
                         </ul>
                     </div>
@@ -1253,9 +1253,9 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
                     <div class="g1-step-body">
                         <div class="g1-step-title">Problem</div>
                         <ul class="gate-questions">
-                            <li>What breaks today that this result is meant to fix?</li>
-                            <li>What will someone do differently because of this result?</li>
-                            <li>Could a report, a list, or a spreadsheet fix the same problem?</li>
+                            <li>What breaks today that this solution is meant to fix?</li>
+                            <li>What will someone do differently because of what it produces?</li>
+                            <li>Could a report, a list, or a spreadsheet solve the same problem without AI?</li>
                         </ul>
                     </div>
                 </div>
@@ -1332,7 +1332,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
                 <div class="gate-number">4</div>
                 <div>
                     <h3>Claims check</h3>
-                    <div class="gate-sub">Can every number reported about this result be traced to its source?</div>
+                    <div class="gate-sub">Can every number reported about this solution be traced to its source?</div>
                     <div class="gate-owner"><span class="owner-tag">Automated check where possible</span><span class="owner-tag">Human review</span></div>
                 </div>
             </div>
@@ -1358,7 +1358,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
                 <div class="gate-number">5</div>
                 <div>
                     <h3>Adoption and value</h3>
-                    <div class="gate-sub">Are people actually using this result, and which person owns it after launch?</div>
+                    <div class="gate-sub">Are people actually using this solution, and which person owns it after launch?</div>
                     <div class="gate-owner"><span class="owner-tag">Monitored after launch</span><span class="owner-tag">Human review</span></div>
                 </div>
             </div>
@@ -1384,7 +1384,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         <div class="verdict-panel is-not-ready" id="verdictPanel" aria-live="polite">
             <div class="verdict-badge" id="verdictBadge">Send back</div>
             <div class="verdict-headline" id="verdictHeadline">Gate 1 (audience, objectives, problem) and Gate 3 (evaluation) have not passed. Both must pass, so this goes back to the team.</div>
-            <div class="verdict-rule" id="verdictRule">How the verdict works. Any gate not marked Pass counts against the result. Gate 1 and Gate 3 must pass. If either has not, the result goes back to the team, no matter how the other gates look. A claim marked Gap in Gate 4 sends it back too. Otherwise, all five passed is accept, one or two not passed is accept with conditions, and three or more is send back.</div>
+            <div class="verdict-rule" id="verdictRule">How the verdict works. Any gate not marked Pass counts against the solution. Gate 1 and Gate 3 must pass. If either has not, the solution goes back to the team, no matter how the other gates look. A claim marked Gap in Gate 4 sends it back too. Otherwise, all five passed is accept, one or two not passed is accept with conditions, and three or more is send back.</div>
             <details class="sendback" id="sendback">
                 <summary><span>Questions I would send back to the team (<span id="sendbackCount">5</span>)</span></summary>
                 <div class="sendback-body" id="sendbackList"></div>
@@ -1438,7 +1438,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     <div class="wrap">
         <div class="section-intro">
             <h2>Bring Me a Claim</h2>
-            <p>Pick any AI result already in front of you. These are the questions I would ask it.</p>
+            <p>Pick any AI solution your team is being asked to trust. These are the questions I would ask about it.</p>
         </div>
         <div class="closer-actions">
             <a class="btn-primary" href="mailto:joe@joepointer.com"><span>Email joe@joepointer.com</span></a>
@@ -1623,7 +1623,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         if (vetoGates.length === 0 && gate4Failed) {
             mode = 'is-not-ready';
             badgeText = 'Send back';
-            headline = 'Gate 4 (claims check) found a claim that falls short. A result carrying a claim that fails goes back to the team.';
+            headline = 'Gate 4 (claims check) found a claim that falls short. A solution carrying a claim that fails goes back to the team.';
             shortText = 'Gate 4 failed.';
         } else if (vetoGates.length > 0) {
             mode = 'is-not-ready';
@@ -1641,17 +1641,17 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         } else if (openCount === 0) {
             mode = 'is-ready';
             badgeText = 'Accept';
-            headline = 'Accept. Every gate has an answer with evidence behind it. The owner of the result still decides.';
+            headline = 'Accept. Every gate has an answer with evidence behind it. The owner of the solution still decides.';
             shortText = 'Every gate has evidence.';
         } else if (openCount <= 2) {
             mode = 'is-conditions';
             badgeText = 'Accept with conditions';
-            headline = openCount + (openCount === 1 ? ' gate needs' : ' gates need') + ' an answer before anyone acts on this result.';
+            headline = openCount + (openCount === 1 ? ' gate needs' : ' gates need') + ' an answer before anyone acts on what this solution produces.';
             shortText = openCount + (openCount === 1 ? ' gate needs' : ' gates need') + ' an answer.';
         } else {
             mode = 'is-not-ready';
             badgeText = 'Send back';
-            headline = openCount + ' gates have not passed. Do not act on this result yet.';
+            headline = openCount + ' gates have not passed. Do not act on what this solution produces yet.';
             shortText = openCount + ' gates not passed.';
         }
 
