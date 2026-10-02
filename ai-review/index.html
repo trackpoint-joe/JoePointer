@@ -1121,6 +1121,19 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     color:var(--gold-dark);text-decoration:underline;text-underline-offset:3px;
 }
 .gate-note-wrap{margin-top:8px;}
+.gate-suggest{
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;
+    margin-top:12px;padding:10px 12px;border-radius:8px;
+    background:rgba(201,169,97,0.14);border:1px solid rgba(138,109,47,0.25);
+    font-size:0.875rem;color:#3a4552;
+}
+.gate-suggest[hidden]{display:none;}
+.suggest-btn{
+    font:inherit;font-size:0.8125rem;font-weight:600;cursor:pointer;
+    padding:5px 14px;border-radius:999px;
+    border:1px solid var(--midnight);background:var(--midnight);color:#fff;
+}
+.suggest-btn:hover{background:var(--navy);}
 .gate-note-wrap[hidden]{display:none;}
 .review-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px;}
 .action-btn{
@@ -1653,6 +1666,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         svHeadline.textContent = shortText;
 
         renderSendback(openGates);
+        updateSuggestions();
         saveSoon();
     }
 
@@ -2006,6 +2020,61 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
         gateNoteEls[n] = { btn: btn, wrap: wrap, note: note };
     }
 
+    /* Suggestions: the question marks can propose a gate status, and the
+       reviewer accepts it with one tap. Nothing changes until they do.
+       Any question marked Falls short proposes Gap. Every question marked
+       Answered proposes Pass. Anything in between proposes nothing. */
+    var suggestEls = {};
+    function buildSuggest(card) {
+        var n = card.getAttribute('data-gate');
+        var fieldset = card.querySelector('.toggle-group');
+        var box = document.createElement('div');
+        box.className = 'gate-suggest';
+        box.hidden = true;
+        box.setAttribute('role', 'status');
+        var text = document.createElement('span');
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'suggest-btn';
+        btn.addEventListener('click', function () {
+            var target = btn.getAttribute('data-target');
+            if (!target) { return; }
+            setGateValue(n, target);
+            clearPreset();
+            computeVerdict();
+        });
+        box.appendChild(text);
+        box.appendChild(btn);
+        fieldset.parentNode.insertBefore(box, fieldset.nextSibling);
+        suggestEls[n] = { card: card, box: box, text: text, btn: btn };
+    }
+    function updateSuggestions() {
+        Object.keys(suggestEls).forEach(function (n) {
+            var el = suggestEls[n];
+            var status = getGateState(el.card);
+            var total = 0, answered = 0, shortCount = 0;
+            Object.keys(questionEls).forEach(function (qid) {
+                if (questionEls[qid].gate !== n) { return; }
+                total += 1;
+                var mark = (state.q[qid] || {}).s;
+                if (mark === 'answered') { answered += 1; }
+                if (mark === 'short') { shortCount += 1; }
+            });
+            var target = '', message = '';
+            if (shortCount > 0 && status !== 'gap') {
+                target = 'gap';
+                message = (shortCount === 1 ? '1 question falls short.' : shortCount + ' questions fall short.') + ' Mark this gate Gap?';
+            } else if (total > 0 && answered === total && status !== 'pass') {
+                target = 'pass';
+                message = 'All ' + total + ' questions answered. Mark this gate Pass?';
+            }
+            el.box.hidden = !target;
+            el.text.textContent = message;
+            el.btn.textContent = target === 'gap' ? 'Mark Gap' : 'Mark Pass';
+            el.btn.setAttribute('data-target', target);
+        });
+    }
+
     function syncNotesToDom() {
         Object.keys(questionEls).forEach(function (qid) {
             var entry = state.q[qid];
@@ -2141,6 +2210,7 @@ body[data-theme="healthcare"]{--midnight:#002677;--navy:#002677;--prussian:#001a
     gateCards.forEach(function (card) {
         buildQuestionControls(card);
         buildGateNote(card);
+        buildSuggest(card);
     });
     loadState();
     syncNotesToDom();
