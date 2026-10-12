@@ -130,8 +130,8 @@ var employerProfiles = {
     'one-call': { industry: 'healthcare', company: 'One Call', welcome: '', resume: 'resources/Joe_Pointer_Resume_One_Call.pdf' },
     'janus-henderson': { industry: 'finance', company: 'Janus Henderson',
         welcome: {
-            role: 'AI Enablement Partner',
-            body: 'I carried one adoption operating model across seven business areas at TIAA through named liaisons, and none of those seven leaders reported to me.',
+            role: 'Head of AI Academy',
+            body: 'I led a team of seven that designed five self-paced curriculum tracks at TIAA, and I report access and adoption as different numbers.',
             links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Janus_Henderson.pdf' },
