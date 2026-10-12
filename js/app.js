@@ -104,19 +104,9 @@ var employerProfiles = {
     'deltek': { industry: 'tech', company: 'Deltek', welcome: '', resume: 'resources/Joe_Pointer_Resume_Deltek.pdf' },
     'tri-state': { industry: 'tech', company: 'Tri-State', welcome: '', resume: 'resources/Joe_Pointer_Resume_Tri_State.pdf' },
     'cherry-bekaert': { industry: 'consulting', company: 'Cherry Bekaert', welcome: '' },
-    'schwab': { industry: 'finance', company: 'Charles Schwab',
-        welcome: {
-            role: 'Director, AI Acceleration, Business Strategy',
-            body: 'Seven business areas, seven leaders who did not report to me, one rhythm and one set of standards. Getting them to give up their own version of the work was the whole job.',
-            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=schwab'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
-        },
+    'schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '',
         resume: 'resources/Joe_Pointer_Resume_Schwab_AI_Acceleration.pdf' },
-    'charles-schwab': { industry: 'finance', company: 'Charles Schwab',
-        welcome: {
-            role: 'Director, AI Acceleration, Business Strategy',
-            body: 'Seven business areas, seven leaders who did not report to me, one rhythm and one set of standards. Getting them to give up their own version of the work was the whole job.',
-            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=charles-schwab'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
-        },
+    'charles-schwab': { industry: 'finance', company: 'Charles Schwab', welcome: '',
         resume: 'resources/Joe_Pointer_Resume_Schwab_AI_Acceleration.pdf' },
     'human-agency': { industry: 'tech', company: 'Human Agency', welcome: '', resume: 'resources/Joe_Pointer_Resume_Human_Agency.pdf' },
     'ai-vp-insurance': { industry: 'finance', company: 'VP AI Strategy', welcome: '' },
