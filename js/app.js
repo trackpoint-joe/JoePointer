@@ -139,13 +139,8 @@ var employerProfiles = {
     // longer exists is worse than no band. Profile and resume stay so the link still works.
     'tifin': { industry: 'finance', company: 'TIFIN', welcome: '',
         resume: 'resources/Joe_Pointer_Resume_TIFIN.pdf' },
-    'express-flooring': { industry: 'operations', company: 'Express Flooring',
-        welcome: {
-            role: 'VP of AI Transformation',
-            body: 'I led the team that built an internal AI career platform at TIAA, then ran 30+ town halls and team sessions to reach the people who were not looking for it.',
-            links: [["How I'd Run Your First 90 Days", '#day-90-plan'], ['The CareerSpark Case Study', '#project-careerspark']]
-        },
-        resume: 'resources/Joe_Pointer_Resume_Express_Flooring.pdf' },
+    // Band blanked 2026-10-12: Express Flooring rejected the application. Profile and resume stay so the link still works.
+    'express-flooring': { industry: 'operations', company: 'Express Flooring', welcome: '', resume: 'resources/Joe_Pointer_Resume_Express_Flooring.pdf' },
     'baker-tilly': { industry: 'consulting', company: 'Baker Tilly',
         welcome: {
             role: 'AI Program Enablement Senior Manager',
