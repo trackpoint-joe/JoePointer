@@ -21,8 +21,10 @@ Allow: /resources/Joe_Pointer_Resume_Full.pdf
 Disallow: /*?company=
 Disallow: /*?industry=
 
-# The Expert Team Brain replay (/brain) is linked from the homepage since
-# 2026-09-27 and deliberately NOT blocked here. Since 2026-09-27 it is indexable
+# The Expert Project Team replay (/expert-team, at /brain until 2026-10-14) is
+# linked from the homepage since 2026-09-27 and deliberately NOT blocked here.
+# The old /brain address is now a redirect stub that noindexes itself. The replay
+# is indexable
 # (robots meta "index, follow" written by export_demo.py --web) and listed in the
 # sitemap, so Joe's Brain can be found in search. Keep the crawl open.
 

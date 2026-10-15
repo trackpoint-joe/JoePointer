@@ -2712,7 +2712,7 @@ body {
     color: var(--text-dark);
 }
 
-/* Links inside an expanded principle (the /brain replay link, 2026-09-27). The
+/* Links inside an expanded principle (the /expert-team replay link, 2026-09-27). The
    darker gold, not --accent: the light gold is about 2:1 on this panel. */
 .principle-expanded a {
     color: var(--accent-dark, var(--gold-dark));
@@ -5390,7 +5390,7 @@ input:focus-visible {
 }
 
 /* ---------------------------------------------------------------- BRAIN CALLOUT + TEASER
-   2026-09-28. Makes the Expert Project Team replay (brain/) easy to reach; before this it
+   2026-09-28. Makes the Expert Project Team replay (expert-team/) easy to reach; before this it
    was linked only inside a collapsed panel on the last How I Think card. Joe's choices:
    a large dark card that breaks up the light sections, text first so it explains before
    it shows, and his node framed in a round portal that echoes the hero headshot (dark gap,
