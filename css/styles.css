@@ -5586,6 +5586,7 @@ input:focus-visible {
     border-bottom: 10px solid transparent;
     filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.8));
 }
+.film-teaser-title { display: block; margin-bottom: 2px; font-family: var(--font-heading, var(--font-display)); font-size: 1.05rem; line-height: 1.2; color: #fff; }
 .film-teaser-text strong { display: block; color: var(--accent-light, #ffd27a); font-weight: 600; }
 .film-teaser-text small { display: block; margin-top: 2px; font-size: 0.85rem; }
 @media (max-width: 768px) {
