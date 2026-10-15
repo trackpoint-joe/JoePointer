@@ -128,6 +128,13 @@ var employerProfiles = {
     'bdo': { industry: 'finance', company: 'BDO', welcome: '', resume: 'resources/Joe_Pointer_Resume_BDO.pdf' },
     'digital-realty': { industry: 'tech', company: 'Digital Realty', welcome: '', resume: 'resources/Joe_Pointer_Resume_Digital_Realty.pdf' },
     'one-call': { industry: 'healthcare', company: 'One Call', welcome: '', resume: 'resources/Joe_Pointer_Resume_One_Call.pdf' },
+    'vail-resorts': { industry: 'operations', company: 'Vail Resorts',
+        welcome: {
+            role: 'Sr. Director, Enterprise Technology and AI Transformation',
+            body: 'Three of my fifteen years at TIAA were as an internal Lean consultant, and I still start with the process before the tool.',
+            links: [["How I'd Run Your First 90 Days", '#day-90-plan'], ['The CareerSpark Case Study', '#project-careerspark']]
+        },
+        resume: 'resources/Joe_Pointer_Resume_Vail_Resorts.pdf' },
     'janus-henderson': { industry: 'finance', company: 'Janus Henderson',
         welcome: {
             role: 'Head of AI Academy',
