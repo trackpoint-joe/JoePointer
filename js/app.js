@@ -80,13 +80,8 @@ var employerProfiles = {
             links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=labcorp'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
         },
         resume: 'resources/Joe_Pointer_Resume_Labcorp.pdf' },
-    'florida-blue': { industry: 'healthcare', company: 'Florida Blue',
-        welcome: {
-            role: 'Principal AI Enablement',
-            body: 'At TIAA I was a founding member of an internal AI use case intake function, a stage gate that controlled which use cases advanced to a second gate for the larger organization.',
-            links: [['Try My AI Delivery Readiness Review', '/ai-review/?company=florida-blue'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
-        },
-        resume: 'resources/Joe_Pointer_Resume_Florida_Blue.pdf' },
+    // Band blanked 2026-10-16: GuideWell cancelled the Principal AI Enablement position. Profile and resume stay so the link still works.
+    'florida-blue': { industry: 'healthcare', company: 'Florida Blue', welcome: '', resume: 'resources/Joe_Pointer_Resume_Florida_Blue.pdf' },
     'bpx': { industry: 'energy', company: 'BPX Energy',
         welcome: {
             role: 'Principal AI Delivery & Quality Lead',
