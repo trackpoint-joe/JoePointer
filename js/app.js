@@ -157,13 +157,8 @@ var employerProfiles = {
         resume: 'resources/Joe_Pointer_Resume_Baker_Tilly.pdf' },
     'avalara': { industry: 'tech', company: 'Avalara', welcome: '',
         resume: 'resources/Joe_Pointer_Resume_Avalara.pdf' },
-    'sun-chemical': { industry: 'operations', company: 'Sun Chemical',
-        welcome: {
-            role: 'Director, AI Transformation & Intelligent Business Enablement',
-            body: 'Three things ran from the center of my operating model: enablement, acceptable-use standards, and measurement. Use-case ownership stayed in the business area, carried by a named liaison.',
-            links: [['The CareerSpark Case Study', '#project-careerspark'], ["How I'd Run Your First 90 Days", '#day-90-plan']]
-        },
-        resume: 'resources/Joe_Pointer_Resume_Sun_Chemical.pdf' }
+    // Band blanked 2026-10-16: Sun Chemical rejected the application. Profile and resume stay so the link still works.
+    'sun-chemical': { industry: 'operations', company: 'Sun Chemical', welcome: '', resume: 'resources/Joe_Pointer_Resume_Sun_Chemical.pdf' }
 };
 
 // Apply industry template based on URL path or query parameter
