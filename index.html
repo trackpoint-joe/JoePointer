@@ -1766,7 +1766,13 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
                     <span class="chat-subtitle">Powered by Claude AI</span>
                 </div>
             </div>
-            <button id="chatClose" class="chat-close" aria-label="Close chat">✕</button>
+            <div class="chat-header-actions">
+                <button id="chatVoice" class="chat-voice-toggle" type="button" aria-pressed="false" title="Hear the answers spoken in an AI voice">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                    <span class="chat-voice-label">Voice off</span>
+                </button>
+                <button id="chatClose" class="chat-close" aria-label="Close chat">✕</button>
+            </div>
         </div>
         <div class="chat-messages" id="chatMessages">
             <div class="chat-message chat-message--ai">
@@ -1793,7 +1799,7 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
         </div>
-        <div class="chat-footer">Powered by Claude AI · Responses may not reflect all details · <a href="mailto:joe@joepointer.com" style="color:inherit">Contact Joe&nbsp;directly</a></div>
+        <div class="chat-footer">Text by Claude, voice by ElevenLabs, both AI · Responses may not reflect all details · <a href="mailto:joe@joepointer.com" style="color:inherit">Contact Joe&nbsp;directly</a></div>
     </div>
     <div id="chatOverlay" class="chat-overlay"></div>
 
@@ -2126,6 +2132,64 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
 
         .chat-close:hover {
             background: rgba(255,255,255,0.12);
+        }
+
+        /* Voice toggle and close button travel together on the right, so the
+           header keeps exactly two children (see .chat-header-id). */
+        .chat-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        /* Spoken answers (ElevenLabs, via the Worker). Off by default. */
+        .chat-voice-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: #fff;
+            border-radius: 14px;
+            padding: 3px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        .chat-voice-toggle:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .chat-voice-toggle[aria-pressed="true"] {
+            background: var(--accent, #c9a961);
+            border-color: var(--accent, #c9a961);
+            color: var(--primary, #0a0e27);
+        }
+
+        .chat-play-again {
+            display: inline-block;
+            margin-top: 0.5rem;
+            background: none;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            border-radius: 14px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .chat-play-again:hover {
+            border-color: var(--primary, #0a0e27);
+            color: var(--primary, #0a0e27);
+        }
+
+        .chat-voice-note {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.72rem;
+            color: #94a3b8;
         }
 
         /* Message area */
@@ -2505,6 +2569,66 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
         return getTodayCount() >= CHAT_DAILY_LIMIT;
     }
 
+    // ============================================================
+    // Voice replies (ElevenLabs). Off by default; the header toggle turns it on.
+    // When on, the request carries voice: true and the Worker returns the answer
+    // as audio alongside the text. The Worker only ever speaks its OWN reply;
+    // there is no endpoint that turns visitor text into Joe's voice, and there
+    // must never be one. If the Worker has not been updated for voice yet, the
+    // answer simply comes back as text.
+    // ============================================================
+    let voiceOn = false;
+    const voicePlayer = new Audio();
+    // A silent clip played on the toggle click itself. Phones only let a page
+    // play audio after a tap; the real answer arrives later, after a network
+    // wait, so this "unlocks" the same player while the tap is still fresh.
+    const SILENT_CLIP = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+
+    function playVoice(src) {
+        voicePlayer.src = src;
+        const p = voicePlayer.play();
+        if (p && p.catch) p.catch(() => {});
+    }
+
+    function stopVoice() {
+        voicePlayer.pause();
+    }
+
+    function setVoice(on) {
+        voiceOn = on;
+        const btn = document.getElementById('chatVoice');
+        if (btn) {
+            btn.setAttribute('aria-pressed', String(on));
+            btn.querySelector('.chat-voice-label').textContent = on ? 'Voice on' : 'Voice off';
+        }
+        if (on) playVoice(SILENT_CLIP);
+        else stopVoice();
+        try {
+            if (typeof gtag === 'function') gtag('event', 'ask_joe_voice', { event_category: 'chatbot', voice_state: on ? 'on' : 'off' });
+        } catch (e) { /* analytics is best effort */ }
+    }
+
+    // Adds playback (or the Worker's note about why there is none) under an answer.
+    function attachVoice(aiWrap, data) {
+        const bubble = aiWrap.querySelector('.chat-bubble');
+        if (!bubble) return;
+        if (data.audio && typeof data.audio === 'string' && data.audio.startsWith('data:audio/')) {
+            playVoice(data.audio);
+            const again = document.createElement('button');
+            again.type = 'button';
+            again.className = 'chat-play-again';
+            again.textContent = 'Play again';
+            again.addEventListener('click', () => playVoice(data.audio));
+            bubble.appendChild(again);
+        } else if (data.voiceNote && typeof data.voiceNote === 'string') {
+            const note = document.createElement('small');
+            note.className = 'chat-voice-note';
+            note.textContent = data.voiceNote;
+            bubble.appendChild(note);
+        }
+        // Neither field: the Worker has not been updated for voice. Stay quiet.
+    }
+
     // Submit a suggestion chip — hides chips, sends message
     function submitSuggestion(text) {
         document.getElementById('chatSuggestions').style.display = 'none';
@@ -2563,6 +2687,7 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
     }
 
     function closeChat() {
+        stopVoice();
         document.getElementById('chatInput')?.blur();
         document.getElementById('chatClose')?.blur();
         document.getElementById('chatPanel').classList.remove('chat-panel--open');
@@ -2690,6 +2815,7 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
         input.value = '';
         input.style.height = 'auto';
         document.getElementById('chatSend').disabled = true;
+        stopVoice(); // a new question cuts off the last spoken answer
 
         const userMsg = appendMessage('user', text);
         chatHistory.push({ role: 'user', content: text });
@@ -2727,10 +2853,12 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    messages: chatHistory,
-                    company: companySlug
-                })
+                // voice is only sent when the visitor turned it on, so the
+                // default request is exactly what the Worker has always seen.
+                body: JSON.stringify(Object.assign(
+                    { messages: chatHistory, company: companySlug },
+                    voiceOn ? { voice: true } : {}
+                ))
             });
 
             loadingEl.remove();
@@ -2743,6 +2871,7 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
             const data = await res.json();
             const reply = data.content?.[0]?.text || 'Sorry, I had trouble with that. Email me directly at joe@joepointer.com.';
             const aiWrap = appendMessage('ai', reply);
+            if (voiceOn && data.content?.[0]?.text) attachVoice(aiWrap, data);
             if (window.askJoeEvidence) window.askJoeEvidence(aiWrap, reply);
             chatHistory.push({ role: 'assistant', content: reply });
             // Scroll so the user's question is at the top with the answer below
@@ -2761,6 +2890,7 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
     }
 
     // Event listeners
+    document.getElementById('chatVoice')?.addEventListener('click', () => setVoice(!voiceOn));
     document.getElementById('chatClose')?.addEventListener('click', closeChat);
     document.getElementById('chatOverlay')?.addEventListener('click', closeChat);
     document.getElementById('chatSend')?.addEventListener('click', sendMessage);
@@ -2903,6 +3033,8 @@ const cbar=$('companyBanner');function cbOffset(){const on=cbar&&cbar.classList.
         }
 
         function startListening() {
+            // Otherwise the mic transcribes the spoken answer back into the box
+            stopVoice();
             committed = input.value.trim();
             sessionFinal = '';
             silentRestarts = 0;
